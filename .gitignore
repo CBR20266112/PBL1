@@ -1,12 +1,17 @@
 # 기본적으로 전부 무시
 *
 
-# PBL1, PBL2 폴더만 포함
+# PBL1 허용
 !PBL1/
-!PBL1/**
 
+# PBL1에서는 SheepShip만 허용
+PBL1/*
+!PBL1/SheepShip/
+!PBL1/SheepShip/**
+
+# PBL2 전체 허용
 !PBL2/
 !PBL2/**
 
-# Git 관련 파일은 유지
+# gitignore는 유지
 !.gitignore
