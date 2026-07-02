@@ -3,19 +3,17 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<title>Sleepy Sheep</title>
 
-    <title>SheepShip</title>
-
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/responsive.css">
 
 </head>
 
@@ -23,326 +21,298 @@
 
 <div id="app">
 
-    <!-- Background -->
+<div class="background">
 
-    <div class="background">
+<div class="stars"></div>
 
-        <div class="stars"></div>
+<div class="moon"></div>
 
-        <div class="moon"></div>
+</div>
 
-    </div>
+<main class="phone">
 
-    <!-- Phone -->
+<header class="header">
 
-    <main class="phone">
+<div>
 
-        <!-- Header -->
+<h1>🌙 Sleepy Sheep</h1>
 
-        <header class="header">
+<p>
+드리미와 함께 건강한 수면 습관을 만들어 보세요.
+</p>
 
-            <div>
+</div>
 
-                <h1>🌙 SheepShip</h1>
+</header>
 
-                <p>오늘도 편안한 하루를 시작해요.</p>
+<section class="hero-card glass">
 
-            </div>
+<div class="sheep-box">
 
-            <div class="point-box">
+<img
+id="sheep"
+src="assets/sheep/idle.png"
+alt="드리미">
 
-                🧶 <span id="point">1250</span>
+</div>
 
-            </div>
+<h2 id="sheep-name">
 
-        </header>
+드리미
 
-        <!-- Hero -->
+</h2>
 
-        <section class="hero-card glass">
+<p id="speechText">
 
-            <div class="sheep-box">
+오늘도 좋은 꿈 꾸러 갈까요?
 
-                <img
-                    id="sheep"
-                    src="assets/sheep/idle.png"
-                    alt="Sheep">
+</p>
 
-            </div>
+<div id="speech" class="speech hidden">
 
-            <h2 id="sheep-name">
+메에~
 
-                음매
+</div>
 
-            </h2>
+</section>
 
-            <p>
+<section class="status-card glass">
 
-                오늘도 푹 쉬어볼까요?
+<div class="status-item">
 
-            </p>
+<label>❤️ 행복도</label>
 
-            <div
-                id="speech"
-                class="speech hidden">
+<div class="progress">
 
-                메에~
+<div
+id="happy-bar"
+class="fill"
+style="width:82%;">
 
-            </div>
+</div>
 
-        </section>
+</div>
 
-        <!-- Status -->
+</div>
 
-        <section class="status-card glass">
+<div class="status-item">
 
-            <div class="status-item">
+<label>🍖 배부름</label>
 
-                <label>❤️ 행복도</label>
+<div class="progress">
 
-                <div class="progress">
+<div
+id="hunger-bar"
+class="fill"
+style="width:65%;">
 
-                    <div
-                        id="happy-bar"
-                        class="fill"
-                        style="width:82%;">
+</div>
 
-                    </div>
+</div>
 
-                </div>
+</div>
 
-            </div>
+<div class="status-item">
 
-            <div class="status-item">
+<label>🧶 양털 성장</label>
 
-                <label>🍖 배고픔</label>
+<div class="progress">
 
-                <div class="progress">
+<div
+id="wool-bar"
+class="fill"
+style="width:48%;">
 
-                    <div
-                        id="hunger-bar"
-                        class="fill"
-                        style="width:61%;">
+</div>
 
-                    </div>
+</div>
 
-                </div>
+</div>
 
-            </div>
+</section>
 
-            <div class="status-item">
+<section class="sleep-card glass">
 
-                <label>🧶 양털</label>
+<h3>
 
-                <div class="progress">
+😴 오늘의 수면
 
-                    <div
-                        id="wool-bar"
-                        class="fill"
-                        style="width:40%;">
+</h3>
 
-                    </div>
+<h2>
 
-                </div>
+7시간 32분
 
-            </div>
+</h2>
 
-        </section>
+<p>
 
-        <!-- Sleep -->
+어제보다 42분 더 오래 잤어요.
 
-        <section class="sleep-card glass">
+</p>
 
-            <h3>
+</section>
 
-                😴 오늘의 수면
+<section class="sleep-card glass">
 
-            </h3>
+<h3>
 
-            <h2>
+🌙 오늘의 수면 점수
 
-                7시간 32분
+</h3>
 
-            </h2>
+<div class="score-card">
 
-            <p>
+<div class="score-number">
 
-                어제보다 42분 더 오래 잤어요.
+92점
 
-            </p>
+</div>
 
-        </section>
-                <!-- Sleep Score -->
+<div class="score-stars">
 
-        <section class="sleep-card glass">
+⭐⭐⭐⭐☆
 
-            <h3>
+</div>
 
-                🌙 오늘의 수면 점수
+<p>
 
-            </h3>
+훌륭해요!
+드리미도 기분이 좋아 보입니다.
 
-            <div class="score-card">
+</p>
 
-                <div class="score-number">
+</div>
 
-                    92점
+</section>
+<section class="sleep-card glass">
 
-                </div>
+    <h3>
 
-                <div class="score-stars">
+        🐑 드리미가 기다리고 있어요!
 
-                    ⭐⭐⭐⭐☆
+    </h3>
 
-                </div>
+    <p>
 
-                <p>
+        오늘은 기분이 좋아 보여요.<br>
+        드리미를 만나러 가볼까요?
 
-                    이번 주 평균보다 8점 높아요.
+    </p>
 
-                </p>
+    <button
+        class="action-button"
+        onclick="location.href='pages/sheep.html'">
 
-            </div>
+        드리미 만나기
 
-        </section>
+    </button>
 
-        <!-- Sheep Notice -->
+</section>
 
-        <section class="sleep-card glass">
+<section class="sleep-card glass">
 
-            <h3>
+    <h3>
 
-                🐑 음매가 기다리고 있어요!
+        🎵 오늘의 추천 ASMR
 
-            </h3>
+    </h3>
 
-            <p>
+    <h2>
 
-                행복도가 조금 떨어졌어요.<br>
+        🌧 빗소리
 
-                쓰다듬어 주면 기분이 좋아집니다.
+    </h2>
 
-            </p>
+    <p>
 
-            <button
-                class="action-button"
-                onclick="location.href='pages/sheep.html'">
+        잔잔한 빗소리와 함께 편안한 잠을 준비해 보세요.
 
-                만나러 가기
+    </p>
 
-            </button>
+    <button
+        class="action-button"
+        onclick="location.href='pages/asmr.html'">
 
-        </section>
+        ASMR 듣기
 
-        <!-- Today's ASMR -->
+    </button>
 
-        <section class="sleep-card glass">
+</section>
 
-            <h3>
+<section class="sleep-card glass">
 
-                🎵 오늘의 추천 ASMR
+    <h3>
 
-            </h3>
+        📊 이번 주 수면 통계
 
-            <h2>
+    </h3>
 
-                🌧 빗소리
+    <p>
 
-            </h2>
+        평균 수면 시간
 
-            <p>
+    </p>
 
-                잔잔한 빗소리로 편안한 잠을 준비해보세요.
+    <h2>
 
-            </p>
+        7시간 11분
 
-            <button
-                class="action-button"
-                onclick="location.href='pages/asmr.html'">
+    </h2>
 
-                ASMR 보러가기
+    <p>
 
-            </button>
+        지난주보다 28분 증가했습니다.
 
-        </section>
+    </p>
 
-        <!-- Weekly Summary -->
+</section>
 
-        <section class="sleep-card glass">
+<nav class="bottom-nav">
 
-            <h3>
+    <button
+        onclick="location.href='index.html'"
+        title="홈">
 
-                📊 이번 주 요약
+        🏠
 
-            </h3>
+    </button>
 
-            <p>
+    <button
+        onclick="location.href='pages/sheep.html'"
+        title="드리미">
 
-                평균 수면 시간
+        🐑
 
-            </p>
+    </button>
 
-            <h2>
+    <button
+        onclick="location.href='pages/sleep.html'"
+        title="수면">
 
-                7시간 11분
+        😴
 
-            </h2>
+    </button>
 
-            <p>
+    <button
+        onclick="location.href='pages/asmr.html'"
+        title="ASMR">
 
-                목표 달성률 82%
+        🎵
 
-            </p>
+    </button>
 
-        </section>
+    <button
+        onclick="location.href='pages/settings.html'"
+        title="설정">
 
-        <!-- Navigation -->
+        ⚙️
 
-        <nav class="bottom-nav">
+    </button>
 
-            <button
-                onclick="location.href='index.html'"
-                title="홈">
+</nav>
 
-                🏠
-
-            </button>
-
-            <button
-                onclick="location.href='pages/sheep.html'"
-                title="내 양">
-
-                🐑
-
-            </button>
-
-            <button
-                onclick="location.href='pages/sleep.html'"
-                title="수면기록">
-
-                😴
-
-            </button>
-
-            <button
-                onclick="location.href='pages/asmr.html'"
-                title="ASMR">
-
-                🎵
-
-            </button>
-
-            <button
-                onclick="location.href='pages/settings.html'"
-                title="설정">
-
-                ⚙️
-
-            </button>
-
-        </nav>
-
-    </main>
+</main>
 
 </div>
 
