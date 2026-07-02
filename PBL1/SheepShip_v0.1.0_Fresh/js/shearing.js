@@ -172,3 +172,311 @@ function erase(x,y){
     updateProgress();
 
 }
+function moveClipper(clientX,clientY){
+
+    if(!rect){
+
+        rect=canvas.getBoundingClientRect();
+
+    }
+
+    const x=clientX-rect.left;
+    const y=clientY-rect.top;
+
+    clipper.style.left=clientX+"px";
+    clipper.style.top=clientY+"px";
+
+    if(drawing){
+
+        erase(x,y);
+
+    }
+
+}
+
+canvas.addEventListener("pointerdown",(e)=>{
+
+    drawing=true;
+
+    moveClipper(
+
+        e.clientX,
+
+        e.clientY
+
+    );
+
+});
+
+canvas.addEventListener("pointermove",(e)=>{
+
+    moveClipper(
+
+        e.clientX,
+
+        e.clientY
+
+    );
+
+});
+
+window.addEventListener("pointerup",()=>{
+
+    drawing=false;
+
+});
+
+window.addEventListener("pointerleave",()=>{
+
+    drawing=false;
+
+});
+function startTimer(){
+
+    stopTimer();
+
+    remainTime=GAME_TIME;
+
+    timerText.textContent=remainTime;
+
+    timer=setInterval(()=>{
+
+        remainTime--;
+
+        if(remainTime<0){
+
+            remainTime=0;
+
+        }
+
+        timerText.textContent=remainTime;
+
+        if(remainTime===0){
+
+            stopTimer();
+
+            drawing=false;
+
+            finishButton.disabled=true;
+
+            alert("시간 종료!");
+
+            location.href="../index.html";
+
+        }
+
+    },1000);
+
+}
+
+function stopTimer(){
+
+    if(timer){
+
+        clearInterval(timer);
+
+        timer=null;
+
+    }
+
+}
+function finishGame(){
+
+    stopTimer();
+
+    completed=true;
+
+    drawing=false;
+
+    beforeSheep.style.opacity="0";
+
+    canvas.style.opacity="0";
+
+    setTimeout(()=>{
+
+        beforeSheep.style.display="none";
+
+        canvas.style.display="none";
+
+        afterSheep.style.display="block";
+
+        afterSheep.style.opacity="1";
+
+    },300);
+
+    localStorage.setItem(
+
+        "sheepSheared",
+
+        "true"
+
+    );
+
+    localStorage.setItem(
+
+        "sheepXP",
+
+        "0"
+
+    );
+
+    finishButton.disabled=false;
+
+    finishButton.textContent="메인으로";
+
+}
+
+finishButton.addEventListener("click",()=>{
+
+    if(!completed){
+
+        return;
+
+    }
+
+    location.href="../index.html";
+
+});
+function resetGame(){
+
+    completed=false;
+
+    drawing=false;
+
+    woolPixels=0;
+
+    beforeSheep.style.display="block";
+    beforeSheep.style.opacity="1";
+
+    afterSheep.style.display="none";
+    afterSheep.style.opacity="0";
+
+    canvas.style.display="block";
+    canvas.style.opacity="1";
+
+    finishButton.disabled=true;
+    finishButton.textContent="완료";
+
+    progressFill.style.width="0%";
+
+    percentText.textContent="0";
+
+    woolCount.textContent="0";
+
+    resizeCanvas();
+
+    createWoolLayer();
+
+    startTimer();
+
+}
+
+window.addEventListener("resize",()=>{
+
+    resizeCanvas();
+
+    createWoolLayer();
+
+    updateProgress();
+
+});
+function startGame(){
+
+    resetGame();
+
+    clipper.style.display="block";
+
+    canvas.style.pointerEvents="auto";
+
+}
+
+function moveCursor(e){
+
+    clipper.style.left=e.clientX+"px";
+
+    clipper.style.top=e.clientY+"px";
+
+}
+
+window.addEventListener("pointermove",moveCursor);
+
+window.addEventListener("blur",()=>{
+
+    drawing=false;
+
+});
+
+canvas.addEventListener("contextmenu",(e)=>{
+
+    e.preventDefault();
+
+});
+
+canvas.addEventListener("dragstart",(e)=>{
+
+    e.preventDefault();
+
+});
+
+afterSheep.style.display="none";
+
+finishButton.disabled=true;
+window.addEventListener("load",()=>{
+
+    resizeCanvas();
+
+    createWoolLayer();
+
+    updateProgress();
+
+    startGame();
+
+});
+
+window.addEventListener("beforeunload",()=>{
+
+    stopTimer();
+
+});
+
+canvas.addEventListener("pointerup",()=>{
+
+    drawing=false;
+
+});
+
+canvas.addEventListener("pointercancel",()=>{
+
+    drawing=false;
+
+});
+
+canvas.addEventListener("mouseleave",()=>{
+
+    drawing=false;
+
+});
+
+canvas.addEventListener("mouseenter",()=>{
+
+    clipper.style.display="block";
+
+});
+
+finishButton.addEventListener("mouseenter",()=>{
+
+    if(completed){
+
+        finishButton.style.transform="scale(1.04)";
+
+    }
+
+});
+
+finishButton.addEventListener("mouseleave",()=>{
+
+    finishButton.style.transform="scale(1)";
+
+});
+
+updateProgress();
