@@ -1,0 +1,249 @@
+/* ========================================
+   SheepShip
+   Global Style
+======================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:
+        "Pretendard",
+        "Noto Sans KR",
+        sans-serif;
+
+    color:var(--text);
+
+    background:
+
+        linear-gradient(
+            180deg,
+            var(--bg-top) 0%,
+            var(--bg-bottom) 100%
+        );
+
+    overflow-x:hidden;
+
+}
+
+/* ========================= */
+
+img{
+
+    display:block;
+
+    max-width:100%;
+
+}
+
+button{
+
+    font:inherit;
+
+    cursor:pointer;
+
+    border:none;
+
+    outline:none;
+
+    background:none;
+
+}
+
+a{
+
+    color:inherit;
+
+    text-decoration:none;
+
+}
+
+ul{
+
+    list-style:none;
+
+}
+
+/* ========================= */
+
+#app{
+
+    width:100%;
+
+    min-height:100vh;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+/* ========================= */
+/* Background */
+/* ========================= */
+
+.background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-10;
+
+}
+
+/* ========================= */
+
+.stars{
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+        radial-gradient(
+            white 1px,
+            transparent 1px
+        );
+
+    background-size:
+
+        45px 45px;
+
+    opacity:.45;
+
+}
+
+/* ========================= */
+
+.moon{
+
+    position:absolute;
+
+    top:55px;
+
+    right:40px;
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    background:
+
+        #FFF7C7;
+
+    box-shadow:
+
+        0 0 60px
+        rgba(255,255,220,.55);
+
+}
+
+/* ========================= */
+
+.phone{
+
+    width:min(
+        100%,
+        var(--phone-width)
+    );
+
+    margin:auto;
+
+    padding:
+
+        28px
+        18px
+        110px;
+
+}
+
+/* ========================= */
+
+h1{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+}
+
+h2{
+
+    font-size:1.5rem;
+
+}
+
+h3{
+
+    font-size:1.1rem;
+
+}
+
+p{
+
+    color:var(--text-light);
+
+    line-height:1.6;
+
+}
+
+/* ========================= */
+
+.glass{
+
+    background:
+
+        var(--glass);
+
+    backdrop-filter:
+
+        blur(
+            var(--blur)
+        );
+
+    -webkit-backdrop-filter:
+
+        blur(
+            var(--blur)
+        );
+
+    border:
+
+        1px solid
+        var(--glass-border);
+
+    border-radius:
+
+        var(--radius-large);
+
+    box-shadow:
+
+        var(--shadow-medium);
+
+}
+
+/* ========================= */
+
+.hidden{
+
+    display:none !important;
+
+}

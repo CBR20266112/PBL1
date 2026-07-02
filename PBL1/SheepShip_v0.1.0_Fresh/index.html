@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>SheepShip</title>
+
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="css/variables.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="css/layout.css">
+
+    <link rel="stylesheet" href="css/components.css">
+
+    <link rel="stylesheet" href="css/animations.css">
+
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- 배경 -->
+
+    <div class="background">
+
+        <div class="stars"></div>
+
+        <div class="moon"></div>
+
+    </div>
+
+    <!-- 앱 -->
+
+    <main class="phone">
+
+        <!-- 헤더 -->
+
+        <header class="header">
+
+            <div>
+
+                <h1>
+
+                    🌙 SheepShip
+
+                </h1>
+
+                <p>
+
+                    오늘도 편안한 하루
+
+                </p>
+
+            </div>
+
+            <div class="point-box">
+
+                🧶
+
+                <span id="point">
+
+                    0
+
+                </span>
+
+            </div>
+
+        </header>
+
+        <!-- 양 -->
+
+        <section class="hero-card">
+
+            <div class="sheep-box">
+
+                <img
+
+                    id="sheep"
+
+                    src="assets/sheep/idle.png"
+
+                    alt="Sheep"
+
+                >
+
+            </div>
+
+            <h2 id="sheep-name">
+
+                음매
+
+            </h2>
+
+            <p>
+
+                오늘도 푹 쉬어볼까요?
+
+            </p>
+
+        </section>
+
+        <!-- 상태 -->
+
+        <section class="status-card">
+
+            <div class="status-item">
+
+                <label>
+
+                    행복도
+
+                </label>
+
+                <div class="progress">
+
+                    <div
+
+                        id="happy-bar"
+
+                        class="fill"
+
+                    ></div>
+
+                </div>
+
+            </div>
+
+            <div class="status-item">
+
+                <label>
+
+                    배고픔
+
+                </label>
+
+                <div class="progress">
+
+                    <div
+
+                        id="hunger-bar"
+
+                        class="fill"
+
+                    ></div>
+
+                </div>
+
+            </div>
+
+            <div class="status-item">
+
+                <label>
+
+                    양털
+
+                </label>
+
+                <div class="progress">
+
+                    <div
+
+                        id="wool-bar"
+
+                        class="fill"
+
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 오늘의 수면 -->
+
+        <section class="sleep-card">
+
+            <h3>
+
+                😴 오늘의 수면
+
+            </h3>
+
+            <p id="sleep-time">
+
+                아직 기록이 없습니다.
+
+            </p>
+
+        </section>
+
+        <!-- 메뉴 -->
+
+        <nav class="bottom-nav">
+
+            <button>
+
+                🏠
+
+            </button>
+
+            <button>
+
+                🐑
+
+            </button>
+
+            <button>
+
+                🎵
+
+            </button>
+
+            <button>
+
+                🧶
+
+            </button>
+
+            <button>
+
+                ⚙️
+
+            </button>
+
+        </nav>
+
+    </main>
+
+</div>
+
+<script type="module" src="js/main.js"></script>
+
+</body>
+
+</html>
