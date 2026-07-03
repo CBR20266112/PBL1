@@ -59,8 +59,23 @@
         </div>
 
         <!-- 양 캐릭터 그래픽 컨테이너 -->
-        <div class="sheep-container" id="sheep-container">
+        <div class="sheep-container" id="sheep-container" style="position:relative; cursor:pointer;">
           <!-- SVG가 여기에 렌더링됨 -->
+          <!-- 부위별 터치 존 오버레이 (투명) -->
+          <div id="sheep-touch-overlay" style="position:absolute;inset:0;z-index:10;">
+            <!-- 왼쪽 귀 -->
+            <div class="sheep-zone" data-zone="ear-left"  style="position:absolute;top:4%;left:8%;width:18%;height:20%;border-radius:50%;"></div>
+            <!-- 오른쪽 귀 -->
+            <div class="sheep-zone" data-zone="ear-right" style="position:absolute;top:4%;right:8%;width:18%;height:20%;border-radius:50%;"></div>
+            <!-- 머리 (귀 사이 윗부분) -->
+            <div class="sheep-zone" data-zone="head"      style="position:absolute;top:0%;left:26%;width:48%;height:28%;border-radius:50%;"></div>
+            <!-- 얼굴 -->
+            <div class="sheep-zone" data-zone="face"      style="position:absolute;top:22%;left:22%;width:56%;height:28%;border-radius:50%;"></div>
+            <!-- 배/몸통 앞 -->
+            <div class="sheep-zone" data-zone="belly"     style="position:absolute;top:48%;left:18%;width:64%;height:30%;border-radius:50%;"></div>
+            <!-- 등 (아래쪽) -->
+            <div class="sheep-zone" data-zone="back"      style="position:absolute;top:75%;left:10%;width:80%;height:25%;border-radius:0 0 50% 50%;"></div>
+          </div>
         </div>
 
         <!-- 말풍선 -->
@@ -247,7 +262,7 @@
   <script type="module">
     import { initCommon, spawnHearts, showToast } from './js/app.js';
     import { readSheep, renderSheepTo, updateXPBar, petSheep, feedSheep, decaySheepStats, playSheepAnim } from './js/sheep.js';
-    import { initSound, resumeAudio, playSoundPet, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled } from './js/sound.js';
+    import { initSound, resumeAudio, playSoundPet, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled } from './js/sound.js';
     import { recordSleep, getStreak } from './js/sleep.js';
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
     import { saveSheep, setItem, getItem, removeItem } from './js/storage.js';
@@ -500,7 +515,121 @@
         if (e.key === 'Enter') btnNameConfirm.click();
       });
 
-      // ─── 쓰다듬기 ───
+      // ─── 양 터치 상호작용 시스템 ───
+      const ZONE_CONFIG = {
+        'ear-left':  {
+          poses:    [SHEEP_POSE.SURPRISED, SHEEP_POSE.WORRIED],
+          bubbles:  ['"어?! 귀는 좀... 간지러워! 메에!"', '"귀 만지지 마! 부끄럽잖아~"', '"킁...? 뭐야 갑자기 🐑"'],
+          emoji:    ['😳','❓','👂'],
+          sound:    playSoundEar,
+          color:    '#c084fc'
+        },
+        'ear-right': {
+          poses:    [SHEEP_POSE.SURPRISED, SHEEP_POSE.SHY],
+          bubbles:  ['"아 간지러워! 메에~!"', '"거기는... 좀 예민해요~ 😳"', '"뾱! 귀 건드리지 마!"'],
+          emoji:    ['😳','👂','❗'],
+          sound:    playSoundEar,
+          color:    '#c084fc'
+        },
+        'head': {
+          poses:    [SHEEP_POSE.HAPPY, SHEEP_POSE.SHY, SHEEP_POSE.WINK],
+          bubbles:  ['"머리 쓰다듬어 줘서 고마워~ 좋다 🥰"', '"므으~ 기분 좋아..."', '"머리 쓰다듬어 주면 기분이 좋아져! ♡"'],
+          emoji:    ['🥰','💆','✨'],
+          sound:    playSoundHead,
+          color:    '#34d399'
+        },
+        'face': {
+          poses:    [SHEEP_POSE.HAPPY, SHEEP_POSE.EXCITED, SHEEP_POSE.WINK],
+          bubbles:  ['"메에! 메에에!~ 기분 최고야! 💕"', '"얼굴 쓰다듬어 주니까 너무 좋아~!"', '"히히 간지러워~ 근데 좋아! 🐑♡"'],
+          emoji:    ['💕','😊','🌟'],
+          sound:    playSoundFace,
+          color:    '#f9a8d4'
+        },
+        'belly': {
+          poses:    [SHEEP_POSE.HAPPY, SHEEP_POSE.EXCITED, SHEEP_POSE.SMUG],
+          bubbles:  ['"배 긁어줘? 으으음~ 거기거기! 🐑"', '"뱃살 긁어주니까 너무 좋아~ 멈추지 마!"', '"으으음... 거기가 제일 좋아...💤"'],
+          emoji:    ['🐑','😍','✨'],
+          sound:    playSoundBelly,
+          color:    '#fbbf24'
+        },
+        'back': {
+          poses:    [SHEEP_POSE.SLEEPY, SHEEP_POSE.HAPPY],
+          bubbles:  ['"므르르르... 등 긁어줘? 졸려..."', '"거기 긁어주면... 잠들 것 같아 😴💤"', '"아... 거기... 좋다... 므음~"'],
+          emoji:    ['😴','💤','🌙'],
+          sound:    playSoundBack,
+          color:    '#60a5fa'
+        }
+      };
+
+      /** 파티클 이모지 스폰 */
+      function spawnZoneParticle(container, emoji, color) {
+        const p = document.createElement('div');
+        const x = 30 + Math.random() * 40;
+        const y = 10 + Math.random() * 30;
+        p.textContent = emoji;
+        p.style.cssText = `
+          position:absolute;left:${x}%;top:${y}%;z-index:20;
+          font-size:1.6rem;pointer-events:none;
+          animation:zoneParticle 0.9s ease-out forwards;
+          filter: drop-shadow(0 0 6px ${color});
+        `;
+        container.style.position = 'relative';
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 950);
+      }
+
+      /** CSS 애니메이션 주입 (최초 1회) */
+      if (!document.getElementById('zone-particle-style')) {
+        const s = document.createElement('style');
+        s.id = 'zone-particle-style';
+        s.textContent = `
+          @keyframes zoneParticle {
+            0%   { transform: translateY(0) scale(0.7); opacity:1; }
+            60%  { transform: translateY(-38px) scale(1.2); opacity:1; }
+            100% { transform: translateY(-60px) scale(0.9); opacity:0; }
+          }
+          .sheep-zone { cursor:pointer; transition: background 0.15s; }
+          .sheep-zone:active { background: rgba(255,255,255,0.08); border-radius:50%; }
+        `;
+        document.head.appendChild(s);
+      }
+
+      let _zoneCD = false;
+      document.getElementById('sheep-touch-overlay').addEventListener('click', (e) => {
+        const zone = e.target.closest('[data-zone]');
+        if (!zone || _zoneCD) return;
+        if (getItem('ss_sleeping_since')) return; // 자는 중이면 반응 안 함
+        _zoneCD = true;
+        setTimeout(() => _zoneCD = false, 900);
+
+        resumeAudio();
+        tryStartBgm();
+
+        const cfg = ZONE_CONFIG[zone.dataset.zone];
+        if (!cfg) return;
+
+        const pose   = cfg.poses[Math.floor(Math.random() * cfg.poses.length)];
+        const bubble = cfg.bubbles[Math.floor(Math.random() * cfg.bubbles.length)];
+        const emoji  = cfg.emoji[Math.floor(Math.random() * cfg.emoji.length)];
+
+        cfg.sound();
+        spawnZoneParticle(sheepContainer, emoji, cfg.color);
+
+        sheep = readSheep();
+        renderSheepTo(sheepContainer, sheep.step, pose);
+        speechBubble.textContent = bubble;
+        speechBubble.style.animation = 'none';
+        speechBubble.offsetHeight;
+        speechBubble.style.animation = 'fadeInUp 0.4s ease';
+
+        // 2.5초 뒤 idle로 복귀
+        setTimeout(() => {
+          sheep = readSheep();
+          renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.IDLE);
+        }, 2500);
+      });
+
+      // ─── 쓰다듬기 버튼 ───
       btnPet.addEventListener('click', () => {
         resumeAudio();
         tryStartBgm();

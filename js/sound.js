@@ -254,6 +254,121 @@ export function playSoundXP() {
   });
 }
 
+// ─── 부위별 상호작용 효과음 ───
+
+/** 귀 간지럽히기: 높고 떨리는 당황 소리 */
+export function playSoundEar() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx(); const now = ctx.currentTime;
+  const baseFreq = rand(480, 560);
+  const vib = ctx.createOscillator(); vib.type = 'sine'; vib.frequency.value = rand(7,11);
+  const vibGain = createGain(rand(18,28)); vib.connect(vibGain);
+  const o = ctx.createOscillator(); const g = createGain(0); o.type = 'sawtooth';
+  o.frequency.setValueAtTime(baseFreq, now);
+  o.frequency.linearRampToValueAtTime(baseFreq * 1.35, now + 0.08);
+  o.frequency.exponentialRampToValueAtTime(baseFreq * 1.1, now + 0.5);
+  vibGain.connect(o.frequency);
+  const lpf = createFilter('lowpass', 1100, 2);
+  o.connect(lpf); lpf.connect(g); g.connect(_sfxGain);
+  g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(0.25, now+0.03);
+  g.gain.setValueAtTime(0.20, now+0.35); g.gain.linearRampToValueAtTime(0, now+0.55);
+  vib.start(now); vib.stop(now+0.6); o.start(now); o.stop(now+0.6);
+}
+
+/** 머리 쓰다듬기: 낮고 부드러운 편안한 소리 */
+export function playSoundHead() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx(); const now = ctx.currentTime;
+  const baseFreq = rand(280, 340); const dur = rand(0.55, 0.75);
+  const o1 = ctx.createOscillator(); const o2 = ctx.createOscillator(); const g = createGain(0);
+  o1.type = 'sawtooth'; o2.type = 'sine';
+  o1.frequency.setValueAtTime(baseFreq, now);
+  o1.frequency.linearRampToValueAtTime(baseFreq*1.08, now+0.1);
+  o1.frequency.exponentialRampToValueAtTime(baseFreq*0.95, now+dur);
+  o2.frequency.value = baseFreq * 1.5;
+  const lpf = createFilter('lowpass', 700, 1.5);
+  o1.connect(lpf); o2.connect(lpf); lpf.connect(g); g.connect(_sfxGain);
+  g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(0.30, now+0.06);
+  g.gain.setValueAtTime(0.26, now+dur*0.6); g.gain.linearRampToValueAtTime(0, now+dur);
+  const noise = createNoise(dur); const bpf = createFilter('bandpass', 3000, 8);
+  const ng = createGain(0.05); noise.connect(bpf); bpf.connect(ng); ng.connect(_sfxGain);
+  noise.start(now); noise.stop(now+dur+0.05);
+  o1.start(now); o1.stop(now+dur+0.05); o2.start(now); o2.stop(now+dur+0.05);
+}
+
+/** 얼굴 쓰다듬기: 높고 짧은 행복 "메에!♡" 소리 */
+export function playSoundFace() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx(); const now = ctx.currentTime;
+  const baseFreq = rand(380, 450);
+  [0, 0.28].forEach((delay, idx) => {
+    const t = now + delay; const dur = idx===0 ? rand(0.22,0.30) : rand(0.16,0.22);
+    const freq = idx===0 ? baseFreq : baseFreq*1.2;
+    const o = ctx.createOscillator(); const g = createGain(0); o.type = 'triangle';
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.linearRampToValueAtTime(freq*1.15, t+0.04);
+    o.frequency.exponentialRampToValueAtTime(freq*0.85, t+dur);
+    const lpf = createFilter('lowpass', 900, 1.8);
+    o.connect(lpf); lpf.connect(g); g.connect(_sfxGain);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(idx===0?0.28:0.22, t+0.025);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    o.start(t); o.stop(t+dur+0.05);
+  });
+  const sparkT = now+0.52;
+  [880,1320,1760].forEach((freq,i) => {
+    const t = sparkT+i*0.045; const o = ctx.createOscillator(); const g = createGain(0.12);
+    o.type='sine'; o.frequency.value=freq; o.connect(g); g.connect(_sfxGain);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.12); o.start(t); o.stop(t+0.14);
+  });
+}
+
+/** 배 긁기: 통통 긁는 만족 소리 */
+export function playSoundBelly() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx(); const now = ctx.currentTime;
+  const cnt = Math.floor(rand(3,5));
+  for (let i=0; i<cnt; i++) {
+    const t=now+i*rand(0.06,0.10); const dur=rand(0.04,0.07);
+    const noise=createNoise(dur+0.02); const bpf=createFilter('bandpass',rand(1200,2400),rand(4,9));
+    const env=createGain(0); noise.connect(bpf); bpf.connect(env); env.connect(_sfxGain);
+    env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(rand(0.28,0.42),t+0.01);
+    env.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    noise.start(t); noise.stop(t+dur+0.02);
+  }
+  const humT=now+cnt*0.08+0.05; const humDur=rand(0.45,0.65); const bf=rand(230,270);
+  const o=ctx.createOscillator(); const g=createGain(0); o.type='sawtooth';
+  o.frequency.setValueAtTime(bf,humT); o.frequency.linearRampToValueAtTime(bf*1.06,humT+0.12);
+  o.frequency.exponentialRampToValueAtTime(bf*0.92,humT+humDur);
+  const lpf=createFilter('lowpass',600,2); o.connect(lpf); lpf.connect(g); g.connect(_sfxGain);
+  g.gain.setValueAtTime(0,humT); g.gain.linearRampToValueAtTime(0.26,humT+0.05);
+  g.gain.setValueAtTime(0.22,humT+humDur*0.65); g.gain.linearRampToValueAtTime(0,humT+humDur);
+  o.start(humT); o.stop(humT+humDur+0.05);
+}
+
+/** 등 긁기: 졸린 낮은 릴랙스 "므르르~" 소리 */
+export function playSoundBack() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx(); const now = ctx.currentTime;
+  const baseFreq = rand(190,240); const dur = rand(0.7,0.95);
+  const trem=ctx.createOscillator(); trem.type='sine'; trem.frequency.value=rand(4,6);
+  const tremGain=createGain(0.08); trem.connect(tremGain);
+  const o1=ctx.createOscillator(); const o2=ctx.createOscillator(); const g=createGain(0);
+  o1.type='sawtooth'; o2.type='triangle';
+  o1.frequency.setValueAtTime(baseFreq,now);
+  o1.frequency.linearRampToValueAtTime(baseFreq*1.04,now+0.2);
+  o1.frequency.exponentialRampToValueAtTime(baseFreq*0.90,now+dur);
+  o2.frequency.value=baseFreq*2; tremGain.connect(o1.frequency);
+  const lpf=createFilter('lowpass',550,1.5);
+  o1.connect(lpf); o2.connect(lpf); lpf.connect(g); g.connect(_sfxGain);
+  g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.22,now+0.08);
+  g.gain.setValueAtTime(0.20,now+dur*0.7); g.gain.linearRampToValueAtTime(0,now+dur);
+  const noise=createNoise(dur); const nlpf=createFilter('lowpass',300,1);
+  const ng=createGain(0.07); noise.connect(nlpf); nlpf.connect(ng); ng.connect(_sfxGain);
+  noise.start(now); noise.stop(now+dur+0.05);
+  trem.start(now); trem.stop(now+dur+0.05);
+  o1.start(now); o1.stop(now+dur+0.05); o2.start(now); o2.stop(now+dur+0.05);
+}
+
 let _shearNoiseTimeout = null;
 let _shearIsActive = false;
 
