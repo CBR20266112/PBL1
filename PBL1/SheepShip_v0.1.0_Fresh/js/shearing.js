@@ -1,37 +1,33 @@
-const beforeSheep=document.getElementById("beforeSheep");
-const afterSheep=document.getElementById("afterSheep");
-
-const canvas=document.getElementById("eraseCanvas");
+const canvas=document.getElementById("woolCanvas");
 const ctx=canvas.getContext("2d",{willReadFrequently:true});
 
+const bodySheep=document.getElementById("bodySheep");
 const clipper=document.getElementById("clipper");
 
 const timerText=document.getElementById("time");
-const woolCount=document.getElementById("woolCount");
-
-const progressFill=document.getElementById("progressFill");
+const woolText=document.getElementById("woolCount");
 const percentText=document.getElementById("percent");
-
+const progressFill=document.getElementById("progressFill");
 const finishButton=document.getElementById("finishButton");
 
-const BRUSH_RADIUS=36;
-const GAME_TIME=60;
-const COMPLETE_PERCENT=95;
+const woolImage=new Image();
 
-let timer=null;
-let remainTime=GAME_TIME;
+woolImage.src="../assets/sheep/shearing/wool.png";
+
+const BRUSH_SIZE=10;
+const GAME_TIME=60;
 
 let drawing=false;
-let completed=false;
+let finished=false;
 
-let woolPixels=0;
-let totalPixels=1;
+let remainTime=GAME_TIME;
+let timer=null;
 
-let rect=null;
+let totalAlpha=0;
 
 function resizeCanvas(){
 
-    rect=beforeSheep.getBoundingClientRect();
+    const rect=bodySheep.getBoundingClientRect();
 
     canvas.width=rect.width;
     canvas.height=rect.height;
@@ -41,51 +37,35 @@ function resizeCanvas(){
 
 }
 
-function createWoolLayer(){
+function drawWool(){
 
     ctx.clearRect(
+
         0,
         0,
         canvas.width,
         canvas.height
+
     );
 
-    ctx.fillStyle="#ffffff";
+    ctx.drawImage(
 
-    for(let y=0;y<canvas.height;y+=8){
+        woolImage,
 
-        for(let x=0;x<canvas.width;x+=8){
+        0,
+        0,
 
-            ctx.beginPath();
+        canvas.width,
+        canvas.height
 
-            ctx.arc(
+    );
 
-                x+Math.random()*8,
-
-                y+Math.random()*8,
-
-                4+Math.random()*3,
-
-                0,
-
-                Math.PI*2
-
-            );
-
-            ctx.fill();
-
-        }
-
-    }
-
-    totalPixels=
-        canvas.width*
-        canvas.height;
+    totalAlpha=getAlpha();
 
 }
-function updateProgress(){
+function getAlpha(){
 
-    const data=ctx.getImageData(
+    const pixels=ctx.getImageData(
 
         0,
         0,
@@ -94,48 +74,73 @@ function updateProgress(){
 
     ).data;
 
-    let transparent=0;
+    let alpha=0;
 
-    for(let i=3;i<data.length;i+=4){
+    for(
 
-        if(data[i]===0){
+        let i=3;
 
-            transparent++;
+        i<pixels.length;
 
-        }
-
-    }
-
-    woolPixels=transparent;
-
-    const percent=Math.min(
-
-        100,
-
-        (transparent/totalPixels)*100
-
-    );
-
-    progressFill.style.width=
-        percent+"%";
-
-    percentText.textContent=
-        Math.floor(percent);
-
-    woolCount.textContent=
-        Math.floor(percent);
-
-    if(
-
-        percent>=COMPLETE_PERCENT &&
-
-        !completed
+        i+=4
 
     ){
 
-        completed=true;
+        alpha+=pixels[i];
 
-        finishButton.disabled=false;
+    }
+
+    return alpha;
+
+}
+
+function updateProgress(){
+
+    const currentAlpha=getAlpha();
+
+    const removed=
+
+        totalAlpha-currentAlpha;
+
+    let percent=
+
+        removed/
+
+        totalAlpha*
+
+        100;
+
+    if(percent<0){
+
+        percent=0;
+
+    }
+
+    if(percent>100){
+
+        percent=100;
+
+    }
+
+    percent=Math.floor(percent);
+
+    woolText.textContent=percent;
+
+    percentText.textContent=percent;
+
+    progressFill.style.width=
+
+        percent+"%";
+
+    if(
+
+        percent>=95 &&
+
+        !finished
+
+    ){
+
+        finishGame();
 
     }
 
@@ -157,7 +162,7 @@ function erase(x,y){
 
         y,
 
-        BRUSH_RADIUS,
+        BRUSH_SIZE,
 
         0,
 
@@ -174,11 +179,7 @@ function erase(x,y){
 }
 function moveClipper(clientX,clientY){
 
-    if(!rect){
-
-        rect=canvas.getBoundingClientRect();
-
-    }
+    const rect=canvas.getBoundingClientRect();
 
     const x=clientX-rect.left;
     const y=clientY-rect.top;
@@ -186,11 +187,19 @@ function moveClipper(clientX,clientY){
     clipper.style.left=clientX+"px";
     clipper.style.top=clientY+"px";
 
-    if(drawing){
+    if(!drawing) return;
+    if(finished) return;
 
-        erase(x,y);
-
+    if(
+        x<0||
+        y<0||
+        x>canvas.width||
+        y>canvas.height
+    ){
+        return;
     }
+
+    erase(x,y);
 
 }
 
@@ -226,11 +235,31 @@ window.addEventListener("pointerup",()=>{
 
 });
 
-window.addEventListener("pointerleave",()=>{
+window.addEventListener("pointercancel",()=>{
 
     drawing=false;
 
 });
+
+window.addEventListener("blur",()=>{
+
+    drawing=false;
+
+});
+
+canvas.addEventListener("mouseleave",()=>{
+
+    drawing=false;
+
+});
+
+canvas.addEventListener("contextmenu",(e)=>{
+
+    e.preventDefault();
+
+});
+
+clipper.style.display="block";
 function startTimer(){
 
     stopTimer();
@@ -257,8 +286,6 @@ function startTimer(){
 
             drawing=false;
 
-            finishButton.disabled=true;
-
             alert("시간 종료!");
 
             location.href="../index.html";
@@ -271,7 +298,7 @@ function startTimer(){
 
 function stopTimer(){
 
-    if(timer){
+    if(timer!==null){
 
         clearInterval(timer);
 
@@ -280,29 +307,30 @@ function stopTimer(){
     }
 
 }
+
 function finishGame(){
 
-    stopTimer();
+    if(finished){
 
-    completed=true;
+        return;
+
+    }
+
+    finished=true;
 
     drawing=false;
 
-    beforeSheep.style.opacity="0";
+    stopTimer();
 
-    canvas.style.opacity="0";
+    progressFill.style.width="100%";
 
-    setTimeout(()=>{
+    percentText.textContent="100";
 
-        beforeSheep.style.display="none";
+    woolText.textContent="100";
 
-        canvas.style.display="none";
+    finishButton.disabled=false;
 
-        afterSheep.style.display="block";
-
-        afterSheep.style.opacity="1";
-
-    },300);
+    finishButton.textContent="메인으로";
 
     localStorage.setItem(
 
@@ -320,15 +348,14 @@ function finishGame(){
 
     );
 
-    finishButton.disabled=false;
+    canvas.style.transition="opacity .35s";
 
-    finishButton.textContent="메인으로";
+    canvas.style.opacity="0";
 
 }
-
 finishButton.addEventListener("click",()=>{
 
-    if(!completed){
+    if(!finished){
 
         return;
 
@@ -337,99 +364,66 @@ finishButton.addEventListener("click",()=>{
     location.href="../index.html";
 
 });
+
 function resetGame(){
 
-    completed=false;
+    finished=false;
 
     drawing=false;
 
-    woolPixels=0;
-
-    beforeSheep.style.display="block";
-    beforeSheep.style.opacity="1";
-
-    afterSheep.style.display="none";
-    afterSheep.style.opacity="0";
-
-    canvas.style.display="block";
-    canvas.style.opacity="1";
-
     finishButton.disabled=true;
+
     finishButton.textContent="완료";
 
     progressFill.style.width="0%";
 
     percentText.textContent="0";
 
-    woolCount.textContent="0";
+    woolText.textContent="0";
+
+    canvas.style.display="block";
+
+    canvas.style.opacity="1";
 
     resizeCanvas();
 
-    createWoolLayer();
+    drawWool();
+
+    updateProgress();
 
     startTimer();
 
 }
 
+woolImage.onload=function(){
+
+    resetGame();
+
+};
+
+if(woolImage.complete){
+
+    resetGame();
+
+}
+
+window.addEventListener("load",()=>{
+
+    if(woolImage.complete){
+
+        resetGame();
+
+    }
+
+});
+
 window.addEventListener("resize",()=>{
 
     resizeCanvas();
 
-    createWoolLayer();
+    drawWool();
 
     updateProgress();
-
-});
-function startGame(){
-
-    resetGame();
-
-    clipper.style.display="block";
-
-    canvas.style.pointerEvents="auto";
-
-}
-
-function moveCursor(e){
-
-    clipper.style.left=e.clientX+"px";
-
-    clipper.style.top=e.clientY+"px";
-
-}
-
-window.addEventListener("pointermove",moveCursor);
-
-window.addEventListener("blur",()=>{
-
-    drawing=false;
-
-});
-
-canvas.addEventListener("contextmenu",(e)=>{
-
-    e.preventDefault();
-
-});
-
-canvas.addEventListener("dragstart",(e)=>{
-
-    e.preventDefault();
-
-});
-
-afterSheep.style.display="none";
-
-finishButton.disabled=true;
-window.addEventListener("load",()=>{
-
-    resizeCanvas();
-
-    createWoolLayer();
-
-    updateProgress();
-
-    startGame();
 
 });
 
@@ -438,45 +432,3 @@ window.addEventListener("beforeunload",()=>{
     stopTimer();
 
 });
-
-canvas.addEventListener("pointerup",()=>{
-
-    drawing=false;
-
-});
-
-canvas.addEventListener("pointercancel",()=>{
-
-    drawing=false;
-
-});
-
-canvas.addEventListener("mouseleave",()=>{
-
-    drawing=false;
-
-});
-
-canvas.addEventListener("mouseenter",()=>{
-
-    clipper.style.display="block";
-
-});
-
-finishButton.addEventListener("mouseenter",()=>{
-
-    if(completed){
-
-        finishButton.style.transform="scale(1.04)";
-
-    }
-
-});
-
-finishButton.addEventListener("mouseleave",()=>{
-
-    finishButton.style.transform="scale(1)";
-
-});
-
-updateProgress();

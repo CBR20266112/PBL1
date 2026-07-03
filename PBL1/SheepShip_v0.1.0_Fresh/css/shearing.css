@@ -1,9 +1,9 @@
 body{
 
     margin:0;
+    overflow:hidden;
     background:#12152a;
     font-family:Pretendard,sans-serif;
-    overflow:hidden;
 
 }
 
@@ -21,13 +21,14 @@ body{
 
     height:80px;
 
+    padding:20px 30px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
 
-    padding:20px 30px;
+    color:#fff;
 
-    color:white;
     font-size:28px;
     font-weight:bold;
 
@@ -47,42 +48,37 @@ body{
 
 }
 
-.sheep{
+/* 털 민 양 (맨 아래) */
+
+#afterSheep{
 
     position:absolute;
 
     width:min(70vw,700px);
 
-    user-select:none;
-    pointer-events:none;
-
-}
-
-#beforeSheep{
-
-    z-index:2;
-
-}
-
-#afterSheep{
-
     z-index:1;
 
+    pointer-events:none;
+    user-select:none;
+
 }
 
-#eraseCanvas{
+/* 털 있는 양을 그리는 캔버스 */
+
+#gameCanvas{
 
     position:absolute;
 
     width:min(70vw,700px);
     height:auto;
 
-    z-index:3;
+    z-index:2;
 
-    touch-action:none;
     cursor:none;
 
 }
+
+/* 바리깡 */
 
 #clipper{
 
@@ -90,25 +86,25 @@ body{
 
     width:90px;
 
-    z-index:10;
+    z-index:20;
 
     pointer-events:none;
 
     transform:translate(-50%,-50%);
 
-    transition:.02s;
-
 }
+
+/* 하단 */
 
 .bottomBar{
 
     height:120px;
 
+    padding:20px 30px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-
-    padding:20px 30px;
 
     background:rgba(255,255,255,.08);
 
@@ -147,9 +143,9 @@ body{
 
 .progressBox p{
 
-    color:white;
-
     margin-top:10px;
+
+    color:#fff;
 
     font-size:20px;
 
@@ -166,10 +162,9 @@ body{
 
     background:#7d5fff;
 
-    color:white;
+    color:#fff;
 
     font-size:22px;
-
     font-weight:bold;
 
     cursor:pointer;
@@ -194,8 +189,8 @@ body{
 
 @media(max-width:768px){
 
-    .sheep,
-    #eraseCanvas{
+    #afterSheep,
+    #gameCanvas{
 
         width:90vw;
 

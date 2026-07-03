@@ -4,16 +4,15 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>양털깎기 | Sleepy Sheep</title>
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>양털깎기</title>
 
 <link rel="stylesheet" href="../css/variables.css">
 <link rel="stylesheet" href="../css/style.css">
-<link rel="stylesheet" href="../css/layout.css">
-<link rel="stylesheet" href="../css/components.css">
-<link rel="stylesheet" href="../css/animations.css">
-<link rel="stylesheet" href="../css/responsive.css">
 <link rel="stylesheet" href="../css/shearing.css">
 
 </head>
@@ -25,11 +24,17 @@
 <div class="topBar">
 
 <div class="timer">
-⏰ <span id="time">60</span>
+
+⏰
+<span id="time">60</span>
+
 </div>
 
 <div class="score">
-🧶 <span id="woolCount">0</span> g
+
+🧶
+<span id="woolCount">0</span>%
+
 </div>
 
 </div>
@@ -37,23 +42,32 @@
 <div class="gameArea">
 
 <img
-id="beforeSheep"
-class="sheep"
-src="../assets/sheep/shearing/full.png"
-draggable="false">
 
-<img
 id="afterSheep"
-class="sheep"
-src="../assets/sheep/shearing/shaved.png"
-draggable="false">
 
-<canvas id="eraseCanvas"></canvas>
+class="sheep"
+
+src="../assets/sheep/shearing/shaved.png"
+
+draggable="false"
+
+>
+
+<canvas
+
+id="gameCanvas"
+
+></canvas>
 
 <img
+
 id="clipper"
+
 src="../assets/icons/clipper.png"
-draggable="false">
+
+draggable="false"
+
+>
 
 </div>
 
@@ -74,9 +88,13 @@ class="progressFill">
 <p>
 
 진행률
+
 <span id="percent">
+
 0
+
 </span>
+
 %
 
 </p>
@@ -84,7 +102,9 @@ class="progressFill">
 </div>
 
 <button
+
 id="finishButton"
+
 disabled>
 
 완료
