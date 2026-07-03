@@ -14,18 +14,16 @@ let sheepXP =
 Number(localStorage.getItem("sheepXP")) || 0;
 
 const growthImages = [
-
-"assets/sheep/growth/growth_step_01_raw.png",
-"assets/sheep/growth/growth_step_02_raw.png",
-"assets/sheep/growth/growth_step_03_raw.png",
-"assets/sheep/growth/growth_step_04_raw.png",
-"assets/sheep/growth/growth_step_05_raw.png",
-"assets/sheep/growth/growth_step_06_raw.png",
-"assets/sheep/growth/growth_step_07_raw.png",
-"assets/sheep/growth/growth_step_08_raw.png",
-"assets/sheep/growth/growth_step_09_raw.png",
-"assets/sheep/growth/growth_step_10_raw.png"
-
+"assets/sheep/growth/cleaned_final/growth_step_01.png",
+"assets/sheep/growth/cleaned_final/growth_step_02.png",
+"assets/sheep/growth/cleaned_final/growth_step_03.png",
+"assets/sheep/growth/cleaned_final/growth_step_04.png",
+"assets/sheep/growth/cleaned_final/growth_step_05.png",
+"assets/sheep/growth/cleaned_final/growth_step_06.png",
+"assets/sheep/growth/cleaned_final/growth_step_07.png",
+"assets/sheep/growth/cleaned_final/growth_step_08.png",
+"assets/sheep/growth/cleaned_final/growth_step_09.png",
+"assets/sheep/growth/cleaned_final/growth_step_10.png"
 ];
 
 function save(){

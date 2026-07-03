@@ -63,6 +63,27 @@ body{
 
 }
 
+/* center-align sheep and canvas exactly */
+#afterSheep, #gameCanvas, #fullSheep{
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+}
+
+/* 게임 시작 화면용 전체 양 이미지 (풀 버전) */
+#fullSheep{
+
+    position:absolute;
+
+    width:min(70vw,700px);
+
+    z-index:10;
+
+    pointer-events:none;
+    user-select:none;
+
+}
+
 /* 털 있는 양을 그리는 캔버스 */
 
 #gameCanvas{

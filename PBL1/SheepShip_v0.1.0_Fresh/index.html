@@ -63,15 +63,7 @@ STEP 1
 
 <div id="sheepArea">
 
-<img
-
-id="growthImage"
-
-src="assets/sheep/growth/growth_step_01_raw.png"
-
-alt="Sleepy Sheep"
-
->
+<img id="growthImage" src="assets/sheep/growth/cleaned_final/growth_step_01.png" alt="Sleepy Sheep">
 
 </div>
 
@@ -92,6 +84,12 @@ alt="Sleepy Sheep"
 <button id="sleepBtn">
 
 😴 잠자기
+
+</button>
+
+<button id="sleepMateBtn">
+
+🛏 수면 메이트
 
 </button>
 
@@ -138,6 +136,38 @@ document
 
 alert("냠냠! 🥕");
 
+});
+
+// Sleep Mate popup + image viewer
+document.getElementById('sleepMateBtn').addEventListener('click', ()=>{
+	// create popup if not exists
+	if (!document.getElementById('sleepMatePopup')){
+		const pop = document.createElement('div');
+		pop.id = 'sleepMatePopup';
+		pop.innerHTML = `
+			<div class="popupInner">
+				<h3>나졸려 님의 침실</h3>
+				<p>팝업을 눌러 방으로 이동하세요.</p>
+				<img id="sleepThumb" src="assets/ui/sleep_room.png" alt="sleep room" />
+				<div class="popupBtns">
+					<button id="openRoom">입장</button>
+					<button id="closePopup">닫기</button>
+				</div>
+			</div>
+		`;
+		document.body.appendChild(pop);
+		document.getElementById('closePopup').addEventListener('click', ()=> pop.remove());
+		document.getElementById('openRoom').addEventListener('click', ()=>{
+			// open full-screen viewer
+			const viewer = document.createElement('div');
+			viewer.id = 'roomViewer';
+					viewer.innerHTML = `<div class="viewerBg"></div><img src="assets/ui/sleep_room.png" class="viewerImg" alt="room" /><button id="closeViewer">닫기</button>`;
+			document.body.appendChild(viewer);
+			document.getElementById('closeViewer').addEventListener('click', ()=> viewer.remove());
+		});
+		// clicking thumbnail also opens viewer
+		document.getElementById('sleepThumb').addEventListener('click', ()=> document.getElementById('openRoom').click());
+	}
 });
 
 </script>
