@@ -85,38 +85,13 @@ export function buildFriendRoomHTML(friend) {
 </div>`;
   }
 
-  const roomBg = getRoomBgStyle(friend.room?.background);
-  const itemsHTML = buildRoomItems(friend.room);
-
+  // 리다졸 외 친구는 방 비공개 메시지 표시
   return `
-<div class="friend-room-container glass" style="${roomBg}; border-radius: var(--radius-xl); padding: 0; overflow: hidden; position: relative; min-height: 260px;">
-  <!-- 방 제목 -->
-  <div style="padding: 16px 20px 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);">
-    <div style="font-size: 1rem; font-weight: 800; color: #fff;">${title}</div>
-    <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 2px;">
-      Lv.${friend.level} · 🔥 ${friend.streak}일 연속
-    </div>
-  </div>
-
-  <!-- 방 내부 -->
-  <div style="position:relative; padding: 16px; min-height: 200px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 12px;">
-
-    <!-- 방 꾸미기 아이템 -->
-    ${itemsHTML}
-
-    <!-- 자고 있는 양 -->
-    <div style="display:flex; flex-direction:column; align-items:center; gap:8px; z-index:2;">
-      ${buildSleepingSheepSVG(friend.step)}
-      ${friend.isSleeping
-        ? `<div class="speech-bubble" style="font-size:0.8rem; max-width:160px;">
-            💤 달콤한 꿈 중...
-           </div>`
-        : `<div class="speech-bubble" style="font-size:0.8rem; max-width:160px;">
-            메에~ 안녕!
-           </div>`
-      }
-    </div>
-  </div>
+<div class="glass" style="border-radius: var(--radius-xl); padding: 40px 20px; text-align: center; background: linear-gradient(180deg, #1a1040 0%, #2D1B4E 100%)">
+  <div style="font-size: 3rem; margin-bottom: 16px;">🔒</div>
+  <div style="font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 8px;">${title}</div>
+  <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6;">이 수면 메이트는 방을<br>공개하지 않았습니다.</div>
+  <div style="margin-top: 20px; font-size: 0.75rem; color: rgba(255,255,255,0.3);">Lv.${friend.level} · 🔥 ${friend.streak}일 연속</div>
 </div>`;
 }
 
