@@ -8,6 +8,7 @@ import { calcShearReward } from './constants.js';
 import { getSheep, saveSheep } from './storage.js';
 import { drawBodySheep, drawWoolLayer, preloadMinigameAssets } from './sheep-renderer.js';
 import { showToast } from './app.js';
+import { startShearSound, stopShearSound, resumeAudio } from './sound.js';
 
 // ─── 내부 상태 ───
 let _state = {
@@ -104,6 +105,7 @@ export function finishMinigame() {
   _state.isRunning = false;
   clearInterval(_state.timerInterval);
   cancelAnimationFrame(_state.animFrame);
+  stopShearSound();
   _removeEvents(_state.canvasWool);
 
   const percent = _getRemovalPercent();
@@ -167,7 +169,18 @@ function _onPointerMove(e) {
   e.preventDefault();
   const pos = _getPos(e);
   _drawCursor(pos.x, pos.y);
-  if (!_state.isDrawing || !_state.isRunning) return;
+  if (!_state.isDrawing || !_state.isRunning) {
+    stopShearSound();
+    return;
+  }
+  // 털이 있는 영역인지 픽셀 확인
+  const pixel = _state.ctxWool.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+  const hasWool = pixel[3] > 10; // 알파 채널 체크
+  if (hasWool) {
+    startShearSound();
+  } else {
+    stopShearSound();
+  }
   _erase(pos.x, pos.y);
   if (_state.onUpdate) {
     _state.onUpdate(_getRemovalPercent(), _state.timerSec);
@@ -177,6 +190,7 @@ function _onPointerMove(e) {
 function _onPointerDown(e) {
   e.preventDefault();
   if (!_state.isRunning) return;
+  resumeAudio();
   _state.isDrawing = true;
   const pos = _getPos(e);
   _erase(pos.x, pos.y);
@@ -185,10 +199,12 @@ function _onPointerDown(e) {
 function _onPointerUp(e) {
   e.preventDefault();
   _state.isDrawing = false;
+  stopShearSound();
 }
 
 function _onPointerLeave() {
   _state.isDrawing = false;
+  stopShearSound();
   _clearCursor();
 }
 

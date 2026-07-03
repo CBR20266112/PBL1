@@ -146,3 +146,9 @@ export function initStorage() {
   if (!getItem(STORAGE_KEYS.ITEMS)) saveItems({ ...DEFAULT_ITEMS, owned: [], equipped: { ...DEFAULT_ITEMS.equipped } });
   if (!getItem(STORAGE_KEYS.SETTINGS)) saveSettings({ ...DEFAULT_SETTINGS });
 }
+
+/** 양 데이터만 초기화 */
+export function resetSheep() {
+  saveSheep({ ...DEFAULT_SHEEP });
+}
+

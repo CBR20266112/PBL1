@@ -126,6 +126,10 @@
           <span class="menu-icon">🏪</span>
           <span class="menu-label">양털 공방</span>
         </a>
+        <a href="pages/asmr.html" class="menu-item">
+          <span class="menu-icon">🎵</span>
+          <span class="menu-label">ASMR</span>
+        </a>
       </nav>
 
       <!-- 잠자기 메인 액션 버튼 -->
@@ -242,12 +246,14 @@
   <script type="module">
     import { initCommon, spawnHearts, showToast } from './js/app.js';
     import { readSheep, renderSheepTo, updateXPBar, petSheep, feedSheep, decaySheepStats, playSheepAnim } from './js/sheep.js';
+    import { initSound, resumeAudio, playSoundPet, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP } from './js/sound.js';
     import { recordSleep, getStreak } from './js/sleep.js';
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
     import { saveSheep, setItem, getItem, removeItem } from './js/storage.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
+      initSound();
 
       const sheepContainer   = document.getElementById('sheep-container');
       const levelBadge       = document.getElementById('level-badge');
@@ -463,8 +469,10 @@
 
       // ─── 쓰다듬기 ───
       btnPet.addEventListener('click', () => {
+        resumeAudio();
         const res = petSheep();
         if (res.success) {
+          playSoundPet();
           showToast(res.msg, 'success');
           spawnHearts(sheepContainer);
           playSheepAnim(sheepContainer, 'sheep-pet-anim', 600);
@@ -475,8 +483,10 @@
 
       // ─── 먹이주기 ───
       btnFeed.addEventListener('click', () => {
+        resumeAudio();
         const res = feedSheep();
         if (res.success) {
+          playSoundFeed();
           showToast(res.msg, 'success');
           playSheepAnim(sheepContainer, 'sheep-eat-anim', 800);
           speechBubble.textContent = '"오물오물... 냠냠 당근 맛있다!"';
@@ -504,6 +514,8 @@
       });
 
       document.getElementById('btn-start-sleep-confirm').addEventListener('click', () => {
+        resumeAudio();
+        playSoundSleep();
         const now = new Date();
         const bedTimeString = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
         setItem('ss_sleeping_since', { time: now.toISOString(), bedtime: bedTimeString });
@@ -514,6 +526,7 @@
       });
 
       document.getElementById('btn-wake-confirm').addEventListener('click', () => {
+        resumeAudio();
         const session = getItem('ss_sleeping_since');
         if (!session) return;
         const now = new Date();
@@ -525,6 +538,7 @@
         removeItem('ss_sleeping_since');
         wakeModal.classList.remove('active');
         sleepOverlay.classList.remove('active');
+        if (res.xpGained > 0) playSoundXP();
         showToast(`기상 기록 완료! +${res.xpGained} XP 획득! 🎉`, 'success');
         renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.HAPPY);
         speechBubble.textContent = '"아침이야! 잘 자고 일어났어 메에~ ✨"';

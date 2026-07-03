@@ -167,9 +167,11 @@
     import { readSheep, renderSheepTo, updateStatBar, petSheep, feedSheep, playSheepAnim } from '../js/sheep.js';
     import { saveSheep } from '../js/storage.js';
     import { SHEEP_POSE, DAILY_QUOTES } from '../js/constants.js';
+    import { initSound, resumeAudio, playSoundPet, playSoundFeed } from '../js/sound.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
+      initSound();
 
       const sheepContainer = document.getElementById('sheep-container');
       const levelBadge = document.getElementById('level-badge');
@@ -223,8 +225,10 @@
 
       // 쓰다듬기
       btnPet.addEventListener('click', () => {
+        resumeAudio();
         const res = petSheep();
         if (res.success) {
+          playSoundPet();
           showToast(res.msg, 'success');
           spawnHearts(sheepContainer);
           playSheepAnim(sheepContainer, 'sheep-pet-anim', 600);
@@ -237,8 +241,10 @@
 
       // 먹이주기
       btnFeed.addEventListener('click', () => {
+        resumeAudio();
         const res = feedSheep();
         if (res.success) {
+          playSoundFeed();
           showToast(res.msg, 'success');
           playSheepAnim(sheepContainer, 'sheep-eat-anim', 800);
           speechBubble.textContent = `"맛있는 밥 고마워, 양! 🥕"`;
