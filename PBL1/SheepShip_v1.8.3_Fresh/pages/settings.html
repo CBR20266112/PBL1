@@ -144,6 +144,10 @@
         </div>
 
         <div class="flex flex-col gap-2">
+          <button class="btn btn-secondary w-full" id="btn-replay-opening" style="background: rgba(167, 139, 250, 0.15); border-color: rgba(167, 139, 250, 0.3); color: var(--color-purple-soft); margin-bottom: 4px;">
+            🎬 오프닝 스토리 다시보기
+          </button>
+          
           <button class="btn btn-secondary w-full" id="btn-reset-data" style="background: rgba(252, 165, 165, 0.1); border-color: rgba(252, 165, 165, 0.3); color: var(--color-danger);">
             🚨 모든 데이터 초기화
           </button>
@@ -191,6 +195,7 @@
   <script type="module">
     import { initCommon, showToast } from '../js/app.js';
     import { getSheep, getSettings, saveSettings, clearAll, resetSheep } from '../js/storage.js';
+    import { startOpening } from '../js/opening.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
@@ -206,6 +211,7 @@
       const switchVibrate = document.getElementById('switch-vibrate');
       const btnResetData = document.getElementById('btn-reset-data');
       const btnResetSheep = document.getElementById('btn-reset-sheep');
+      const btnReplayOpening = document.getElementById('btn-replay-opening');
 
       let settings = getSettings();
 
@@ -257,6 +263,11 @@
 
       switchVibrate.addEventListener('change', () => {
         updateSetting('vibration', switchVibrate.checked);
+      });
+
+      // 오프닝 스토리 다시보기
+      btnReplayOpening.addEventListener('click', () => {
+        startOpening(document.querySelector('.phone'), true);
       });
 
       // 모든 데이터 초기화

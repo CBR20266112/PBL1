@@ -250,10 +250,14 @@
     import { recordSleep, getStreak } from './js/sleep.js';
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
     import { saveSheep, setItem, getItem, removeItem } from './js/storage.js';
+    import { checkAndShowOpening } from './js/opening.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
       initSound();
+
+      // 첫 로드 시 오프닝 스토리 노출 여부 체크
+      checkAndShowOpening(document.querySelector('.phone'));
 
       const sheepContainer   = document.getElementById('sheep-container');
       const levelBadge       = document.getElementById('level-badge');
