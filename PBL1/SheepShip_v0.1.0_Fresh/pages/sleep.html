@@ -1,201 +1,307 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>수면 기록 | SheepShip</title>
-
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/animations.css">
-    <link rel="stylesheet" href="../css/responsive.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>?섎㈃ 湲곕줉 | SleepySheep</title>
+  
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 </head>
-
 <body>
 
-<div class="background">
-
-    <div class="stars"></div>
-
+  <!-- 諛ㅽ븯??諛곌꼍 -->
+  <div class="background">
+    <canvas id="star-canvas"></canvas>
     <div class="moon"></div>
-
-</div>
-
-<main class="phone">
-
-<header class="header">
-
-<div>
-
-<h1>😴 수면 기록</h1>
-
-<p>오늘도 편안한 밤을 준비해요.</p>
-
-</div>
-
-</header>
-
-<section class="hero-card glass">
-
-<h2>
-
-오늘의 수면
-
-</h2>
-
-<h1>
-
-7시간 32분
-
-</h1>
-
-<p>
-
-좋은 수면을 했어요 🌙
-
-</p>
-
-</section>
-
-<section class="status-card glass">
-
-<div class="status-item">
-
-<label>
-
-🌙 취침
-
-</label>
-
-<h3>
-
-23 : 18
-
-</h3>
-
-</div>
-
-<div class="status-item">
-
-<label>
-
-☀ 기상
-
-</label>
-
-<h3>
-
-06 : 50
-
-</h3>
-
-</div>
-
-<div class="status-item">
-
-<label>
-
-😊 오늘의 기분
-
-</label>
-
-<h3>
-
-매우 좋음
-
-</h3>
-
-</div>
-
-</section>
-
-<section class="sleep-card glass">
-
-<h3>
-
-📝 메모
-
-</h3>
-
-<p>
-
-오늘은 일찍 잠들어서 개운하게 일어났다.
-
-</p>
-
-</section>
-
-<section class="sleep-card glass">
-
-<h3>
-
-📊 이번 주 통계
-
-</h3>
-
-<p>
-
-평균 수면
-
-7시간 11분
-
-</p>
-
-<p>
-
-취침 성공
-
-5 / 7일
-
-</p>
-
-</section>
-
-<nav class="bottom-nav">
-
-<button onclick="location.href='../index.html'">
-
-🏠
-
-</button>
-
-<button onclick="location.href='sheep.html'">
-
-🐑
-
-</button>
-
-<button onclick="location.href='asmr.html'">
-
-🎵
-
-</button>
-
-<button>
-
-🧶
-
-</button>
-
-<button onclick="location.href='settings.html'">
-
-⚙️
-
-</button>
-
-</nav>
-
-</main>
-
+  </div>
+
+  <main class="phone">
+    <!-- ?ㅻ뜑 -->
+    <header class="header">
+      <div class="header-left">
+        <button class="btn-back" onclick="location.href='../index.html'" title="?ㅻ줈媛湲?>??/button>
+        <div>
+          <h1>?샂 ?섎㈃ 湲곕줉</h1>
+          <p class="subtitle">泥닿퀎?곸쑝濡?湲곕줉?섎뒗 ?섎㈃ ?듦?</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="chip-box" id="wool-display">
+          <span class="icon">?㎍</span>
+          <span id="wool-count">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ?ㅽ겕濡??곸뿭 -->
+    <div class="content">
+
+      <!-- ?ㅻ뒛 ?섎㈃ 湲곕줉 ?붿빟 移대뱶 -->
+      <section class="hero-card glass" id="today-record-card">
+        <h2>?ㅻ뒛???섎㈃</h2>
+        <h1 style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;" id="today-sleep-duration">湲곕줉 ?놁쓬</h1>
+        <p id="today-sleep-comment">?섎㈃???쒖옉?섍굅???꾨옒?먯꽌 ?섎룞?쇰줈 ?낅젰?대낫?몄슂! ?뮘</p>
+      </section>
+
+      <!-- ?ㅻ뒛 ?섎㈃ ?쒓컙 ?곸꽭 ?뺣낫 -->
+      <section class="glass card" id="today-detail-card" style="padding: var(--space-4);">
+        <div class="status-grid">
+          <div class="flex justify-between items-center" style="border-bottom: 1px solid var(--glass-border); padding-bottom: var(--space-2);">
+            <span class="text-muted font-bold text-small">?뙔 痍⑥묠 ?쒓컙</span>
+            <span class="font-bold" id="today-bedtime">-</span>
+          </div>
+          <div class="flex justify-between items-center" style="border-bottom: 1px solid var(--glass-border); padding-bottom: var(--space-2); padding-top: var(--space-2);">
+            <span class="text-muted font-bold text-small">?截?湲곗긽 ?쒓컙</span>
+            <span class="font-bold" id="today-waketime">-</span>
+          </div>
+          <div class="flex justify-between items-center" style="border-bottom: 1px solid var(--glass-border); padding-bottom: var(--space-2); padding-top: var(--space-2);">
+            <span class="text-muted font-bold text-small">?삃 ?쇱뼱?ъ쓣 ??湲곕텇</span>
+            <span class="font-bold" id="today-mood">-</span>
+          </div>
+          <div class="flex justify-between items-center" style="padding-top: var(--space-2);">
+            <span class="text-muted font-bold text-small">?뱷 ?ㅻ뒛??硫붾え</span>
+            <span class="text-right" id="today-note" style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">-</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ?섎룞 ?섎㈃ 湲곕줉 異붽? 移대뱶 -->
+      <section class="glass card">
+        <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-3); color: var(--text-secondary);">?륅툘 吏곸젒 ?섎㈃ 湲곕줉?섍린</h3>
+        
+        <div class="time-input-group" style="margin-bottom: var(--space-3);">
+          <div class="time-input-card">
+            <span class="time-input-label">?뙔 痍⑥묠 ?쒓컙</span>
+            <input type="time" id="input-bedtime" class="time-input" value="23:00">
+          </div>
+          <div class="time-input-card">
+            <span class="time-input-label">?截?湲곗긽 ?쒓컙</span>
+            <input type="time" id="input-waketime" class="time-input" value="07:00">
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-4);">
+          <span class="time-input-label" style="display:block; margin-bottom: 8px;">?삃 ?ㅻ뒛 湲곕텇??</span>
+          <div class="mood-row">
+            <button class="mood-btn" data-mood="1">?삟</button>
+            <button class="mood-btn" data-mood="2">?Ⅱ</button>
+            <button class="mood-btn selected" data-mood="3">?삉</button>
+            <button class="mood-btn" data-mood="4">?삃</button>
+            <button class="mood-btn" data-mood="5">?Ⅰ</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-4);">
+          <span class="time-input-label" style="display:block; margin-bottom: 8px;">?뱷 硫붾え</span>
+          <input type="text" id="input-note" class="glass" style="width:100%; border-radius: var(--radius-sm); border:1px solid var(--glass-border); padding:var(--space-3); color:#fff; font-size:var(--font-size-sm);" placeholder="?ㅻ뒛 ?좎옄由ъ뿉 ???媛꾨떒???곸뼱蹂댁꽭??>
+        </div>
+
+        <button class="btn btn-primary w-full" id="btn-save-manual-sleep">?섎㈃ 湲곕줉 ???/button>
+      </section>
+
+      <!-- ?섎㈃ 洹몃옒??諛??듦퀎 -->
+      <section class="glass card">
+        <div class="section-header">
+          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">?뱤 ?섎㈃ 遺꾩꽍 洹몃옒??/h3>
+        </div>
+        
+        <!-- ??諛?-->
+        <div class="tab-bar" style="margin-bottom: var(--space-4);">
+          <div class="tab-item active" id="tab-weekly">二쇨컙</div>
+          <div class="tab-item" id="tab-monthly">?붽컙</div>
+        </div>
+
+        <!-- 二쇨컙 / ?붽컙 ?듦퀎 ?붿빟 ?띿뒪??-->
+        <div class="stat-row" style="margin-bottom: var(--space-4);">
+          <div class="stat-chip">
+            <span class="chip-icon">?븩</span>
+            <span class="chip-value" id="stat-weekly-avg">0?쒓컙 0遺?/span>
+            <span class="chip-label">?됯퇏 ?섎㈃ ?쒓컙</span>
+          </div>
+          <div class="stat-chip">
+            <span class="chip-icon">?렞</span>
+            <span class="chip-value" id="stat-goal-attain">0 / 7??/span>
+            <span class="chip-label">紐⑺몴 ?ъ꽦 ?잛닔</span>
+          </div>
+        </div>
+
+        <!-- 洹몃옒??罹붾쾭??-->
+        <div class="chart-area">
+          <canvas id="sleep-chart"></canvas>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ?섎떒 ?ㅻ퉬寃뚯씠??-->
+    <nav class="bottom-nav">
+      <div class="nav-item" data-href="../index.html">
+        <span class="nav-icon">?룧</span>
+        <span class="nav-label">??/span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item active" data-href="sleep.html">
+        <span class="nav-icon">?뱤</span>
+        <span class="nav-label">?섎㈃</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="sheep.html">
+        <span class="nav-icon">?릲</span>
+        <span class="nav-label">????/span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="workshop.html">
+        <span class="nav-icon">?㎍</span>
+        <span class="nav-label">怨듬갑</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="friends.html">
+        <span class="nav-icon">?뫁</span>
+        <span class="nav-label">移쒓뎄</span>
+        <span class="nav-dot"></span>
+      </div>
+    </nav>
+  </main>
+
+  <script type="module">
+    import { initCommon, showToast } from '../js/app.js';
+    import { getSheep } from '../js/storage.js';
+    import { 
+      recordSleep, 
+      formatDuration, 
+      getTodaySleep, 
+      getWeeklyAvg, 
+      getMonthlySuccess, 
+      getRecentRecords,
+      drawSleepChart 
+    } from '../js/sleep.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCommon();
+
+      const woolCount = document.getElementById('wool-count');
+      const todaySleepDuration = document.getElementById('today-sleep-duration');
+      const todaySleepComment = document.getElementById('today-sleep-comment');
+      const todayBedtime = document.getElementById('today-bedtime');
+      const todayWaketime = document.getElementById('today-waketime');
+      const todayMood = document.getElementById('today-mood');
+      const todayNote = document.getElementById('today-note');
+
+      const inputBedtime = document.getElementById('input-bedtime');
+      const inputWaketime = document.getElementById('input-waketime');
+      const inputNote = document.getElementById('input-note');
+      const btnSaveManualSleep = document.getElementById('btn-save-manual-sleep');
+
+      const tabWeekly = document.getElementById('tab-weekly');
+      const tabMonthly = document.getElementById('tab-monthly');
+      const statWeeklyAvg = document.getElementById('stat-weekly-avg');
+      const statGoalAttain = document.getElementById('stat-goal-attain');
+      const sleepChartCanvas = document.getElementById('sleep-chart');
+
+      let currentTab = 'weekly'; // 'weekly' or 'monthly'
+      let activeMood = 3;
+
+      function refreshPage() {
+        const sheep = getSheep();
+        woolCount.textContent = sheep.wool;
+
+        // ?ㅻ뒛 ?섎㈃ ?뺣낫 ?뚮뜑留?        const today = getTodaySleep();
+        if (today) {
+          todaySleepDuration.textContent = formatDuration(today.duration);
+          todaySleepComment.textContent = today.duration >= 480 
+            ? '?ㅻ뒛 紐⑺몴 ?섎㈃?쒓컙???ъ꽦?덉뼱?? ?뙚 ?묓꽭??臾대윮臾대윮 ?먮엫嫄곗삁??' 
+            : '議곌툑 紐⑥옄? ?섎㈃?댁뿀?ㅼ슂. ?ㅻ뒛 諛ㅼ? ??源딆? ?좎쓣 二쇰Т?몄슂! ?뙔';
+
+          todayBedtime.textContent = today.bedtime;
+          todayWaketime.textContent = today.wakeTime;
+          
+          const moodEmojis = ['?삟 議곌툑 ?섎벀', '?Ⅱ 議몃┝', '?삉 蹂댄넻', '?삃 醫뗭쓬', '?Ⅰ ?꾩＜ ?곸풄??];
+          todayMood.textContent = moodEmojis[today.mood - 1] || '?삉 蹂댄넻';
+          todayNote.textContent = today.note || '硫붾え ?놁쓬';
+        } else {
+          todaySleepDuration.textContent = '湲곕줉 ?놁쓬';
+          todaySleepComment.textContent = '?꾩쭅 ?섎㈃ 湲곕줉???깅줉?섏? ?딆븯?댁슂.';
+          todayBedtime.textContent = '-';
+          todayWaketime.textContent = '-';
+          todayMood.textContent = '-';
+          todayNote.textContent = '-';
+        }
+
+        // ?듦퀎 & 洹몃옒??媛깆떊
+        refreshStatsAndChart();
+      }
+
+      function refreshStatsAndChart() {
+        const avgMin = getWeeklyAvg();
+        statWeeklyAvg.textContent = formatDuration(avgMin);
+
+        if (currentTab === 'weekly') {
+          const weeklyRecords = getRecentRecords(7);
+          const successCount = weeklyRecords.filter(r => r.duration >= 480).length;
+          statGoalAttain.textContent = `${successCount} / 7??;
+          drawSleepChart(sleepChartCanvas, 'weekly');
+        } else {
+          const successData = getMonthlySuccess();
+          statGoalAttain.textContent = `${successData.success} / ${successData.total}??;
+          drawSleepChart(sleepChartCanvas, 'monthly');
+        }
+      }
+
+      // 湲곕텇 ?⑥텛 ?대┃
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          activeMood = parseInt(btn.dataset.mood);
+        });
+      });
+
+      // ?섎룞 湲곕줉 ???      btnSaveManualSleep.addEventListener('click', () => {
+        const bedtime = inputBedtime.value;
+        const waketime = inputWaketime.value;
+        const note = inputNote.value.trim();
+
+        if (!bedtime || !waketime) {
+          showToast('痍⑥묠 ?쒓컙怨?湲곗긽 ?쒓컙??諛붾Ⅴ寃??ㅼ젙??二쇱꽭??', 'error');
+          return;
+        }
+
+        const res = recordSleep({
+          bedtime,
+          wakeTime: waketime,
+          mood: activeMood,
+          note
+        });
+
+        showToast(`?ㅻ뒛 ?섎㈃ 湲곕줉 ????꾨즺! +${res.xpGained} XP ?띾뱷! ?㎍`, 'success');
+        inputNote.value = '';
+        refreshPage();
+      });
+
+      // ???좉?
+      tabWeekly.addEventListener('click', () => {
+        if (currentTab === 'weekly') return;
+        currentTab = 'weekly';
+        tabWeekly.classList.add('active');
+        tabMonthly.classList.remove('active');
+        refreshStatsAndChart();
+      });
+
+      tabMonthly.addEventListener('click', () => {
+        if (currentTab === 'monthly') return;
+        currentTab = 'monthly';
+        tabMonthly.classList.add('active');
+        tabWeekly.classList.remove('active');
+        refreshStatsAndChart();
+      });
+
+      refreshPage();
+    });
+  </script>
 </body>
-
 </html>
