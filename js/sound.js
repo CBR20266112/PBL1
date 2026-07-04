@@ -369,6 +369,91 @@ export function playSoundBack() {
   o1.start(now); o1.stop(now+dur+0.05); o2.start(now); o2.stop(now+dur+0.05);
 }
 
+let _clipperHumActive = false;
+let _clipperOsc = null;
+let _clipperLfo = null;
+let _clipperGain = null;
+
+/**
+ * 바리깡 공회전 모터 진동음 시작
+ */
+export function startClipperHum() {
+  if (_clipperHumActive) return;
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  
+  _clipperHumActive = true;
+  
+  // 모터 기본음 (낮은 주파수 톱니파)
+  _clipperOsc = ctx.createOscillator();
+  _clipperOsc.type = 'sawtooth';
+  _clipperOsc.frequency.setValueAtTime(105, now);
+  
+  // 기계 떨림을 연출할 빠른 진동 LFO
+  _clipperLfo = ctx.createOscillator();
+  _clipperLfo.type = 'sine';
+  _clipperLfo.frequency.setValueAtTime(45, now); // 45Hz
+  
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.setValueAtTime(6, now); // ±6Hz 주파수 변조
+  
+  // 저역 필터로 부드럽게 깎음
+  const lpf = ctx.createBiquadFilter();
+  lpf.type = 'lowpass';
+  lpf.frequency.setValueAtTime(320, now);
+  
+  _clipperGain = ctx.createGain();
+  _clipperGain.gain.setValueAtTime(0, now);
+  // 어택 효과 (점진적 켜짐)
+  _clipperGain.gain.linearRampToValueAtTime(0.28, now + 0.15);
+  
+  // 연결
+  _clipperLfo.connect(lfoGain);
+  lfoGain.connect(_clipperOsc.frequency);
+  
+  _clipperOsc.connect(lpf);
+  lpf.connect(_clipperGain);
+  _clipperGain.connect(_sfxGain);
+  
+  _clipperOsc.start(now);
+  _clipperLfo.start(now);
+}
+
+/**
+ * 바리깡 공회전 모터 진동음 정지
+ */
+export function stopClipperHum() {
+  if (!_clipperHumActive) return;
+  _clipperHumActive = false;
+  
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  
+  if (_clipperGain) {
+    // 디케이 효과 (부드럽게 꺼짐)
+    _clipperGain.gain.cancelScheduledValues(now);
+    _clipperGain.gain.setValueAtTime(_clipperGain.gain.value, now);
+    _clipperGain.gain.linearRampToValueAtTime(0, now + 0.12);
+  }
+  
+  const oscToStop = _clipperOsc;
+  const lfoToStop = _clipperLfo;
+  const gainToDisconnect = _clipperGain;
+  
+  setTimeout(() => {
+    try { oscToStop.stop(); } catch(e){}
+    try { lfoToStop.stop(); } catch(e){}
+    try { oscToStop.disconnect(); } catch(e){}
+    try { lfoToStop.disconnect(); } catch(e){}
+    try { gainToDisconnect.disconnect(); } catch(e){}
+  }, 150);
+  
+  _clipperOsc = null;
+  _clipperLfo = null;
+  _clipperGain = null;
+}
+
 let _shearNoiseTimeout = null;
 let _shearIsActive = false;
 
