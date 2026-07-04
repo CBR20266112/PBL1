@@ -11,6 +11,7 @@ export const STORAGE_KEYS = Object.freeze({
   FRIENDS:  'ss_friends',
   SETTINGS: 'ss_settings',
   ROOM:     'ss_room',
+  WORRIES:  'ss_worries',
 });
 
 // ─── 성장 단계 테이블 ───
@@ -114,6 +115,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   sleepGoal:    480,  // 분 (8시간)
   wakeAlarm:    '07:00',
   bedAlarm:     '22:30',
+  geminiApiKey: '',
 });
 
 // ─── 아이템 초기값 ───

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -173,6 +173,24 @@
         </div>
       </section>
 
+      <!-- AI 수면 메이트 고도화 (선택) -->
+      <section class="glass card" style="padding: var(--space-4);">
+        <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2); color: var(--text-secondary);">🤖 AI 수면 메이트 고도화 (선택)</h3>
+        <p class="text-muted" style="font-size: var(--font-size-2xs); line-height: 1.5; margin-bottom: var(--space-3);">
+          개인 Google Gemini API Key를 입력하면, 고민 상담소에서 프리셋 답변 대신 실시간 맞춤형 힐링 편지를 직접 적어줍니다. 키는 본인 브라우저 로컬에만 안전하게 보관됩니다.
+        </p>
+        
+        <div class="flex flex-col gap-2">
+          <input type="password" id="input-gemini-key" class="glass" 
+            style="width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); padding: var(--space-2.5) var(--space-3); color: #fff; font-size: var(--font-size-xs); background: rgba(0,0,0,0.25);"
+            placeholder="AI 키 (AIzaSy...) 입력">
+          <div class="flex gap-2">
+            <button class="btn btn-secondary w-full" id="btn-save-gemini-key" style="font-size: var(--font-size-xs); padding: var(--space-2); flex: 1;">저장</button>
+            <button class="btn btn-secondary w-full" id="btn-delete-gemini-key" style="font-size: var(--font-size-xs); padding: var(--space-2); flex: 1; border-color: rgba(252, 165, 165, 0.2); color: var(--color-danger); background: rgba(252, 165, 165, 0.05);">삭제</button>
+          </div>
+        </div>
+      </section>
+
       <!-- 데이터 초기화 및 개발 정보 -->
       <section class="glass card" style="padding: var(--space-4);">
         <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2); color: var(--text-secondary);">📂 정보 및 관리</h3>
@@ -259,6 +277,10 @@
       const btnResetSheep = document.getElementById('btn-reset-sheep');
       const btnReplayOpening = document.getElementById('btn-replay-opening');
 
+      const inputGeminiKey = document.getElementById('input-gemini-key');
+      const btnSaveGeminiKey = document.getElementById('btn-save-gemini-key');
+      const btnDeleteGeminiKey = document.getElementById('btn-delete-gemini-key');
+
       let settings = getSettings();
 
       function refreshUI() {
@@ -280,6 +302,9 @@
         sliderBgmVol.value = bgmVol;
         bgmVolVal.textContent = Math.round(bgmVol * 100) + '%';
         updateBgmSliderState(isBgmEnabled());
+
+        // Gemini API Key 로드
+        inputGeminiKey.value = settings.geminiApiKey || '';
       }
 
       function updateBgmSliderState(enabled) {
@@ -374,6 +399,27 @@
             }, 1500);
           }
         }
+      });
+
+      // Gemini API Key 저장
+      btnSaveGeminiKey.addEventListener('click', () => {
+        const key = inputGeminiKey.value.trim();
+        if (!key) {
+          showToast('API 키를 올바르게 입력해주세요양.', 'error');
+          inputGeminiKey.focus();
+          return;
+        }
+        settings.geminiApiKey = key;
+        saveSettings(settings);
+        showToast('Gemini API Key가 성공적으로 저장되었습니다! 🤖', 'success');
+      });
+
+      // Gemini API Key 삭제
+      btnDeleteGeminiKey.addEventListener('click', () => {
+        inputGeminiKey.value = '';
+        settings.geminiApiKey = '';
+        saveSettings(settings);
+        showToast('저장된 API Key를 삭제했습니다. 오프라인 온기 모드로 동작합니다.', 'info');
       });
 
       refreshUI();

@@ -145,10 +145,35 @@ export function initStorage() {
   if (!getItem(STORAGE_KEYS.SLEEP)) saveSleepRecords([]);
   if (!getItem(STORAGE_KEYS.ITEMS)) saveItems({ ...DEFAULT_ITEMS, owned: [], equipped: { ...DEFAULT_ITEMS.equipped } });
   if (!getItem(STORAGE_KEYS.SETTINGS)) saveSettings({ ...DEFAULT_SETTINGS });
+  if (!getItem(STORAGE_KEYS.WORRIES)) setItem(STORAGE_KEYS.WORRIES, []);
 }
 
 /** 양 데이터만 초기화 */
 export function resetSheep() {
   saveSheep({ ...DEFAULT_SHEEP });
+}
+
+/** 고민 기록 배열 읽기 */
+export function getWorries() {
+  return getItem(STORAGE_KEYS.WORRIES, []);
+}
+
+/** 고민 기록 추가/업데이트 */
+export function saveWorry(date, content, reply) {
+  const worries = getWorries();
+  const idx = worries.findIndex(w => w.date === date);
+  const newWorry = { date, content, reply, createdAt: new Date().toISOString() };
+  
+  if (idx >= 0) {
+    worries[idx] = newWorry;
+  } else {
+    worries.push(newWorry);
+  }
+  
+  // 날짜 기준 오름차순 정렬
+  worries.sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  setItem(STORAGE_KEYS.WORRIES, worries);
+  return newWorry;
 }
 

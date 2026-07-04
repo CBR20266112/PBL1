@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>드리미 마음 상담소 | SleepySheep</title>
+  
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <style>
+    .worry-page {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+    }
+    
+    .worry-timeline {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      overflow-y: auto;
+    }
+
+    .empty-worry {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: var(--space-4);
+      margin-top: 25%;
+      color: var(--text-muted);
+      padding: var(--space-6);
+    }
+
+    .empty-icon {
+      font-size: 3.5rem;
+      opacity: 0.65;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .worry-card {
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+    .worry-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(167, 139, 250, 0.4);
+    }
+
+    .worry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+
+    .worry-date {
+      font-size: var(--font-size-xs);
+      font-weight: 800;
+      color: var(--color-purple-soft);
+    }
+
+    .worry-state {
+      font-size: var(--font-size-2xs);
+      background: rgba(134, 239, 172, 0.15);
+      color: #86efac;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+    }
+
+    .worry-text-preview {
+      font-size: var(--font-size-sm);
+      color: var(--text-primary);
+      line-height: 1.5;
+      margin-bottom: var(--space-3);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+
+    .worry-reply-preview {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      border-left: 3px solid var(--color-purple);
+      font-size: var(--font-size-xs);
+      color: var(--text-muted);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 편지 작성창 스타일 */
+    .worry-textarea {
+      width: 100%;
+      height: 140px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--glass-border);
+      padding: var(--space-4);
+      color: #fff;
+      font-size: var(--font-size-sm);
+      background: rgba(0,0,0,0.35);
+      resize: none;
+      outline: none;
+      line-height: 1.6;
+      font-family: inherit;
+    }
+    .worry-textarea:focus {
+      border-color: var(--color-purple);
+      box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+    }
+
+    /* 로딩 애니메이션 */
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+      padding: var(--space-8) 0;
+    }
+
+    .loading-sheep-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .loading-sheep {
+      font-size: 4rem;
+      animation: bounce 0.8s ease infinite alternate;
+      display: inline-block;
+    }
+
+    .loading-z {
+      position: absolute;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--color-purple-soft);
+      opacity: 0;
+      animation: zFloat 2s ease-out infinite;
+    }
+    
+    .loading-z:nth-child(2) { top: -10px; right: 10px; animation-delay: 0.6s; }
+    .loading-z:nth-child(3) { top: -20px; right: 25px; animation-delay: 1.2s; }
+
+    /* 3턴 대화방 레이아웃 */
+    .chat-container {
+      background: linear-gradient(180deg, #161233 0%, #0d0a21 100%);
+      border: 1px solid rgba(167, 139, 250, 0.35);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+      max-height: 80vh;
+      animation: slideUp 0.4s var(--transition-bounce);
+    }
+
+    .chat-header {
+      font-size: var(--font-size-md);
+      font-weight: 800;
+      color: var(--color-purple-soft);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: var(--space-2);
+      margin-bottom: var(--space-3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding-right: 4px;
+      margin-bottom: var(--space-3);
+    }
+
+    /* 말풍선 공통 */
+    .bubble {
+      max-width: 80%;
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      line-height: 1.5;
+      word-break: break-all;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    /* 사용자 말풍선 (우측) */
+    .bubble-user {
+      align-self: flex-end;
+      background: var(--color-purple);
+      color: #fff;
+      border-bottom-right-radius: 2px;
+    }
+
+    /* 드리미 아기양 말풍선 (좌측) */
+    .bubble-model {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border-bottom-left-radius: 2px;
+      border-left: 3px solid var(--color-purple-soft);
+    }
+
+    .bubble-model-prefix {
+      font-size: var(--font-size-2xs);
+      color: var(--color-purple-soft);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: var(--space-2);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: var(--space-3);
+    }
+
+    .chat-input {
+      flex: 1;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      padding: var(--space-2) var(--space-3);
+      color: #fff;
+      font-size: var(--font-size-sm);
+      background: rgba(0,0,0,0.3);
+      outline: none;
+    }
+    .chat-input:focus {
+      border-color: var(--color-purple);
+    }
+
+    .chat-btn-send {
+      background: var(--color-purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0 var(--space-4);
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .chat-btn-send:active {
+      transform: scale(0.96);
+    }
+
+    .turn-badge {
+      font-size: var(--font-size-2xs);
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: var(--space-2);
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: var(--radius-full);
+      padding: 2px 10px;
+      align-self: center;
+    }
+
+    /* 플로팅 글쓰기 버튼 */
+    .btn-floating-write {
+      position: absolute;
+      right: 20px;
+      bottom: 85px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-purple), var(--color-purple-dark));
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow-purple);
+      border: none;
+      cursor: pointer;
+      z-index: 5;
+      transition: transform 0.2s ease;
+    }
+    .btn-floating-write:hover {
+      transform: scale(1.08) rotate(5deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 밤하늘 배경 -->
+  <div class="background">
+    <canvas id="star-canvas"></canvas>
+    <div class="moon"></div>
+  </div>
+
+  <main class="phone worry-page">
+    <!-- 헤더 -->
+    <header class="header">
+      <div class="header-left">
+        <button class="btn-back" onclick="location.href='../index.html'" title="뒤로가기">←</button>
+        <div>
+          <h1>드리미 마음 상담소</h1>
+          <p class="subtitle">밤을 괴롭히는 걱정 덜어내기 (3턴 제한)</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="chip-box" id="wool-display" title="보유 양털">
+          <span class="icon">🧶</span>
+          <span id="wool-count">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 타임라인 스크롤 영역 -->
+    <div class="content worry-timeline" id="worry-timeline-container">
+      <!-- 동적 로드됨 -->
+    </div>
+
+    <!-- 플로팅 글쓰기 버튼 -->
+    <button class="btn-floating-write" id="btn-open-worry-modal" title="오늘의 걱정 털어놓기">
+      💭
+    </button>
+
+    <!-- 하단 네비게이션 -->
+    <nav class="bottom-nav">
+      <div class="nav-item" data-href="../index.html">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">홈</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="sleep.html">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">수면</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="sheep.html">
+        <span class="nav-icon">🐑</span>
+        <span class="nav-label">내 양</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="workshop.html">
+        <span class="nav-icon">🧶</span>
+        <span class="nav-label">공방</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="friends.html">
+        <span class="nav-icon">👥</span>
+        <span class="nav-label">친구</span>
+        <span class="nav-dot"></span>
+      </div>
+    </nav>
+  </main>
+
+  <!-- 뒷배경 암전 오버레이 -->
+  <div class="overlay" id="worry-overlay"></div>
+
+  <!-- 최초 고민 작성 모달 -->
+  <div class="modal" id="worry-write-modal">
+    <div class="modal-handle"></div>
+    <h3 class="text-center font-bold" style="font-size: var(--font-size-md); margin-bottom: var(--space-1);">💭 오늘 밤을 무겁게 하는 고민</h3>
+    <p class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-4); line-height: 1.5;">
+      취업, 학업, 대인관계 무엇이든 털어놓아 보아요양.<br>드리미가 온 마음을 다해 따뜻한 위로 대화를 나눌게요.
+    </p>
+    
+    <div style="margin-bottom: var(--space-4);">
+      <textarea id="textarea-worry-input" class="worry-textarea" placeholder="이곳에 그날의 걱정을 적어보세요. (최소 5자 이상)&#10;예) 면접에서 떨어질까 봐 밤마다 가슴이 두근거려 잠이 잘 오지 않아요..."></textarea>
+    </div>
+
+    <div class="flex gap-3">
+      <button class="btn btn-secondary" id="btn-close-worry-modal" style="flex:1;">닫기</button>
+      <button class="btn btn-primary" id="btn-submit-worry" style="flex:2;">대화 시작하기 🐑</button>
+    </div>
+  </div>
+
+  <!-- 분석 중 로딩 모달 -->
+  <div class="modal" id="worry-loading-modal">
+    <div class="loading-container">
+      <div class="loading-sheep-container">
+        <span class="loading-sheep">🐑</span>
+        <span class="loading-z">z</span>
+        <span class="loading-z">z</span>
+        <span class="loading-z">z</span>
+      </div>
+      <h3 class="font-bold" style="font-size: var(--font-size-sm); color:#fff; margin-top: 10px;">드리미가 답장을 생각하고 있어요...</h3>
+      <p class="text-muted" style="font-size: var(--font-size-2xs); text-align:center;">
+        당신의 걱정을 덜어낼 힐링 마법을 준비 중양. 메에~ 💤
+      </p>
+    </div>
+  </div>
+
+  <!-- 3턴 제한 대화 모달 -->
+  <div class="modal" id="worry-chat-modal" style="background:transparent; border:none; box-shadow:none; padding:0;">
+    <div class="chat-container">
+      <div class="chat-header">
+        <span>💬 드리미와의 힐링 대화</span>
+        <span class="worry-date" id="chat-date-txt">2026-07-05</span>
+      </div>
+      
+      <!-- 대화창 메시지 나열부 -->
+      <div class="chat-messages" id="chat-messages-box">
+        <!-- 동적 로드됨 -->
+      </div>
+      
+      <!-- 대화 입력창 (3턴 미만일 때만 활성) -->
+      <div class="chat-input-area" id="chat-input-container">
+        <input type="text" id="input-chat-message" class="chat-input" placeholder="답장을 보내거나 추가 고민을 적어줘요양..." maxlength="80">
+        <button class="chat-btn-send" id="btn-send-chat">전송</button>
+      </div>
+
+      <!-- 수면 전환 영역 (3턴 종료 또는 수면 선택 시 노출) -->
+      <div class="flex flex-col gap-2" id="chat-sleep-container" style="display: none; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 4px;">
+        <div class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-bottom: 4px; color: var(--color-purple-soft); font-weight:800;">
+          💤 오늘 밤의 위로 대화는 마쳤습니다. 이제 푹 잘 시간양!
+        </div>
+        <button class="btn btn-primary w-full" id="btn-confirm-chat-sleep" style="padding: var(--space-3); font-weight:800;">
+          🌙 한결 편안해졌어요. 이제 자러 가기
+        </button>
+        <button class="btn btn-secondary w-full" id="btn-confirm-chat-close" style="padding: var(--space-2.5); border-color: rgba(255,255,255,0.1); color: var(--text-muted);">
+          목록으로 돌아가기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initCommon, showToast, spawnHearts } from '../js/app.js';
+    import { getSheep, saveSheep, getSettings, getWorries, saveWorry } from '../js/storage.js';
+    import { getLocalWorryReply, getGeminiWorryReply, getWorryCategory } from '../js/worry.js';
+    import { resumeAudio } from '../js/sound.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCommon();
+
+      const overlay = document.getElementById('worry-overlay');
+      const writeModal = document.getElementById('worry-write-modal');
+      const loadingModal = document.getElementById('worry-loading-modal');
+      const chatModal = document.getElementById('worry-chat-modal');
+      
+      const timelineContainer = document.getElementById('worry-timeline-container');
+      const woolCount = document.getElementById('wool-count');
+      const worryInput = document.getElementById('textarea-worry-input');
+
+      const btnOpenWrite = document.getElementById('btn-open-worry-modal');
+      const btnCloseWrite = document.getElementById('btn-close-worry-modal');
+      const btnSubmit = document.getElementById('btn-submit-worry');
+      
+      const chatMessagesBox = document.getElementById('chat-messages-box');
+      const chatInputContainer = document.getElementById('chat-input-container');
+      const chatInputField = document.getElementById('input-chat-message');
+      const btnSendChat = document.getElementById('btn-send-chat');
+
+      const chatSleepContainer = document.getElementById('chat-sleep-container');
+      const btnCloseChat = document.getElementById('btn-confirm-chat-close');
+      const btnSleepChat = document.getElementById('btn-confirm-chat-sleep');
+      const chatDateTxt = document.getElementById('chat-date-txt');
+
+      let currentActiveDate = ""; // 현재 보고 있는 대화방 날짜
+
+      // ─── UI 렌더링 ───
+      function refreshUI() {
+        const sheep = getSheep();
+        woolCount.textContent = sheep.wool;
+        renderTimeline();
+      }
+
+      function todayStr() {
+        return new Date().toISOString().slice(0, 10);
+      }
+
+      function renderTimeline() {
+        const worries = getWorries();
+        timelineContainer.innerHTML = '';
+
+        if (worries.length === 0) {
+          timelineContainer.innerHTML = `
+            <div class="empty-worry">
+              <div class="empty-icon">💭</div>
+              <h3 class="font-bold" style="font-size: var(--font-size-md); color:#fff;">아직 걱정거리를 털어놓지 않았군요양</h3>
+              <p style="font-size: var(--font-size-xs); line-height:1.6;">
+                오늘 밤 나를 괴롭히는 걱정이 있다면<br>
+                우측 하단의 플로팅 버튼을 눌러 드리미에게 털어놓아 봐요양.<br>
+                위로의 대화(최대 3턴 제한)와 수면 보상을 얻을 수 있어요!
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        // 최신 고민이 위로 오도록 역순 루프
+        for (let i = worries.length - 1; i >= 0; i--) {
+          const item = worries[i];
+          const card = document.createElement('div');
+          card.className = 'glass card worry-card';
+          card.style.padding = 'var(--space-4)';
+          
+          card.innerHTML = `
+            <div class="worry-header">
+              <span class="worry-date">${item.date}</span>
+              <span class="worry-state">대화 완료 🐑</span>
+            </div>
+            <div class="worry-text-preview">${escapeHtml(item.content)}</div>
+            <div class="worry-reply-preview">${escapeHtml(item.reply)}</div>
+          `;
+          
+          card.addEventListener('click', () => {
+            openChatRoom(item.date);
+          });
+          
+          timelineContainer.appendChild(card);
+        }
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // ─── 3턴 대화방 열기 ───
+      function openChatRoom(date) {
+        currentActiveDate = date;
+        chatDateTxt.textContent = date;
+        
+        const worries = getWorries();
+        const worryData = worries.find(w => w.date === date);
+        if (!worryData) return;
+
+        // 히스토리가 없다면 마이그레이션(기존 1턴 적재)
+        if (!worryData.turns) {
+          worryData.turns = [
+            { role: "user", content: worryData.content },
+            { role: "model", content: worryData.reply }
+          ];
+        }
+
+        renderChatMessages(worryData.turns);
+        
+        // 사용자가 보낸 메시지 수(턴 수)
+        const userTurnsCount = worryData.turns.filter(t => t.role === 'user').length;
+
+        if (userTurnsCount >= 3) {
+          // 3턴 종료 상태
+          chatInputContainer.style.display = 'none';
+          chatSleepContainer.style.display = 'flex';
+        } else {
+          // 추가 대화 가능
+          chatInputContainer.style.display = 'flex';
+          chatSleepContainer.style.display = 'flex'; // 대화 중에도 목록가기/잠자기 바로 선택 가능
+        }
+
+        overlay.classList.add('active');
+        chatModal.classList.add('active');
+        
+        // 대화창 하단 자동 스크롤
+        setTimeout(() => {
+          chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+        }, 100);
+      }
+
+      function renderChatMessages(turns) {
+        chatMessagesBox.innerHTML = '';
+        let turnCounter = 1;
+
+        turns.forEach(msg => {
+          if (msg.role === 'user') {
+            const badge = document.createElement('div');
+            badge.className = 'turn-badge';
+            badge.textContent = `대화 ${turnCounter}번째 마디 🐑`;
+            chatMessagesBox.appendChild(badge);
+            turnCounter++;
+          }
+
+          const div = document.createElement('div');
+          div.className = `bubble bubble-${msg.role}`;
+          
+          if (msg.role === 'model') {
+            div.innerHTML = `
+              <div class="bubble-model-prefix">드리미</div>
+              <div>${escapeHtml(msg.content).replace(/\n/g, '<br>')}</div>
+            `;
+          } else {
+            div.textContent = msg.content;
+          }
+          chatMessagesBox.appendChild(div);
+        });
+      }
+
+      // ─── 이벤트 처리 ───
+
+      // 최초 고민 작성 모달 열기
+      btnOpenWrite.addEventListener('click', () => {
+        resumeAudio();
+        const today = todayStr();
+        const worries = getWorries();
+        const alreadyDone = worries.find(w => w.date === today);
+        
+        if (alreadyDone) {
+          showToast('오늘의 위로 대화는 이미 나누셨습니다! 메에~', 'info');
+          openChatRoom(alreadyDone.date);
+          return;
+        }
+
+        worryInput.value = '';
+        overlay.classList.add('active');
+        writeModal.classList.add('active');
+        setTimeout(() => worryInput.focus(), 150);
+      });
+
+      // 작성 모달 닫기
+      btnCloseWrite.addEventListener('click', () => {
+        writeModal.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+
+      // 닫기용 오버레이 클릭
+      overlay.addEventListener('click', () => {
+        writeModal.classList.remove('active');
+        loadingModal.classList.remove('active');
+        chatModal.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+
+      // 최초 고민 저장 및 대화방 진입
+      btnSubmit.addEventListener('click', async () => {
+        const text = worryInput.value.trim();
+        if (text.length < 5) {
+          showToast('걱정을 최소 5자 이상 작성해 주세요양.', 'error');
+          worryInput.focus();
+          return;
+        }
+
+        writeModal.classList.remove('active');
+        loadingModal.classList.add('active');
+
+        const settings = getSettings();
+        const today = todayStr();
+        let reply = "";
+
+        const category = getWorryCategory(text);
+
+        // 딜레이 연출 (1.2초)
+        await new Promise(resolve => setTimeout(resolve, 1200));
+
+        try {
+          if (settings.geminiApiKey && settings.geminiApiKey.trim() !== "") {
+            // 온라인 Gemini 호출
+            const initHistory = [{ role: 'user', content: text }];
+            reply = await getGeminiWorryReply(initHistory, settings.geminiApiKey);
+            showToast('🤖 Gemini AI 와 마음 대화를 개시했습니다!', 'success');
+          } else {
+            // 로컬 호출
+            reply = getLocalWorryReply(text, 1, category);
+            showToast('🐑 드리미의 따뜻한 위로 대화가 도착했습니다!', 'success');
+          }
+        } catch (err) {
+          console.warn(err);
+          reply = getLocalWorryReply(text, 1, category);
+          showToast('🐑 로컬 온기 프리셋 대화로 폴백합니다.', 'info');
+        }
+
+        // 스토리지 구조화 저장
+        const initialTurns = [
+          { role: "user", content: text },
+          { role: "model", content: reply }
+        ];
+
+        // worries 배열 로드 후 업데이트
+        const worries = getWorries();
+        const newWorry = {
+          date: today,
+          content: text,
+          reply: reply, // 대표 요약용
+          category: category,
+          turns: initialTurns,
+          createdAt: new Date().toISOString()
+        };
+        worries.push(newWorry);
+        worries.sort((a, b) => new Date(a.date) - new Date(b.date));
+        localStorage.setItem('ss_worries', JSON.stringify(worries));
+
+        // 최초 고민 보상 (+10 XP)
+        const sheep = getSheep();
+        sheep.xp += 10;
+        let leveledUp = false;
+        if (sheep.xp >= sheep.xpToNext) {
+          sheep.level += 1;
+          sheep.xp -= sheep.xpToNext;
+          sheep.xpToNext = Math.round(sheep.xpToNext * 1.3);
+          sheep.step = Math.min(Math.floor((sheep.level - 1) / 3) + 1, 10);
+          leveledUp = true;
+        }
+        saveSheep(sheep);
+
+        refreshUI();
+        spawnHearts(document.body);
+        
+        if (leveledUp) {
+          showToast(`🎉 레벨업! 드리미가 Lv.${sheep.level}이(가) 되었습니다!`, 'success');
+        } else {
+          showToast('💡 걱정을 나누고 경험치 10점을 획득했습니다!', 'success');
+        }
+
+        loadingModal.classList.remove('active');
+        openChatRoom(today);
+      });
+
+      // 대화 한마디 추가 전송 (멀티턴)
+      btnSendChat.addEventListener('click', async () => {
+        const text = chatInputField.value.trim();
+        if (!text) return;
+
+        chatInputField.value = '';
+        
+        const worries = getWorries();
+        const worryData = worries.find(w => w.date === currentActiveDate);
+        if (!worryData) return;
+
+        // 히스토리 추가
+        worryData.turns.push({ role: "user", content: text });
+        renderChatMessages(worryData.turns);
+        chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+
+        // 턴 수 카운트
+        const userTurnsCount = worryData.turns.filter(t => t.role === 'user').length;
+
+        // 임시 로딩 말풍선 표시
+        const tempLoadingDiv = document.createElement('div');
+        tempLoadingDiv.className = 'bubble bubble-model';
+        tempLoadingDiv.innerHTML = `
+          <div class="bubble-model-prefix">드리미</div>
+          <div style="font-style: italic; opacity: 0.6;">생각하는 중양... 🐑💤</div>
+        `;
+        chatMessagesBox.appendChild(tempLoadingDiv);
+        chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+
+        // 대화 비활성화
+        chatInputField.disabled = true;
+        btnSendChat.disabled = true;
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        let reply = "";
+        const settings = getSettings();
+
+        try {
+          if (settings.geminiApiKey && settings.geminiApiKey.trim() !== "") {
+            reply = await getGeminiWorryReply(worryData.turns, settings.geminiApiKey);
+          } else {
+            reply = getLocalWorryReply(text, userTurnsCount, worryData.category);
+          }
+        } catch (err) {
+          console.warn(err);
+          reply = getLocalWorryReply(text, userTurnsCount, worryData.category);
+        }
+
+        // 로딩 말풍선 제거 및 실제 답변 추가
+        tempLoadingDiv.remove();
+        worryData.turns.push({ role: "model", content: reply });
+        
+        // 스토리지 저장
+        const idx = worries.findIndex(w => w.date === currentActiveDate);
+        if (idx >= 0) worries[idx] = worryData;
+        localStorage.setItem('ss_worries', JSON.stringify(worries));
+
+        renderChatMessages(worryData.turns);
+        chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+
+        // 입력창 복구 및 3턴 만료 검사
+        chatInputField.disabled = false;
+        btnSendChat.disabled = false;
+
+        if (userTurnsCount >= 3) {
+          // 3턴 가득 찬 경우 입력 불가화 및 안내 팝업 유도
+          chatInputContainer.style.display = 'none';
+          chatSleepContainer.style.display = 'flex';
+          showToast('수면 안정을 위해 오늘의 대화는 여기까지양! 편안히 잘 시간양 🌙', 'info');
+        }
+        
+        refreshUI();
+      });
+
+      chatInputField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') btnSendChat.click();
+      });
+
+      // 대화창 닫기
+      btnCloseChat.addEventListener('click', () => {
+        chatModal.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+
+      // 대화 후 자러가기
+      btnSleepChat.addEventListener('click', () => {
+        chatModal.classList.remove('active');
+        overlay.classList.remove('active');
+
+        // 홈 화면에 가자마자 '오늘 밤자기 시작' 상태가 즉시 켜지도록 로컬 스토리지에 특수 수면 플래그 심기
+        const now = new Date();
+        const bedTimeString = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        
+        localStorage.setItem('ss_sleeping_since', JSON.stringify({ 
+          time: now.toISOString(), 
+          bedtime: bedTimeString 
+        }));
+
+        showToast('🛌 수면 기록을 시작합니다! 홈 화면으로 이동합니다... 🌙', 'success');
+        
+        setTimeout(() => {
+          location.href = '../index.html';
+        }, 1200);
+      });
+
+      // 초기 로드
+      refreshUI();
+    });
+  </script>
+</body>
+</html>
