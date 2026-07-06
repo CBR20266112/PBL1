@@ -49,16 +49,18 @@ class ShornParticle {
 
 // ─── 파티클: 벗겨지는 털 띠 (카타르시스) ───
 class WoolStrip {
-  constructor(x, y, angle, speed) {
+  constructor(x, y, angle, speed, img = null) {
     this.x = x;
     this.y = y;
     this.angle = angle;
+    this.img = img;
     this.len = 14 + Math.random() * 18 + speed * 1.2;
     this.w = 3 + Math.random() * 3;
     this.vx = Math.cos(angle + Math.PI) * (1.5 + speed * 0.15);
     this.vy = Math.sin(angle + Math.PI) * (1.5 + speed * 0.15) - rand(1, 3);
     this.alpha = 1;
     this.curl = (Math.random() - 0.5) * 0.4;
+    this.size = 28 + Math.random() * 22 + speed * 2.5;
   }
 
   update() {
@@ -76,13 +78,18 @@ class WoolStrip {
     ctx.globalAlpha = this.alpha;
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle);
-    ctx.strokeStyle = '#F8F4FF';
-    ctx.lineWidth = this.w;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(-this.len * 0.5, 0);
-    ctx.quadraticCurveTo(0, this.curl * 10, this.len * 0.5, 0);
-    ctx.stroke();
+    if (this.img) {
+      const s = this.size;
+      ctx.drawImage(this.img, -s * 0.55, -s * 0.35, s * 1.1, s * 0.7);
+    } else {
+      ctx.strokeStyle = '#F8F4FF';
+      ctx.lineWidth = this.w;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-this.len * 0.5, 0);
+      ctx.quadraticCurveTo(0, this.curl * 10, this.len * 0.5, 0);
+      ctx.stroke();
+    }
     ctx.restore();
   }
 }
@@ -263,16 +270,21 @@ function _preloadGameAssets() {
   const particleAlt = new Image();
   particleAlt.src = `${basePath}assets/game/particle_alt.png`;
 
+  const stripImg = new Image();
+  stripImg.src = `${basePath}assets/game/wool_strip.png`;
+
   const load = img => new Promise(resolve => {
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
   });
 
-  return Promise.all([load(bodyImg), load(woolImg), load(clipperImg), load(particleImg), load(particleAlt)])
-    .then(([body, wool, clipper, particle, particleAltImg]) => ({
-      bodyImg: body, woolImg: wool, clipperImg: clipper,
-      particleImg: particle, particleAltImg,
-    }));
+  return Promise.all([
+    load(bodyImg), load(woolImg), load(clipperImg),
+    load(particleImg), load(particleAlt), load(stripImg),
+  ]).then(([body, wool, clipper, particle, particleAltImg, strip]) => ({
+    bodyImg: body, woolImg: wool, clipperImg: clipper,
+    particleImg: particle, particleAltImg, stripImg: strip,
+  }));
 }
 
 // ─── Canvas ───
@@ -505,7 +517,7 @@ function _spawnShearFx(x, y, dx, dy, speed) {
   }
 
   if (speed > 2.5 && Math.random() < 0.35 + intensity * 0.35) {
-    _strips.push(new WoolStrip(x, y, angle, speed));
+    _strips.push(new WoolStrip(x, y, angle, speed, _state.preloadedAssets.stripImg));
     _flashes.push(new PeelFlash(x, y, angle));
   }
 

@@ -4,7 +4,7 @@
  */
 
 /** 앱 버전 (설정 화면·배포 기준) */
-export const APP_VERSION = '1.73.0';
+export const APP_VERSION = '1.74.0';
 
 // ─── localStorage 키 ───
 export const STORAGE_KEYS = Object.freeze({
@@ -147,7 +147,7 @@ export const ATTENDANCE_CYCLE = Object.freeze({
 export const NAME_REJECT_HAPPINESS_DELTA = 8;
 
 export const ATTENDANCE_SINGLE_COUNT = 45;
-export const ATTENDANCE_STRIP_COUNT = 0; // strips/ 에 추가 시 갱신
+export const ATTENDANCE_STRIP_COUNT = 30;
 
 /** @deprecated 주기 소량 양털로 대체 — 호환용 */
 export const DAILY_ATTENDANCE_WOOL = ATTENDANCE_CYCLE.WOOL_SMALL;

@@ -41,6 +41,39 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+
+    .dev-trigger-wrap {
+      display: flex;
+      justify-content: center;
+      padding: var(--space-2) 0 var(--space-6);
+    }
+    .dev-trigger-btn {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.28;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      background: rgba(0, 0, 0, 0.2);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dev-trigger-btn:hover,
+    .dev-trigger-btn.active {
+      opacity: 0.75;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+    }
+    .dev-trigger-btn:active {
+      transform: scale(0.9);
+    }
+    .dev-trigger-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -229,36 +262,6 @@
         </div>
       </section>
 
-      <!-- 🛠️ 시연용 개발 도구 -->
-      <section class="glass card" style="padding: var(--space-4); border: 1px solid rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.04);">
-        <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-1); color: #fbbf24;">🛠️ 시연용 개발 도구</h3>
-        <p style="font-size: var(--font-size-2xs); color: rgba(251,191,36,0.6); margin-bottom: var(--space-3); line-height: 1.5;">프로토타입 시연 전용 — 경험치 및 양털을 즉시 추가합니다.</p>
-
-        <!-- 현재 상태 표시 -->
-        <div id="dev-status" style="font-size: var(--font-size-xs); color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3); line-height: 1.8;"></div>
-
-        <div class="flex flex-col gap-2">
-          <!-- XP 추가 버튼 행 -->
-          <div class="flex gap-2">
-            <button class="btn btn-secondary" id="btn-dev-xp-100" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); color: #34d399;">
-              ⚡ XP +100
-            </button>
-            <button class="btn btn-secondary" id="btn-dev-xp-1000" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(52,211,153,0.2); border-color: rgba(52,211,153,0.5); color: #34d399; font-weight: 800;">
-              🚀 XP +1000
-            </button>
-          </div>
-          <!-- 양털 / 양털성장 추가 버튼 행 -->
-          <div class="flex gap-2">
-            <button class="btn btn-secondary" id="btn-dev-wool-50" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(167,139,250,0.12); border-color: rgba(167,139,250,0.35); color: var(--color-purple-soft);">
-              🧶 양털 +50
-            </button>
-            <button class="btn btn-secondary" id="btn-dev-shear" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(167,139,250,0.2); border-color: rgba(167,139,250,0.5); color: var(--color-purple-soft); font-weight: 800;">
-              ✂️ 털깎기 즉시 가능
-            </button>
-          </div>
-        </div>
-      </section>
-
       <!-- 데이터 초기화 및 개발 정보 -->
       <section class="glass card" style="padding: var(--space-4);">
         <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2); color: var(--text-secondary);">📂 정보 및 관리</h3>
@@ -284,6 +287,42 @@
           </div>
         </div>
       </section>
+
+      <!-- 🛠️ 개발자 옵션 (아이콘으로 활성화) -->
+      <section class="glass card hidden" id="dev-tools-panel" style="padding: var(--space-4); border: 1px solid rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.04);">
+        <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-1); color: #fbbf24;">🛠️ 개발자 옵션</h3>
+        <p style="font-size: var(--font-size-2xs); color: rgba(251,191,36,0.6); margin-bottom: var(--space-3); line-height: 1.5;">시연 전용 — 경험치·양털·갤러리를 즉시 조작합니다.</p>
+
+        <div id="dev-status" style="font-size: var(--font-size-xs); color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3); line-height: 1.8;"></div>
+
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-2">
+            <button class="btn btn-secondary" id="btn-dev-xp-100" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); color: #34d399;">
+              ⚡ XP +100
+            </button>
+            <button class="btn btn-secondary" id="btn-dev-xp-1000" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(52,211,153,0.2); border-color: rgba(52,211,153,0.5); color: #34d399; font-weight: 800;">
+              🚀 XP +1000
+            </button>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary" id="btn-dev-wool-50" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(167,139,250,0.12); border-color: rgba(167,139,250,0.35); color: var(--color-purple-soft);">
+              🧶 양털 +50
+            </button>
+            <button class="btn btn-secondary" id="btn-dev-shear" style="flex:1; font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(167,139,250,0.2); border-color: rgba(167,139,250,0.5); color: var(--color-purple-soft); font-weight: 800;">
+              ✂️ 털깎기 즉시 가능
+            </button>
+          </div>
+          <button class="btn btn-secondary w-full" id="btn-dev-unlock-gallery" style="font-size: var(--font-size-xs); padding: var(--space-2); background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.35); color: #fbbf24;">
+            🖼️ 갤러리 전체 해금
+          </button>
+        </div>
+      </section>
+
+      <div class="dev-trigger-wrap">
+        <button type="button" id="btn-dev-trigger" class="dev-trigger-btn" title="개발자 옵션" aria-label="개발자 옵션">
+          <img src="../assets/icon/dev.jpg" alt="">
+        </button>
+      </div>
 
     </div>
 
@@ -321,6 +360,7 @@
     import { promptInstall, isAppInstalled } from '../js/pwa-install.js';
     import { applyAppIcons, getIconModeLabel } from '../js/app-icon.js';
     import { initSound, isBgmEnabled, setBgmEnabled, startBgm, stopBgm, resumeAudio, getBgmVolume, setBgmVolume } from '../js/sound.js';
+    import { isDevModeEnabled, setDevModeEnabled, unlockAllGallery } from '../js/dev-tools.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
@@ -516,7 +556,24 @@
         }
       });
 
-      // ─── 🛠️ 시연용 개발 도구 핸들러 ───
+      // ─── 🛠️ 개발자 옵션 ───
+
+      const devPanel = document.getElementById('dev-tools-panel');
+      const btnDevTrigger = document.getElementById('btn-dev-trigger');
+
+      function applyDevModeUI() {
+        const on = isDevModeEnabled();
+        devPanel?.classList.toggle('hidden', !on);
+        btnDevTrigger?.classList.toggle('active', on);
+        if (on) updateDevStatus();
+      }
+
+      btnDevTrigger?.addEventListener('click', () => {
+        const next = !isDevModeEnabled();
+        setDevModeEnabled(next);
+        applyDevModeUI();
+        if (next) showToast('🛠️ 개발자 옵션이 활성화되었습니다', 'info');
+      });
 
       /** XP 추가 후 레벨업/스텝 자동 처리 */
       function applyDevXP(amount) {
@@ -580,7 +637,12 @@
         showToast('✂️ 양털깎기 버튼이 즉시 활성화됩니다!', 'success');
       });
 
-      updateDevStatus();
+      document.getElementById('btn-dev-unlock-gallery')?.addEventListener('click', () => {
+        unlockAllGallery();
+        showToast('🖼️ 갤러리 전체 해금 완료!', 'success');
+      });
+
+      applyDevModeUI();
 
       // Gemini API Key 저장
       btnSaveGeminiKey.addEventListener('click', () => {
