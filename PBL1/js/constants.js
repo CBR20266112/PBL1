@@ -3,6 +3,9 @@
  * 모든 모듈이 이 파일에서 상수를 import한다.
  */
 
+/** 앱 버전 (설정 화면·배포 기준) */
+export const APP_VERSION = '1.72.1';
+
 // ─── localStorage 키 ───
 export const STORAGE_KEYS = Object.freeze({
   SHEEP:    'ss_sheep',
@@ -108,14 +111,15 @@ export const DEFAULT_SHEEP = Object.freeze({
 
 // ─── 앱 설정 초기값 ───
 export const DEFAULT_SETTINGS = Object.freeze({
-  darkMode:     true,
-  notification: true,
-  bgMusic:      false,
-  vibration:    true,
-  sleepGoal:    480,  // 분 (8시간)
-  wakeAlarm:    '07:00',
-  bedAlarm:     '22:30',
-  geminiApiKey: '',
+  darkMode:          true,
+  notification:      true,
+  bgMusic:           false,
+  vibration:         true,
+  sleepGoal:         480,  // 분 (8시간)
+  wakeAlarm:         '07:00',
+  bedAlarm:          '22:30',
+  morningCallSimple: false, // true면 상호작용 없이 알람 끄기 버튼만
+  geminiApiKey:      '',
 });
 
 // ─── 아이템 초기값 ───

@@ -959,6 +959,81 @@ export function stopBgm() {
 /** 현재 BGM 재생 중 여부 */
 export function isBgmPlaying() { return _bgmRunning; }
 
+let _morningAlarmRunning = false;
+let _morningAlarmTimeout = null;
+let _morningAlarmNodes = [];
+
+/**
+ * 모닝콜 알람: 잔잔한 오르골 아르페지오 + 드리미 "메에~" 반복
+ */
+export function playMorningCallAlarm() {
+  if (!isSfxEnabled()) return;
+  stopMorningCallAlarm();
+  _morningAlarmRunning = true;
+  _playMorningAlarmCycle();
+}
+
+function _playSheepBaa(ctx, startTime) {
+  const o = ctx.createOscillator();
+  const g = createGain(0);
+  o.type = 'sine';
+  o.frequency.setValueAtTime(520, startTime);
+  o.frequency.linearRampToValueAtTime(780, startTime + 0.08);
+  o.frequency.exponentialRampToValueAtTime(420, startTime + 0.45);
+  o.connect(g);
+  g.connect(_sfxGain);
+  g.gain.setValueAtTime(0, startTime);
+  g.gain.linearRampToValueAtTime(0.35, startTime + 0.04);
+  g.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
+  o.start(startTime);
+  o.stop(startTime + 0.55);
+  _morningAlarmNodes.push(o, g);
+}
+
+function _playMorningChime(ctx, startTime) {
+  [523.25, 659.25, 783.99].forEach((freq, i) => {
+    const t = startTime + i * 0.18;
+    const o = ctx.createOscillator();
+    const g = createGain(0);
+    o.type = 'triangle';
+    o.frequency.value = freq;
+    o.connect(g);
+    g.connect(_sfxGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.22, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+    o.start(t);
+    o.stop(t + 0.95);
+    _morningAlarmNodes.push(o, g);
+  });
+}
+
+function _playMorningAlarmCycle() {
+  if (!_morningAlarmRunning || !isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime + 0.05;
+  _playMorningChime(ctx, now);
+  _playSheepBaa(ctx, now + 0.55);
+  _playSheepBaa(ctx, now + 1.15);
+
+  _morningAlarmTimeout = setTimeout(() => {
+    _morningAlarmNodes.forEach(n => { try { n.disconnect(); } catch (e) {} });
+    _morningAlarmNodes = [];
+    if (_morningAlarmRunning) _playMorningAlarmCycle();
+  }, 2800);
+}
+
+/** 모닝콜 알람 정지 */
+export function stopMorningCallAlarm() {
+  _morningAlarmRunning = false;
+  clearTimeout(_morningAlarmTimeout);
+  _morningAlarmNodes.forEach(n => {
+    try { n.stop(); } catch (e) {}
+    try { n.disconnect(); } catch (e) {}
+  });
+  _morningAlarmNodes = [];
+}
+
 export function initSound() {
   syncVolumes();
 }
