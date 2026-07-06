@@ -49,6 +49,8 @@ export function removeItem(key) {
 /** 앱 데이터 전체 초기화 */
 export function clearAll() {
   Object.values(STORAGE_KEYS).forEach(k => localStorage.removeItem(k));
+  // 오프닝 시청 기록 (opening.js) — 전체 초기화 시 스토리 다시 재생
+  localStorage.removeItem('ss_opening_viewed');
 }
 
 // ─── 도메인별 헬퍼 ───
