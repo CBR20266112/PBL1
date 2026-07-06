@@ -655,6 +655,34 @@
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
 }
 
+.shop-item-icon-wrap {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shop-item-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));
+}
+
+.decor-wearable,
+.decor-room-prop {
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+}
+
+.decor-cushion {
+  animation: sheepFloat 4s ease-in-out infinite;
+}
+
+.room-viewport {
+  background-color: #0F0C29;
+}
+
 .shop-item-name {
   font-size: var(--font-size-xs);
   font-weight: 700;

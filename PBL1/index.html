@@ -83,7 +83,7 @@
 
         <!-- 양 캐릭터 그래픽 컨테이너 -->
         <div class="sheep-container" id="sheep-container" style="position:relative; cursor:pointer;">
-          <!-- SVG가 여기에 렌더링됨 -->
+          <div id="sheep-render-target" style="position:relative;width:100%;height:100%;z-index:1;"></div>
           <!-- 부위별 터치 존 오버레이 (투명) -->
           <div id="sheep-touch-overlay" style="position:absolute;inset:0;z-index:10;">
             <!-- 왼쪽 귀 -->
@@ -408,6 +408,7 @@
       checkAndShowOpening(document.querySelector('.phone'));
 
       const sheepContainer   = document.getElementById('sheep-container');
+      const sheepRenderTarget = document.getElementById('sheep-render-target');
       const levelBadge       = document.getElementById('level-badge');
       const speechBubble     = document.getElementById('speech-bubble');
       const xpText           = document.getElementById('xp-text');
@@ -606,7 +607,7 @@
           btnMainSleep.classList.remove('btn-primary');
           document.getElementById('sleeping-banner').classList.add('hidden');
         }
-        renderSheepTo(sheepContainer, sheep.step, currentPose);
+        renderSheepTo(sheepRenderTarget, sheep.step, currentPose);
       }
 
       function initHomeAsmr() {
@@ -680,10 +681,10 @@
         const pose = IDLE_POSES[Math.floor(Math.random() * IDLE_POSES.length)];
         currentPose = pose;
         sheep = readSheep();
-        renderSheepTo(sheepContainer, sheep.step, pose);
+        renderSheepTo(sheepRenderTarget, sheep.step, pose);
         setTimeout(() => {
           currentPose = SHEEP_POSE.IDLE;
-          renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.IDLE);
+          renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.IDLE);
         }, 2200);
       }
 
@@ -704,7 +705,7 @@
         dialogStep = 0;
         stopAutoTimers();
         sheep = readSheep();
-        renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.SHY);
+        renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.SHY);
         showDialogStep();
         nameOverlay.classList.add('active');
         nameDialogModal.classList.add('active');
@@ -722,7 +723,7 @@
           btn.textContent = '다음 ›';
           btn.onclick = () => {
             dialogStep++;
-            if (dialogStep === 1) renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.WORRIED);
+            if (dialogStep === 1) renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.WORRIED);
             showDialogStep();
           };
           nameDialogBtns.appendChild(btn);
@@ -752,7 +753,7 @@
         sheep = readSheep();
         if (!accepted) rejectNaming();
         sheep = readSheep();
-        renderSheepTo(sheepContainer, sheep.step, accepted ? SHEEP_POSE.HAPPY : SHEEP_POSE.SAD);
+        renderSheepTo(sheepRenderTarget, sheep.step, accepted ? SHEEP_POSE.HAPPY : SHEEP_POSE.SAD);
         speechBubble.textContent = accepted
           ? `"새 이름, 마음에 들어! 메에~ 🥰"`
           : `"...괜찮아. 드리미도 좋은 이름이야." (행복도가 조금 떨어졌어요)`;
@@ -775,7 +776,7 @@
         saveSheep(sheep);
         closeNameDialog(true);
         sheepNameHeader.textContent = newName;
-        renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.EXCITED);
+        renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.EXCITED);
         showToast(`"${newName}"라는 이름, 너무 좋아! 메에~ 🎉`, 'success');
         speechBubble.textContent = `"${newName}! 이제 내 이름은 ${newName}이야! 🥰"`;
       });
@@ -894,7 +895,7 @@
         if (touchRes.woolGrew) showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success');
 
         sheep = readSheep();
-        renderSheepTo(sheepContainer, sheep.step, pose);
+        renderSheepTo(sheepRenderTarget, sheep.step, pose);
         speechBubble.textContent = bubble;
         speechBubble.style.animation = 'none';
         speechBubble.offsetHeight;
@@ -903,7 +904,7 @@
         // 2.5초 뒤 idle로 복귀
         setTimeout(() => {
           sheep = readSheep();
-          renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.IDLE);
+          renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.IDLE);
           refreshUI();
         }, 2500);
       });
@@ -912,7 +913,7 @@
         showToast(res.msg, 'success');
         if (res.woolGrew) setTimeout(() => showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success'), 400);
         runPetInteraction({
-          container: sheepContainer,
+          container: sheepRenderTarget,
           step: readSheep().step,
           speechEl: speechBubble,
         });
@@ -1116,10 +1117,10 @@
             ? `출석 ${attResult.attendance.streak}일 연속!`
             : '출석 인정!';
           speechBubble.textContent = `"기상 성공! 메에~ 오늘도 응원해! ${streakText}"`;
-          renderSheepTo(sheepContainer, bonusSheep.step, SHEEP_POSE.EXCITED);
+          renderSheepTo(sheepRenderTarget, bonusSheep.step, SHEEP_POSE.EXCITED);
         } else {
           speechBubble.textContent = '"조금 더 깨워줄걸... 그래도 오늘 하루 힘내자!"';
-          renderSheepTo(sheepContainer, bonusSheep.step, SHEEP_POSE.SLEEPY);
+          renderSheepTo(sheepRenderTarget, bonusSheep.step, SHEEP_POSE.SLEEPY);
         }
 
         morningCallState = null;
@@ -1155,7 +1156,7 @@
           : '20초 안에 당근을 줘서 드리미를 깨워주세요!';
         btnMorningCallAction.textContent = isPet ? '🖐️ 드리미 쓰다듬기' : '🥕 당근 먹이기';
         btnMorningCallAction.removeAttribute('disabled');
-        renderSheepTo(sheepContainer, readSheep().step, SHEEP_POSE.SLEEPY);
+        renderSheepTo(sheepRenderTarget, readSheep().step, SHEEP_POSE.SLEEPY);
       }
 
       function startMorningCall({ fromWake = false, scheduled = false } = {}) {
@@ -1205,7 +1206,7 @@
         } else {
           playSoundFeed();
           playSheepAnim(sheepContainer, 'sheep-eat-anim', 800);
-          renderSheepTo(sheepContainer, readSheep().step, SHEEP_POSE.EAT);
+          renderSheepTo(sheepRenderTarget, readSheep().step, SHEEP_POSE.EAT);
         }
 
         endMorningCall(true);

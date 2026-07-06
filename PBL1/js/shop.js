@@ -5,6 +5,7 @@
 import { SHOP_CATALOG, SHOP_CATEGORIES } from './constants.js';
 import { getSheep, saveSheep, getItems, saveItems } from './storage.js';
 import { showToast } from './app.js';
+import { getItemImagePath } from './decor.js';
 
 // ─── 조회 ───
 
@@ -100,6 +101,8 @@ export function buildShopItemHTML(item, owned, equipped) {
     ? `<span class="shop-item-price" style="color:var(--color-success)">무료</span>`
     : `<span class="shop-item-price">🧶 ${item.price}</span>`;
 
+  const iconHTML = `<img class="shop-item-thumb" src="${getItemImagePath(item.id)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="shop-item-icon" style="display:none">${item.icon}</span>`;
+
   return `
 <div class="shop-item ${isOwned ? 'owned' : ''} ${isEquipped ? 'equipped' : ''}"
      data-item-id="${item.id}"
@@ -107,7 +110,7 @@ export function buildShopItemHTML(item, owned, equipped) {
      tabindex="0"
      aria-label="${item.name} ${item.price}양털">
   ${badgeHTML}
-  <div class="shop-item-icon">${item.icon}</div>
+  <div class="shop-item-icon-wrap">${iconHTML}</div>
   <div class="shop-item-name">${item.name}</div>
   ${priceHTML}
 </div>`;

@@ -5,6 +5,7 @@
 import { GROWTH_TABLE, SHEEP_POSE, DAILY_QUOTES, NAME_REJECT_HAPPINESS_DELTA, INTERACTION_XP } from './constants.js';
 import { getSheep, saveSheep } from './storage.js';
 import { getSheepSVG } from './sheep-renderer.js';
+import { buildWearableOverlays } from './decor.js';
 import { showToast } from './app.js';
 
 const WOOL_GROWTH_MAX = 3;
@@ -216,9 +217,15 @@ export function decaySheepStats() {
 
 // ─── UI 렌더링 헬퍼 ───
 
-export function renderSheepTo(container, step, pose = SHEEP_POSE.IDLE) {
+export function renderSheepTo(container, step, pose = SHEEP_POSE.IDLE, equipped = null) {
   if (!container) return;
-  container.innerHTML = getSheepSVG(step, pose);
+
+  const wearablesHTML = buildWearableOverlays(equipped);
+  container.innerHTML = `
+    <div class="sheep-render-wrap" style="position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
+      ${getSheepSVG(step, pose)}
+      ${wearablesHTML}
+    </div>`;
 
   const img = container.querySelector('img.sheep-svg');
   if (img) {
