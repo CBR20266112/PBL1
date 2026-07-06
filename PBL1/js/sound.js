@@ -777,6 +777,12 @@ export function stopClipperHum() {
 
 let _shearNoiseTimeout = null;
 let _shearIsActive = false;
+let _shearMotion = 0; // 0~1, 포인터 속도 기반 강도
+
+/** 털깎기 마찰음 강도 (속도 0~20px/frame 정규화) */
+export function setShearMotion(speed) {
+  _shearMotion = Math.min(1, Math.max(0, speed / 14));
+}
 
 export function startShearSound() {
   if (_shearIsActive) return;
@@ -788,25 +794,72 @@ function _loopShearTick() {
   if (!_shearIsActive || !isSfxEnabled()) return;
   const ctx = getCtx();
   const now = ctx.currentTime;
-  const dur = 0.07;
-  const noise = createNoise(dur + 0.02);
-  const bpf1  = createFilter('bandpass', rand(3000, 5000), 2);
-  const lpf   = createFilter('lowpass',  rand(6000, 9000));
+  const motion = Math.max(0.25, _shearMotion);
+  const dur = 0.05 + (1 - motion) * 0.04;
+
+  // 거친 마찰 레이어
+  const noise = createNoise(dur + 0.03);
+  const bpf1  = createFilter('bandpass', rand(2200, 4200) + motion * 1800, 1.8);
+  const lpf   = createFilter('lowpass', rand(5000, 8000) + motion * 2000);
   const env   = createGain(0);
   noise.connect(bpf1); bpf1.connect(lpf); lpf.connect(env); env.connect(_sfxGain);
-  const vol = rand(0.35, 0.55);
+  const vol = (0.22 + motion * 0.38) * rand(0.92, 1.08);
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(vol, now + 0.01);
-  env.gain.linearRampToValueAtTime(vol * 0.8, now + dur * 0.6);
+  env.gain.linearRampToValueAtTime(vol, now + 0.008);
+  env.gain.linearRampToValueAtTime(vol * 0.75, now + dur * 0.55);
   env.gain.linearRampToValueAtTime(0, now + dur);
   noise.start(now); noise.stop(now + dur + 0.02);
-  _shearNoiseTimeout = setTimeout(_loopShearTick, dur * 1000 + rand(5, 20));
+
+  // 부드러운 솜 밀림 레이어 (속도 높을수록 두껍게)
+  if (motion > 0.35) {
+    const soft = createNoise(dur * 1.2);
+    const softLpf = createFilter('lowpass', rand(900, 1400), 0.8);
+    const softEnv = createGain(0);
+    soft.connect(softLpf); softLpf.connect(softEnv); softEnv.connect(_sfxGain);
+    const softVol = motion * rand(0.08, 0.16);
+    softEnv.gain.setValueAtTime(0, now);
+    softEnv.gain.linearRampToValueAtTime(softVol, now + 0.012);
+    softEnv.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.04);
+    soft.start(now); soft.stop(now + dur + 0.06);
+  }
+
+  const interval = Math.max(18, (dur * 1000) * (1.1 - motion * 0.45) + rand(2, 12));
+  _shearNoiseTimeout = setTimeout(_loopShearTick, interval);
 }
 
 export function stopShearSound() {
   _shearIsActive = false;
+  _shearMotion = 0;
   clearTimeout(_shearNoiseTimeout);
   _shearNoiseTimeout = null;
+}
+
+/** 큰 덩어리 털이 벗겨질 때 짧은 카타르시스 팝 */
+export function playShearPeelPop(intensity = 0.6) {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const vol = 0.12 + intensity * 0.22;
+
+  const noise = createNoise(0.06);
+  const bpf = createFilter('bandpass', rand(600, 1100), 0.9);
+  const ng = createGain(0);
+  noise.connect(bpf); bpf.connect(ng); ng.connect(_sfxGain);
+  ng.gain.setValueAtTime(0, now);
+  ng.gain.linearRampToValueAtTime(vol, now + 0.006);
+  ng.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+  noise.start(now); noise.stop(now + 0.08);
+
+  const o = ctx.createOscillator();
+  const og = createGain(0);
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(rand(180, 260), now);
+  o.frequency.exponentialRampToValueAtTime(rand(90, 140), now + 0.09);
+  o.connect(og); og.connect(_sfxGain);
+  og.gain.setValueAtTime(0, now);
+  og.gain.linearRampToValueAtTime(vol * 0.5, now + 0.01);
+  og.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+  o.start(now); o.stop(now + 0.12);
 }
 
 // --- ASMR ---

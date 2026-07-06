@@ -65,6 +65,12 @@
   width: 100%;
   max-width: 380px;
   aspect-ratio: 1;
+  will-change: transform;
+  transition: box-shadow 0.15s ease;
+}
+
+.canvas-frame.is-shearing {
+  box-shadow: 0 0 28px rgba(167, 139, 250, 0.45), var(--shadow-xl);
 }
 
 /* Canvas 레이어 스택 */

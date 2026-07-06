@@ -85,7 +85,14 @@ function buildInstallUI() {
   document.body.appendChild(modalEl);
 
   const icon = modalEl.querySelector('#pwa-install-icon');
-  if (icon) icon.src = `${getAssetBase()}assets/sheep/step1/idle.png`;
+  if (icon) {
+    import('./app-icon.js').then(({ getAppIconRelativePath }) => {
+      icon.src = getAppIconRelativePath();
+    });
+    window.addEventListener('ss-app-icon-changed', (e) => {
+      if (icon && e.detail?.href) icon.src = e.detail.href;
+    });
+  }
 
   modalEl.querySelector('#btn-pwa-install-later')?.addEventListener('click', dismissLater);
   overlayEl.addEventListener('click', dismissLater);

@@ -4,7 +4,7 @@
  */
 
 /** 앱 버전 (설정 화면·배포 기준) */
-export const APP_VERSION = '1.72.6';
+export const APP_VERSION = '1.72.7';
 
 // ─── localStorage 키 ───
 export const STORAGE_KEYS = Object.freeze({
@@ -119,6 +119,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   wakeAlarm:         '07:00',
   bedAlarm:          '22:30',
   morningCallSimple: false, // true면 상호작용 없이 알람 끄기 버튼만
+  iconMode:          'time', // 'time' | 'daily' — 앱 아이콘 변경 방식
   geminiApiKey:      '',
 });
 

@@ -70,8 +70,8 @@ async function checkAlarm() {
 
   await self.registration.showNotification(title, {
     body,
-    icon: alarmState.iconUrl || 'assets/sheep/step1/idle.png',
-    badge: alarmState.iconUrl || 'assets/sheep/step1/idle.png',
+    icon: alarmState.iconUrl || 'assets/icon/app_icon_candidate_night.png',
+    badge: alarmState.iconUrl || 'assets/icon/app_icon_candidate_night.png',
     tag: 'ss-morningcall',
     renotify: true,
     requireInteraction: true,

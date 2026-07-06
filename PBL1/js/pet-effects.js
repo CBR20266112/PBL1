@@ -23,9 +23,9 @@ const PET_BUBBLES = [
 const PET_EMOJIS = ['💕', '🩷', '❤️', '💜', '✨', '🤚', '⭐', '💖', '🌟'];
 
 const EFFECT_FILE_NAMES = [
-  'hand.png.png', 'heart.png.png', 'miniHeart.png.png',
-  'twinkle.png.png', 'wool.png.png', 'woolShine.png.png',
-  'heart.png', 'sparkle.png', 'hand.png',
+  'hand.png', 'heart.png', 'miniHeart.png',
+  'twinkle.png', 'wool.png', 'woolShine.png',
+  'sparkle.png',
 ];
 
 function getAssetBasePath() {
@@ -63,7 +63,7 @@ export function getPetPoseCandidates() {
   // 기존에 넣어 둔 step1 반응 이미지도 공통 풀에 포함
   paths.push(`${base}assets/sheep/step1/pet.png`);
   for (let i = 2; i <= 8; i++) {
-    paths.push(`${base}assets/sheep/step1/pet (${i}).png`);
+    paths.push(`${base}assets/sheep/step1/pet_${String(i).padStart(2, '0')}.png`);
   }
 
   return paths;

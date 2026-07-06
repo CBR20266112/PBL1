@@ -8,6 +8,7 @@ import {
   getMorningCallConfig,
   localTodayKey,
 } from './morningcall.js';
+import { getAppIconAbsoluteUrl } from './app-icon.js';
 
 function getSwBase() {
   return window.location.pathname.includes('/pages/') ? '../' : './';
@@ -22,7 +23,7 @@ export function getAppBaseUrl() {
 }
 
 function getIconUrl() {
-  return `${getAppBaseUrl()}assets/sheep/step1/idle.png`;
+  return getAppIconAbsoluteUrl();
 }
 
 async function getRegistration() {
