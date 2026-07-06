@@ -93,60 +93,381 @@ function createGain(val) {
 
 // --- SFX ---
 
-/**
- * 양 쓰다듬기 소리: 귀여운 "뾱뾱" pitch glide + "메에~" 양 울음 혼합
- */
-export function playSoundPet() {
+// --- 쓰다듬기 전용 합성음 (효과음·울음 다양 변주) ---
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/** 공통 양 울음 합성 */
+function synthSheepBaa({
+  now,
+  baseFreq = 320,
+  duration = 0.5,
+  vol = 0.28,
+  wave1 = 'sawtooth',
+  wave2 = 'sine',
+  pitchUp = 1.2,
+  pitchDown = 0.88,
+  lpfFreq = 900,
+  vibrato = 0,
+} = {}) {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const t = now ?? ctx.currentTime;
+  const o1 = ctx.createOscillator();
+  const o2 = ctx.createOscillator();
+  const g = createGain(0);
+  o1.type = wave1;
+  o2.type = wave2;
+  o1.frequency.setValueAtTime(baseFreq, t);
+  o1.frequency.linearRampToValueAtTime(baseFreq * pitchUp, t + duration * 0.15);
+  o1.frequency.exponentialRampToValueAtTime(baseFreq * pitchDown, t + duration);
+  o2.frequency.setValueAtTime(baseFreq * 2, t);
+  o2.frequency.linearRampToValueAtTime(baseFreq * 2.2, t + duration * 0.12);
+  if (vibrato > 0) {
+    const v = ctx.createOscillator();
+    const vg = createGain(vibrato);
+    v.frequency.value = rand(5, 9);
+    v.connect(vg);
+    vg.connect(o1.frequency);
+    v.start(t);
+    v.stop(t + duration + 0.05);
+  }
+  const lpf = createFilter('lowpass', lpfFreq, 2);
+  o1.connect(lpf);
+  o2.connect(lpf);
+  lpf.connect(g);
+  g.connect(_sfxGain);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.04);
+  g.gain.setValueAtTime(vol * 0.85, t + duration * 0.7);
+  g.gain.linearRampToValueAtTime(0, t + duration);
+  o1.start(t);
+  o1.stop(t + duration + 0.05);
+  o2.start(t);
+  o2.stop(t + duration + 0.05);
+}
+
+// ── 쓰다듬기 효과음 변주 ──
+
+function playPetStrokeBoing() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx();
   const now = ctx.currentTime;
+  const count = Math.floor(rand(2, 5));
+  for (let i = 0; i < count; i++) {
+    const t = now + i * rand(0.06, 0.11);
+    const o = ctx.createOscillator();
+    const g = createGain(0);
+    o.type = pickRandom(['sine', 'triangle']);
+    const f = rand(750, 1450);
+    o.frequency.setValueAtTime(f * 0.55, t);
+    o.frequency.linearRampToValueAtTime(f, t + 0.02);
+    o.frequency.exponentialRampToValueAtTime(f * 0.35, t + 0.18);
+    o.connect(g);
+    g.connect(_sfxGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(rand(0.22, 0.42), t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    o.start(t);
+    o.stop(t + 0.22);
+  }
+}
 
-  // 1) 뾱뾱 (짧은 pitch glide 연속)
-  const boingCount = Math.floor(rand(2, 4));
-  for (let i = 0; i < boingCount; i++) {
-    const t = now + i * rand(0.07, 0.13);
+function playPetStrokeBrush() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const strokes = Math.floor(rand(4, 7));
+  for (let i = 0; i < strokes; i++) {
+    const t = now + i * rand(0.05, 0.09);
+    const dur = rand(0.04, 0.08);
+    const noise = createNoise(dur);
+    const lpf = createFilter('lowpass', rand(1800, 3200), 1.2);
+    const g = createGain(0);
+    noise.connect(lpf);
+    lpf.connect(g);
+    g.connect(_sfxGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(rand(0.12, 0.22), t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    noise.start(t);
+    noise.stop(t + dur + 0.02);
+  }
+}
+
+function playPetStrokeFluffy() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const pats = Math.floor(rand(2, 4));
+  for (let i = 0; i < pats; i++) {
+    const t = now + i * rand(0.1, 0.16);
     const o = ctx.createOscillator();
     const g = createGain(0);
     o.type = 'sine';
-    const startFreq = rand(900, 1400);
-    o.frequency.setValueAtTime(startFreq * 0.6, t);
-    o.frequency.linearRampToValueAtTime(startFreq, t + 0.025);
-    o.frequency.exponentialRampToValueAtTime(startFreq * 0.4, t + 0.18);
-    o.connect(g); g.connect(_sfxGain);
+    const f = rand(90, 160);
+    o.frequency.setValueAtTime(f, t);
+    o.frequency.exponentialRampToValueAtTime(f * 0.7, t + 0.12);
+    o.connect(g);
+    g.connect(_sfxGain);
     g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(rand(0.3, 0.45), t + 0.015);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-    o.start(t); o.stop(t + 0.22);
+    g.gain.linearRampToValueAtTime(rand(0.18, 0.3), t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+    o.start(t);
+    o.stop(t + 0.16);
+    const n = createNoise(0.06);
+    const bpf = createFilter('bandpass', rand(400, 800), 2);
+    const ng = createGain(0);
+    n.connect(bpf);
+    bpf.connect(ng);
+    ng.connect(_sfxGain);
+    ng.gain.setValueAtTime(0, t);
+    ng.gain.linearRampToValueAtTime(0.08, t + 0.01);
+    ng.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+    n.start(t);
+    n.stop(t + 0.08);
   }
+}
 
-  // 2) 뒤따라 나오는 양 울음 "메에~"
-  const maaTime = now + boingCount * 0.1 + rand(0.05, 0.12);
-  const maaDur  = rand(0.38, 0.58);
-  const baseFreq = rand(310, 370);
-  const o1 = ctx.createOscillator();
-  const o2 = ctx.createOscillator();
-  const maaGain = createGain(0);
-  o1.type = 'sawtooth';
-  o2.type = 'sine';
-  o1.frequency.setValueAtTime(baseFreq, maaTime);
-  o1.frequency.linearRampToValueAtTime(baseFreq * 1.18, maaTime + 0.07);
-  o1.frequency.exponentialRampToValueAtTime(baseFreq * 0.88, maaTime + maaDur);
-  o2.frequency.setValueAtTime(baseFreq * 2.02, maaTime);
-  o2.frequency.linearRampToValueAtTime(baseFreq * 2.35, maaTime + 0.07);
-  o2.frequency.exponentialRampToValueAtTime(baseFreq * 1.75, maaTime + maaDur);
-  const lpf = createFilter('lowpass', 900, 2);
-  o1.connect(lpf); o2.connect(lpf); lpf.connect(maaGain); maaGain.connect(_sfxGain);
-  maaGain.gain.setValueAtTime(0, maaTime);
-  maaGain.gain.linearRampToValueAtTime(0.28, maaTime + 0.04);
-  maaGain.gain.setValueAtTime(0.22, maaTime + maaDur * 0.7);
-  maaGain.gain.linearRampToValueAtTime(0, maaTime + maaDur);
-  o1.start(maaTime); o1.stop(maaTime + maaDur + 0.05);
-  o2.start(maaTime); o2.stop(maaTime + maaDur + 0.05);
+function playPetStrokeScritch() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const cnt = Math.floor(rand(3, 6));
+  for (let i = 0; i < cnt; i++) {
+    const t = now + i * rand(0.05, 0.08);
+    const dur = rand(0.03, 0.06);
+    const noise = createNoise(dur);
+    const bpf = createFilter('bandpass', rand(1400, 2800), rand(3, 7));
+    const g = createGain(0);
+    noise.connect(bpf);
+    bpf.connect(g);
+    g.connect(_sfxGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(rand(0.15, 0.28), t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    noise.start(t);
+    noise.stop(t + dur + 0.02);
+  }
+}
+
+function playPetStrokeTickle() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const taps = Math.floor(rand(3, 5));
+  for (let i = 0; i < taps; i++) {
+    const t = now + i * rand(0.04, 0.07);
+    const o = ctx.createOscillator();
+    const g = createGain(0);
+    o.type = 'triangle';
+    const f = rand(1100, 1800);
+    o.frequency.setValueAtTime(f, t);
+    o.frequency.exponentialRampToValueAtTime(f * 0.5, t + 0.08);
+    o.connect(g);
+    g.connect(_sfxGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(rand(0.1, 0.18), t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+    o.start(t);
+    o.stop(t + 0.12);
+  }
+}
+
+// ── 양 울음 변주 ──
+
+function playPetBaaClassic() {
+  const ctx = getCtx();
+  synthSheepBaa({
+    now: ctx.currentTime,
+    baseFreq: rand(300, 380),
+    duration: rand(0.4, 0.62),
+    vol: rand(0.24, 0.3),
+  });
+}
+
+function playPetBaaShort() {
+  const ctx = getCtx();
+  synthSheepBaa({
+    now: ctx.currentTime,
+    baseFreq: rand(350, 440),
+    duration: rand(0.14, 0.24),
+    vol: rand(0.22, 0.28),
+    pitchUp: 1.25,
+    pitchDown: 0.8,
+  });
+}
+
+function playPetBaaLong() {
+  const ctx = getCtx();
+  synthSheepBaa({
+    now: ctx.currentTime,
+    baseFreq: rand(260, 330),
+    duration: rand(0.75, 1.05),
+    vol: rand(0.2, 0.26),
+    pitchUp: 1.15,
+    pitchDown: 0.82,
+    vibrato: rand(4, 8),
+    lpfFreq: 750,
+  });
+}
+
+function playPetBaaDouble() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const f = rand(310, 370);
+  synthSheepBaa({ now, baseFreq: f, duration: rand(0.2, 0.28), vol: 0.24 });
+  synthSheepBaa({
+    now: now + rand(0.22, 0.32),
+    baseFreq: f * rand(1.08, 1.18),
+    duration: rand(0.22, 0.32),
+    vol: 0.22,
+  });
+}
+
+function playPetBaaHappy() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const base = rand(400, 480);
+  [0, 0.26].forEach((delay, i) => {
+    synthSheepBaa({
+      now: now + delay,
+      baseFreq: i === 0 ? base : base * 1.15,
+      duration: rand(0.18, 0.28),
+      vol: i === 0 ? 0.26 : 0.22,
+      wave1: 'triangle',
+      pitchUp: 1.3,
+      pitchDown: 0.85,
+      lpfFreq: 1100,
+    });
+  });
+}
+
+function playPetBaaSleepy() {
+  const ctx = getCtx();
+  synthSheepBaa({
+    now: ctx.currentTime,
+    baseFreq: rand(200, 260),
+    duration: rand(0.55, 0.85),
+    vol: rand(0.16, 0.22),
+    pitchUp: 1.06,
+    pitchDown: 0.9,
+    lpfFreq: 600,
+    vibrato: rand(3, 5),
+  });
+}
+
+function playPetBaaTiny() {
+  const ctx = getCtx();
+  synthSheepBaa({
+    now: ctx.currentTime,
+    baseFreq: rand(460, 560),
+    duration: rand(0.12, 0.2),
+    vol: rand(0.18, 0.24),
+    wave1: 'triangle',
+    pitchUp: 1.35,
+    pitchDown: 0.75,
+    lpfFreq: 1200,
+  });
+}
+
+function playPetBaaQuestion() {
+  if (!isSfxEnabled()) return;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
+  const f = rand(300, 360);
+  const o = ctx.createOscillator();
+  const g = createGain(0);
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(f, now);
+  o.frequency.linearRampToValueAtTime(f * 1.45, now + 0.35);
+  const lpf = createFilter('lowpass', 850, 2);
+  o.connect(lpf);
+  lpf.connect(g);
+  g.connect(_sfxGain);
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(0.24, now + 0.04);
+  g.gain.linearRampToValueAtTime(0, now + 0.42);
+  o.start(now);
+  o.stop(now + 0.45);
+}
+
+const PET_STROKE_VARIANTS = [
+  playPetStrokeBoing,
+  playPetStrokeBrush,
+  playPetStrokeFluffy,
+  playPetStrokeScritch,
+  playPetStrokeTickle,
+];
+
+const PET_BAA_VARIANTS = [
+  playPetBaaClassic,
+  playPetBaaShort,
+  playPetBaaLong,
+  playPetBaaDouble,
+  playPetBaaHappy,
+  playPetBaaSleepy,
+  playPetBaaTiny,
+  playPetBaaQuestion,
+];
+
+function playRandomPetStroke() {
+  pickRandom(PET_STROKE_VARIANTS)();
+}
+
+function playRandomPetBaa() {
+  pickRandom(PET_BAA_VARIANTS)();
+}
+
+/** @deprecated 호환용 — 랜덤 쓰다듬기+울음 */
+export function playSoundPet() {
+  playRandomPetStroke();
+  setTimeout(playRandomPetBaa, rand(100, 280));
 }
 
 /**
- * 먹이주기 소리: 냠냠 씹어먹는 소리 + 짧고 만족스러운 "메에~"
+ * 쓰다듬기 랜덤 사운드 묶음 (효과음 + 울음, 매번 다른 조합)
  */
+export function playPetSoundBundle() {
+  if (!isSfxEnabled()) return;
+
+  const roll = Math.random();
+
+  if (roll < 0.1) {
+    playRandomPetBaa();
+    return;
+  }
+
+  if (roll < 0.2) {
+    playRandomPetStroke();
+    setTimeout(playRandomPetBaa, rand(70, 160));
+    setTimeout(playRandomPetBaa, rand(380, 620));
+    return;
+  }
+
+  if (roll < 0.32) {
+    playPetStrokeBrush();
+    setTimeout(playPetBaaSleepy, rand(200, 380));
+    return;
+  }
+
+  if (roll < 0.42) {
+    playPetStrokeFluffy();
+    setTimeout(playPetBaaHappy, rand(150, 300));
+    return;
+  }
+
+  playRandomPetStroke();
+  setTimeout(playRandomPetBaa, rand(110, 340));
+  if (Math.random() < 0.22) {
+    setTimeout(playRandomPetBaa, rand(420, 680));
+  }
+}
+
 export function playSoundFeed() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx();

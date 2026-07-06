@@ -41,10 +41,10 @@
     <!-- 스크롤 영역 -->
     <div class="content">
 
-      <!-- 메에메에 캘린더 -->
+      <!-- 메에메에 캘린더 (수면 탭 전용) -->
       <section class="glass card" style="padding: var(--space-3); margin-bottom: var(--space-3);">
         <a href="calendar.html" class="btn btn-secondary w-full" style="display:block;text-align:center;text-decoration:none;">
-          📅 메에메에 캘린더 보기
+          📅 메에메에 캘린더
         </a>
       </section>
 
@@ -80,7 +80,7 @@
       <!-- 수동 수면 기록 추가 카드 -->
       <section class="glass card">
         <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-3); color: var(--text-secondary);">✍️ 직접 수면 기록하기</h3>
-        
+        <p class="text-muted" id="alarm-hint" style="font-size: var(--font-size-xs); margin-bottom: var(--space-3); line-height: 1.5;"></p>
         <div class="time-input-group" style="margin-bottom: var(--space-3);">
           <div class="time-input-card">
             <span class="time-input-label">💤 취침 시간</span>
@@ -187,6 +187,11 @@
       getRecentRecords,
       drawSleepChart 
     } from '../js/sleep.js';
+    import {
+      saveMorningCallSchedule,
+      getSleepTimeDefaults,
+      formatAlarmHint,
+    } from '../js/morningcall.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
@@ -203,6 +208,7 @@
       const inputWaketime = document.getElementById('input-waketime');
       const inputNote = document.getElementById('input-note');
       const btnSaveManualSleep = document.getElementById('btn-save-manual-sleep');
+      const alarmHint = document.getElementById('alarm-hint');
 
       const tabWeekly = document.getElementById('tab-weekly');
       const tabMonthly = document.getElementById('tab-monthly');
@@ -212,6 +218,24 @@
 
       let currentTab = 'weekly'; // 'weekly' or 'monthly'
       let activeMood = 3;
+
+      function syncAlarmSchedule() {
+        saveMorningCallSchedule(inputBedtime.value, inputWaketime.value);
+        if (alarmHint) {
+          alarmHint.textContent = formatAlarmHint(inputBedtime.value, inputWaketime.value);
+        }
+      }
+
+      function initSleepInputs() {
+        const { bedtime, wakeTime } = getSleepTimeDefaults();
+        inputBedtime.value = bedtime;
+        inputWaketime.value = wakeTime;
+        syncAlarmSchedule();
+      }
+
+      initSleepInputs();
+      inputBedtime.addEventListener('change', syncAlarmSchedule);
+      inputWaketime.addEventListener('change', syncAlarmSchedule);
 
       function refreshPage() {
         const sheep = getSheep();
@@ -286,6 +310,8 @@
           mood: activeMood,
           note
         });
+
+        syncAlarmSchedule();
 
         showToast(`오늘 수면 기록 저장 완료! +${res.xpGained} XP 획득! 🧶`, 'success');
         inputNote.value = '';

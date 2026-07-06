@@ -148,4 +148,26 @@ export function initCommon() {
   initStars();
   initNav();
   initPageAnimation();
+  initPwaAlarmLazy();
+}
+
+/** PWA 알람 (홈에서 모닝콜 핸들러 연결) */
+let _pwaAlarmBooted = false;
+export function initPwaAlarmLazy() {
+  if (_pwaAlarmBooted) return;
+  _pwaAlarmBooted = true;
+  import('./pwa-alarm.js').then(({ initPwaAlarm, syncAlarmToServiceWorker }) => {
+    initPwaAlarm({
+      onMorningCall: () => {
+        const isHome = !window.location.pathname.includes('/pages/');
+        if (isHome) {
+          window.dispatchEvent(new CustomEvent('ss-morningcall-trigger'));
+        } else {
+          const base = window.location.pathname.includes('/pages/') ? '../' : './';
+          window.location.assign(`${base}index.html?morningcall=1`);
+        }
+      },
+    });
+    window.ssSyncBackgroundAlarm = syncAlarmToServiceWorker;
+  }).catch(() => {});
 }

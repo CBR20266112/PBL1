@@ -103,10 +103,13 @@
               <input type="time" id="setting-bed-alarm" class="time-input" style="font-size:var(--font-size-lg);" value="22:30">
             </div>
             <div class="time-input-card" style="padding:var(--space-3);">
-              <span class="time-input-label">☀️ 모닝콜 알람 시간</span>
+              <span class="time-input-label">☀️ 기본 기상 시간</span>
               <input type="time" id="setting-wake-alarm" class="time-input" style="font-size:var(--font-size-lg);" value="07:00">
             </div>
           </div>
+          <p class="text-muted" style="font-size: var(--font-size-2xs); line-height: 1.5; margin-top: var(--space-2);">
+            실제 모닝콜은 <strong>수면 탭</strong>에서 입력한 기상 시간에 울립니다. 위 값은 처음 입력 시 기본값으로 쓰여요.
+          </p>
 
           <div class="divider" style="margin: 8px 0;"></div>
 
@@ -145,7 +148,7 @@
           <div class="setting-item">
             <div class="setting-info">
               <span class="setting-title">🔔 푸시 알림 수신</span>
-              <span class="setting-desc">취침 알림 및 기상 격려 알림 수신</span>
+              <span class="setting-desc">백그라운드 모닝콜 알림 (브라우저 알림 허용 필요)</span>
             </div>
             <label class="switch">
               <input type="checkbox" id="switch-notify" checked>
@@ -298,6 +301,7 @@
     import { getSheep, saveSheep, getSettings, saveSettings, clearAll, resetSheep } from '../js/storage.js';
     import { GROWTH_TABLE, APP_VERSION } from '../js/constants.js';
     import { startOpening } from '../js/opening.js';
+    import { saveMorningCallSchedule } from '../js/morningcall.js';
     import { initSound, isBgmEnabled, setBgmEnabled, startBgm, stopBgm, resumeAudio, getBgmVolume, setBgmVolume } from '../js/sound.js';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -376,18 +380,25 @@
 
       settingBedAlarm.addEventListener('change', () => {
         updateSetting('bedAlarm', settingBedAlarm.value);
+        saveMorningCallSchedule(settingBedAlarm.value, settingWakeAlarm.value);
       });
 
       settingWakeAlarm.addEventListener('change', () => {
         updateSetting('wakeAlarm', settingWakeAlarm.value);
+        saveMorningCallSchedule(settingBedAlarm.value, settingWakeAlarm.value);
       });
 
       switchDarkMode.addEventListener('change', () => {
         updateSetting('darkMode', switchDarkMode.checked);
       });
 
-      switchNotify.addEventListener('change', () => {
+      switchNotify.addEventListener('change', async () => {
         updateSetting('notification', switchNotify.checked);
+        if (switchNotify.checked) {
+          const { requestNotificationPermission } = await import('../js/pwa-alarm.js');
+          await requestNotificationPermission();
+        }
+        window.dispatchEvent(new CustomEvent('ss-alarm-schedule-changed'));
       });
 
       switchBgMusic.addEventListener('change', () => {

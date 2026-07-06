@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="manifest" href="manifest.webmanifest">
   <title>SleepySheep | 홈</title>
   
   <link rel="stylesheet" href="css/variables.css">
@@ -126,6 +128,9 @@
         <div id="shear-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2);">
           레벨업하여 양털이 꽉 차면(3단계 자람) 깎을 수 있어요!
         </div>
+        <p class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.5;">
+          양 몸을 살짝 문지르면 쓰다듬을 수 있어요 🖐️
+        </p>
       </section>
 
       <!-- 메뉴 그리드 -->
@@ -200,8 +205,22 @@
   <div class="modal" id="sleep-modal">
     <div class="modal-handle"></div>
     <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);">😴 안녕히 주무세요, 양!</h3>
+    <p class="text-center text-muted" style="font-size: var(--font-size-sm); margin-bottom: var(--space-4); line-height: 1.6;">
+      취침·기상 시간을 정해 주세요.<br>
+      <strong>기상 시간</strong>에 드리미 모닝콜이 울립니다.
+    </p>
+    <div class="time-input-group" style="margin-bottom: var(--space-4);">
+      <div class="time-input-card">
+        <span class="time-input-label">💤 취침 시간</span>
+        <input type="time" id="sleep-modal-bedtime" class="time-input" value="23:00">
+      </div>
+      <div class="time-input-card">
+        <span class="time-input-label">☀️ 기상 시간 (모닝콜)</span>
+        <input type="time" id="sleep-modal-waketime" class="time-input" value="07:00">
+      </div>
+    </div>
+    <p class="text-center text-muted" id="sleep-modal-alarm-hint" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-4);"></p>
     <p class="text-center text-muted" style="font-size: var(--font-size-sm); margin-bottom: var(--space-5); line-height: 1.6;">
-      취침 기록을 시작합니다.<br>
       일어나신 후 '기상하기' 버튼을 눌러 수면 기록을 완료해 주세요.
     </p>
     <div class="flex flex-col gap-3">
@@ -307,14 +326,16 @@
 
 
   <script type="module">
-    import { initCommon, spawnHearts, showToast } from './js/app.js';
+    import { initCommon, showToast } from './js/app.js';
     import { readSheep, renderSheepTo, updateXPBar, petSheep, feedSheep, decaySheepStats, playSheepAnim, addXP } from './js/sheep.js';
-    import { initSound, resumeAudio, playSoundPet, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm } from './js/sound.js';
+    import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm } from './js/sound.js';
+    import { runPetInteraction } from './js/pet-effects.js';
+    import { initSheepStrokePet, getLastStrokeTravel } from './js/sheep-stroke.js';
     import { recordSleep, getStreak } from './js/sleep.js';
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
     import { saveSheep, setItem, getItem, removeItem, getSettings } from './js/storage.js';
     import { checkAndShowOpening } from './js/opening.js';
-    import { pickMorningAction, MORNING_ACTION, initWakeAlarmScheduler } from './js/morningcall.js';
+    import { pickMorningAction, MORNING_ACTION, initWakeAlarmScheduler, saveMorningCallSchedule, getSleepTimeDefaults, formatAlarmHint } from './js/morningcall.js';
     import { recordAttendance } from './js/attendance.js';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -658,6 +679,7 @@
       document.getElementById('sheep-touch-overlay').addEventListener('click', (e) => {
         const zone = e.target.closest('[data-zone]');
         if (!zone || _zoneCD) return;
+        if (getLastStrokeTravel() > 35) return;
         if (getItem('ss_sleeping_since')) return; // 자는 중이면 반응 안 함
         _zoneCD = true;
         setTimeout(() => _zoneCD = false, 900);
@@ -689,19 +711,35 @@
         }, 2500);
       });
 
+      function handlePetSuccess(res) {
+        showToast(res.msg, 'success');
+        runPetInteraction({
+          container: sheepContainer,
+          step: readSheep().step,
+          speechEl: speechBubble,
+        });
+        refreshUI();
+      }
+
+      initSheepStrokePet({
+        container: sheepContainer,
+        target: document.getElementById('sheep-touch-overlay'),
+        isBlocked: () => !!getItem('ss_sleeping_since'),
+        onPet: (res) => {
+          resumeAudio();
+          tryStartBgm();
+          handlePetSuccess(res);
+        },
+        onPetFail: (res) => showToast(res.msg, 'error'),
+      });
+
       // ─── 쓰다듬기 버튼 ───
       btnPet.addEventListener('click', () => {
         resumeAudio();
         tryStartBgm();
         const res = petSheep();
-        if (res.success) {
-          playSoundPet();
-          showToast(res.msg, 'success');
-          spawnHearts(sheepContainer);
-          playSheepAnim(sheepContainer, 'sheep-pet-anim', 600);
-          speechBubble.textContent = '"기분 좋아! 고마워 양~ ♥"';
-          refreshUI();
-        } else { showToast(res.msg, 'error'); }
+        if (res.success) handlePetSuccess(res);
+        else showToast(res.msg, 'error');
       });
 
       // ─── 먹이주기 ───
@@ -721,6 +759,32 @@
       // ─── 양털깎기 ───
       btnShearGame.addEventListener('click', () => { location.href = 'pages/minigame.html'; });
 
+      function loadSleepModalTimes() {
+        const { bedtime, wakeTime } = getSleepTimeDefaults();
+        const bedEl = document.getElementById('sleep-modal-bedtime');
+        const wakeEl = document.getElementById('sleep-modal-waketime');
+        const hintEl = document.getElementById('sleep-modal-alarm-hint');
+        if (bedEl) bedEl.value = bedtime;
+        if (wakeEl) wakeEl.value = wakeTime;
+        if (hintEl) hintEl.textContent = formatAlarmHint(bedtime, wakeTime);
+      }
+
+      function bindSleepModalTimeInputs() {
+        const bedEl = document.getElementById('sleep-modal-bedtime');
+        const wakeEl = document.getElementById('sleep-modal-waketime');
+        const hintEl = document.getElementById('sleep-modal-alarm-hint');
+        const sync = () => {
+          if (!bedEl || !wakeEl) return;
+          saveMorningCallSchedule(bedEl.value, wakeEl.value);
+          if (hintEl) hintEl.textContent = formatAlarmHint(bedEl.value, wakeEl.value);
+        };
+        bedEl?.addEventListener('change', sync);
+        wakeEl?.addEventListener('change', sync);
+      }
+
+      bindSleepModalTimeInputs();
+      loadSleepModalTimes();
+
       // ─── 잠자기 / 기상하기 ───
       btnMainSleep.addEventListener('click', () => {
         const sleepingSince = getItem('ss_sleeping_since');
@@ -732,6 +796,7 @@
           sleepOverlay.classList.add('active');
           wakeModal.classList.add('active');
         } else {
+          loadSleepModalTimes();
           sleepOverlay.classList.add('active');
           sleepModal.classList.add('active');
         }
@@ -743,10 +808,18 @@
         playSoundSleep();
         const now = new Date();
         const bedTimeString = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        setItem('ss_sleeping_since', { time: now.toISOString(), bedtime: bedTimeString });
+        const plannedBed = document.getElementById('sleep-modal-bedtime')?.value || bedTimeString;
+        const wakeTime = document.getElementById('sleep-modal-waketime')?.value || '07:00';
+        saveMorningCallSchedule(plannedBed, wakeTime);
+        setItem('ss_sleeping_since', {
+          time: now.toISOString(),
+          bedtime: bedTimeString,
+          plannedBedtime: plannedBed,
+          wakeTime,
+        });
         sleepModal.classList.remove('active');
         sleepOverlay.classList.remove('active');
-        showToast('좋은 꿈 꾸세요! 수면 기록을 시작합니다. 🌙', 'success');
+        showToast(`좋은 꿈 꾸세요! ${wakeTime}에 모닝콜이 울려요. 🌙`, 'success');
         refreshUI();
       });
 
@@ -794,6 +867,12 @@
           });
           removeItem('ss_sleeping_since');
         }
+
+        const defaults = getSleepTimeDefaults();
+        saveMorningCallSchedule(
+          session?.plannedBedtime || session?.bedtime || defaults.bedtime,
+          session?.wakeTime || defaults.wakeTime,
+        );
 
         const { bonusXp, bonusWool } = applyMorningBonus(success, simple);
         const bonusRes = addXP(bonusXp);
@@ -914,10 +993,12 @@
         morningCallState.completed = true;
 
         if (morningCallState.action === MORNING_ACTION.PET) {
-          playSoundPet();
-          playSheepAnim(sheepContainer, 'sheep-pet-anim', 600);
-          spawnHearts(sheepContainer, 3);
-          renderSheepTo(sheepContainer, readSheep().step, SHEEP_POSE.HAPPY);
+          runPetInteraction({
+            container: sheepContainer,
+            step: readSheep().step,
+            speechEl: speechBubble,
+            idleMs: 1800,
+          });
         } else {
           playSoundFeed();
           playSheepAnim(sheepContainer, 'sheep-eat-anim', 800);
@@ -939,6 +1020,11 @@
       });
 
       initWakeAlarmScheduler(() => {
+        if (document.getElementById('morningcall-modal')?.classList.contains('active')) return;
+        startMorningCall({ scheduled: true });
+      });
+
+      window.addEventListener('ss-morningcall-trigger', () => {
         if (document.getElementById('morningcall-modal')?.classList.contains('active')) return;
         startMorningCall({ scheduled: true });
       });

@@ -1,0 +1,26 @@
+{
+  "name": "Sleepy Sheep",
+  "short_name": "SleepySheep",
+  "description": "힐링 수면 메이트 — 드리미와 함께하는 수면 관리",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a3e",
+  "theme_color": "#7c3aed",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "assets/sheep/step1/idle.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/sheep/step1/idle.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

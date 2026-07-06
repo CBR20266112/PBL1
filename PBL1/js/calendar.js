@@ -2,14 +2,13 @@
  * calendar.js — 메에메에 캘린더 (수면 + 고민 통합)
  */
 
-import { getSleepRecords } from './storage.js';
-import { getWorries } from './storage.js';
+import { getSleepRecords, getWorries, getSettings } from './storage.js';
 import { formatDuration } from './sleep.js';
 
 const MOOD_EMOJIS = ['😢', '🥱', '😐', '😊', '🥰'];
 const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
 
-/** YYYY-MM-DD */
+/** 로컬 기준 YYYY-MM-DD */
 export function toDateKey(year, month, day) {
   const m = String(month + 1).padStart(2, '0');
   const d = String(day).padStart(2, '0');
@@ -17,7 +16,8 @@ export function toDateKey(year, month, day) {
 }
 
 export function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  return toDateKey(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 /** 해당 월의 캘린더 셀 배열 (앞뒤 빈 칸 포함) */
@@ -58,6 +58,35 @@ export function getMonthDataMap(year, month) {
   return { sleepMap, worryMap };
 }
 
+/** 월간 통계 */
+export function getMonthStats(year, month, sleepGoal) {
+  const goal = sleepGoal ?? getSettings().sleepGoal ?? 480;
+  const { sleepMap, worryMap } = getMonthDataMap(year, month);
+  const sleeps = Object.values(sleepMap);
+  const worryDays = Object.keys(worryMap).length;
+  const sleepDays = sleeps.length;
+  const totalMin = sleeps.reduce((s, r) => s + (r.duration || 0), 0);
+  const avgMinutes = sleepDays ? Math.round(totalMin / sleepDays) : 0;
+  const goalDays = sleeps.filter(r => (r.duration || 0) >= goal).length;
+
+  return {
+    sleepDays,
+    worryDays,
+    avgMinutes,
+    goalDays,
+    sleepGoal: goal,
+    daysInMonth: new Date(year, month + 1, 0).getDate(),
+  };
+}
+
+/** 수면 달성도 (셀 색상용) */
+export function sleepLevel(duration, sleepGoal) {
+  if (!duration || duration <= 0) return 'none';
+  if (duration >= sleepGoal) return 'good';
+  if (duration >= sleepGoal * 0.75) return 'ok';
+  return 'low';
+}
+
 /** 고민 표시용 텍스트 (멀티턴 대응) */
 export function getWorryDisplay(worry) {
   if (!worry) return null;
@@ -72,6 +101,20 @@ export function getWorryDisplay(worry) {
   return { content: worry.content || '', reply: worry.reply || '' };
 }
 
+/** 고민 대화 스레드 (상세 UI용) */
+export function getWorryThread(worry) {
+  if (!worry) return [];
+  if (worry.turns?.length) {
+    return worry.turns
+      .filter(t => t.role === 'user' || t.role === 'model')
+      .map(t => ({ role: t.role, content: t.content || '' }));
+  }
+  const thread = [];
+  if (worry.content) thread.push({ role: 'user', content: worry.content });
+  if (worry.reply) thread.push({ role: 'model', content: worry.reply });
+  return thread;
+}
+
 /** 기분 이모지 */
 export function moodEmoji(mood) {
   return MOOD_EMOJIS[Math.min(Math.max((mood || 3) - 1, 0), 4)] || '😐';
@@ -80,20 +123,33 @@ export function moodEmoji(mood) {
 /** 날짜 상세 엔트리 */
 export function getDayEntry(dateStr) {
   const sleep = getSleepRecords().find(r => r.date === dateStr) ?? null;
-  const worry = getWorries().find(w => w.date === dateStr) ?? null;
+  const worryRaw = getWorries().find(w => w.date === dateStr) ?? null;
+  const settings = getSettings();
+  const goal = settings.sleepGoal ?? 480;
+
   return {
     date: dateStr,
     sleep,
-    worry: getWorryDisplay(worry),
+    worry: getWorryDisplay(worryRaw),
+    worryThread: getWorryThread(worryRaw),
+    sleepGoal: goal,
+    sleepMetGoal: sleep ? (sleep.duration || 0) >= goal : false,
     hasSleep: !!sleep,
-    hasWorry: !!worry,
-    hasAny: !!(sleep || worry),
+    hasWorry: !!worryRaw,
+    hasAny: !!(sleep || worryRaw),
   };
 }
 
 /** 월 제목 */
 export function formatMonthTitle(year, month) {
   return `${year}년 ${month + 1}월`;
+}
+
+/** 날짜 라벨 */
+export function formatDateLabel(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const dow = WEEKDAY_LABELS[new Date(Number(y), Number(m) - 1, Number(d)).getDay()];
+  return `${y}년 ${parseInt(m, 10)}월 ${parseInt(d, 10)}일 (${dow})`;
 }
 
 export { WEEKDAY_LABELS, MOOD_EMOJIS, formatDuration };

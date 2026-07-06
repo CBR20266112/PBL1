@@ -54,6 +54,7 @@ export function clearAll() {
   localStorage.removeItem('ss_attendance');
   localStorage.removeItem('ss_sleeping_since');
   localStorage.removeItem('ss_morningcall_fired_date');
+  localStorage.removeItem('ss_morningcall_schedule');
 }
 
 // ─── 도메인별 헬퍼 ───

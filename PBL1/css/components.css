@@ -99,6 +99,20 @@
   transform: scale(1.05) translateY(-4px);
 }
 
+.sheep-stroke-target {
+  touch-action: none;
+  cursor: grab;
+}
+
+.sheep-stroke-target:active {
+  cursor: grabbing;
+}
+
+.sheep-container.sheep-stroking .sheep-svg {
+  transform: scale(1.04) translateY(-3px);
+  transition: transform 0.12s ease;
+}
+
 /* 이미지 로드 실패 시 빈 영역 표시 (깨진 아이콘 숨김) */
 .sheep-container img.sheep-svg:not([src]),
 .sheep-container img.sheep-svg[src=""] {
@@ -123,6 +137,24 @@
   pointer-events: none;
   animation: floatHeart 1.2s ease forwards;
   z-index: 10;
+}
+
+.pet-effect-particle {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 12;
+  animation: floatHeart 1.2s ease forwards;
+  filter: drop-shadow(0 2px 6px rgba(249, 168, 212, 0.5));
+}
+
+.pet-effect-emoji {
+  width: auto;
+  height: auto;
+  font-size: 1.4rem;
+  filter: none;
 }
 
 /* 말풍선 */

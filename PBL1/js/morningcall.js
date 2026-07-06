@@ -1,5 +1,5 @@
 /**
- * morningcall.js — Sleepy Sheep 전용 모닝콜 유틸
+ * morningcall.js — Sleepy Sheep 모닝콜 (수면·기상 입력 기준)
  */
 
 import { getSettings, getItem, setItem } from './storage.js';
@@ -9,50 +9,130 @@ export const MORNING_ACTION = Object.freeze({
   FEED: 'feed',
 });
 
-/** 쓰다듬기 또는 당근 먹이기 중 하나 랜덤 선택 */
+export const MORNINGCALL_SCHEDULE_KEY = 'ss_morningcall_schedule';
+
 export function pickMorningAction() {
   return Math.random() < 0.5 ? MORNING_ACTION.PET : MORNING_ACTION.FEED;
 }
 
-/** 모닝콜 관련 설정 반환 */
 export function getMorningCallConfig() {
   const settings = getSettings();
   return {
     simple:       settings.morningCallSimple === true,
-    wakeAlarm:    settings.wakeAlarm || '07:00',
     notification: settings.notification !== false,
   };
+}
+
+/** 로컬 기준 YYYY-MM-DD */
+export function localTodayKey(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 /** 'HH:MM' → 분 */
 export function parseTimeToMinutes(timeStr) {
   const [h, m] = (timeStr || '07:00').split(':').map(Number);
-  return h * 60 + m;
+  return h * 60 + (m || 0);
+}
+
+/** 기상 시각이 취침 다음날인지 계산해 알람 날짜 반환 */
+export function computeWakeAlarmDate(bedtime, wakeTime, baseDate = new Date()) {
+  const bedMin = parseTimeToMinutes(bedtime);
+  const wakeMin = parseTimeToMinutes(wakeTime);
+  const d = new Date(baseDate);
+  if (wakeMin <= bedMin) {
+    d.setDate(d.getDate() + 1);
+  }
+  return localTodayKey(d);
+}
+
+/** 수면·기상 입력 저장 → 모닝콜 스케줄 */
+export function saveMorningCallSchedule(bedtime, wakeTime) {
+  if (!bedtime || !wakeTime) return null;
+  const alarmDate = computeWakeAlarmDate(bedtime, wakeTime);
+  const data = { bedtime, wakeTime, alarmDate };
+  setItem(MORNINGCALL_SCHEDULE_KEY, data);
+  notifyAlarmScheduleChanged();
+  return data;
+}
+
+function notifyAlarmScheduleChanged() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('ss-alarm-schedule-changed'));
+  }
+}
+
+/** 입력 필드 기본값 (저장된 스케줄 → 설정 기본값) */
+export function getSleepTimeDefaults() {
+  const schedule = getItem(MORNINGCALL_SCHEDULE_KEY);
+  if (schedule?.bedtime && schedule?.wakeTime) {
+    return { bedtime: schedule.bedtime, wakeTime: schedule.wakeTime };
+  }
+  const s = getSettings();
+  return {
+    bedtime: s.bedAlarm || '23:00',
+    wakeTime: s.wakeAlarm || '07:00',
+  };
+}
+
+/** 모닝콜 안내 문구 */
+export function formatAlarmHint(bedtime, wakeTime) {
+  if (!bedtime || !wakeTime) return '';
+  const alarmDate = computeWakeAlarmDate(bedtime, wakeTime);
+  const today = localTodayKey();
+  const dayLabel = alarmDate === today ? '오늘' : '내일';
+  return `⏰ 모닝콜 ${dayLabel} ${wakeTime}에 울려요`;
+}
+
+/** 현재 적용 중인 기상 알람 (수면 중 세션 우선) */
+export function getWakeAlarmTarget() {
+  const session = getItem('ss_sleeping_since');
+  if (session?.wakeTime) {
+    const bedtime = session.bedtime || '23:00';
+    const base = session.time ? new Date(session.time) : new Date();
+    return {
+      wakeTime: session.wakeTime,
+      alarmDate: computeWakeAlarmDate(bedtime, session.wakeTime, base),
+    };
+  }
+
+  const schedule = getItem(MORNINGCALL_SCHEDULE_KEY);
+  if (schedule?.wakeTime && schedule?.alarmDate) {
+    return { wakeTime: schedule.wakeTime, alarmDate: schedule.alarmDate };
+  }
+
+  return null;
 }
 
 /** 현재 시각이 기상 알람 시각인지 (±1분) */
 export function isWakeAlarmNow(wakeAlarm) {
   const now = new Date();
   const current = now.getHours() * 60 + now.getMinutes();
-  const target  = parseTimeToMinutes(wakeAlarm);
+  const target = parseTimeToMinutes(wakeAlarm);
   return Math.abs(current - target) <= 1;
 }
 
 /**
- * 설정된 기상 알람 시각에 콜백 실행
+ * 입력한 기상 시간에 모닝콜 콜백 실행
  * @param {(payload: { simple: boolean, scheduled: boolean }) => void} onTrigger
- * @returns {number} interval id
  */
 export function initWakeAlarmScheduler(onTrigger) {
   const check = () => {
-    const { wakeAlarm, notification, simple } = getMorningCallConfig();
+    const { notification, simple } = getMorningCallConfig();
     if (!notification) return;
 
-    const today = new Date().toISOString().slice(0, 10);
+    const target = getWakeAlarmTarget();
+    if (!target) return;
+
+    const today = localTodayKey();
+    if (target.alarmDate !== today) return;
     if (getItem('ss_morningcall_fired_date') === today) return;
-    if (!isWakeAlarmNow(wakeAlarm)) return;
+    if (!isWakeAlarmNow(target.wakeTime)) return;
 
     setItem('ss_morningcall_fired_date', today);
+    notifyAlarmScheduleChanged();
     onTrigger({ simple, scheduled: true });
   };
 

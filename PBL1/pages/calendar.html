@@ -21,6 +21,8 @@
       color: var(--text-muted);
       font-weight: 800;
     }
+    .cal-weekdays span:first-child,
+    .cal-weekdays span:last-child { color: #f9a8d4; }
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -35,20 +37,60 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 1px;
       cursor: pointer;
       transition: all 0.2s ease;
       padding: 2px;
+      position: relative;
+      overflow: hidden;
     }
     .cal-cell.empty { visibility: hidden; pointer-events: none; }
     .cal-cell:hover:not(.empty) { background: rgba(167,139,250,0.15); }
     .cal-cell.today { border-color: var(--color-purple-soft); box-shadow: 0 0 8px rgba(167,139,250,0.25); }
     .cal-cell.selected { background: rgba(167,139,250,0.28); border-color: var(--color-purple); }
-    .cal-day-num { font-size: var(--font-size-sm); font-weight: 800; }
-    .cal-dots { display: flex; gap: 3px; min-height: 6px; }
-    .cal-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .cal-cell.has-sleep-good { background: rgba(167,139,250,0.12); }
+    .cal-cell.has-sleep-ok { background: rgba(167,139,250,0.06); }
+    .cal-cell.has-sleep-low { background: rgba(249,168,212,0.08); }
+    .cal-day-num { font-size: var(--font-size-sm); font-weight: 800; line-height: 1; z-index: 1; }
+    .cal-cell.sun .cal-day-num,
+    .cal-cell.sat .cal-day-num { color: #f9a8d4; }
+    .cal-mood { font-size: 0.65rem; line-height: 1; z-index: 1; }
+    .cal-sleep-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #A78BFA, #c4b5fd);
+      border-radius: 0 2px 0 0;
+      max-width: 100%;
+      z-index: 0;
+    }
+    .cal-dots { display: flex; gap: 2px; min-height: 5px; z-index: 1; }
+    .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
     .cal-dot-sleep { background: #A78BFA; }
     .cal-dot-worry { background: #F9A8D4; }
+    .cal-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+    .cal-summary-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      text-align: center;
+    }
+    .cal-summary-val {
+      font-size: var(--font-size-md);
+      font-weight: 800;
+      color: #fff;
+    }
+    .cal-summary-label {
+      font-size: var(--font-size-2xs);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
     .day-detail-row {
       display: flex;
       justify-content: space-between;
@@ -66,6 +108,54 @@
       font-size: var(--font-size-sm);
       line-height: 1.6;
       white-space: pre-line;
+    }
+    .worry-thread { display: flex; flex-direction: column; gap: var(--space-2); }
+    .worry-bubble {
+      max-width: 92%;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+    .worry-bubble.user {
+      align-self: flex-end;
+      background: rgba(249,168,212,0.15);
+      border: 1px solid rgba(249,168,212,0.25);
+    }
+    .worry-bubble.model {
+      align-self: flex-start;
+      background: rgba(167,139,250,0.15);
+      border: 1px solid rgba(167,139,250,0.25);
+    }
+    .worry-bubble-label {
+      font-size: var(--font-size-2xs);
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 800;
+    }
+    .goal-badge {
+      display: inline-block;
+      font-size: var(--font-size-2xs);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 800;
+      margin-left: var(--space-2);
+    }
+    .goal-badge.ok { background: rgba(52,211,153,0.2); color: #6ee7b7; }
+    .goal-badge.no { background: rgba(251,191,36,0.15); color: #fcd34d; }
+    .detail-actions {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .detail-actions a {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      text-decoration: none;
+      font-size: var(--font-size-xs);
     }
   </style>
 </head>
@@ -89,16 +179,23 @@
 
     <div class="content">
       <section class="glass card" style="padding: var(--space-4);">
-        <div class="flex justify-between items-center" style="margin-bottom: var(--space-3);">
+        <div class="flex justify-between items-center" style="margin-bottom: var(--space-3); gap: var(--space-2);">
           <button class="btn btn-secondary" id="btn-prev-month" style="padding: var(--space-2) var(--space-3);">‹</button>
-          <h2 class="font-bold" id="cal-month-title" style="font-size: var(--font-size-md);">2026년 7월</h2>
+          <div class="text-center" style="flex:1;">
+            <h2 class="font-bold" id="cal-month-title" style="font-size: var(--font-size-md);">2026년 7월</h2>
+            <button class="btn btn-secondary" id="btn-today" style="margin-top: 4px; padding: 2px 10px; font-size: var(--font-size-2xs);">오늘</button>
+          </div>
           <button class="btn btn-secondary" id="btn-next-month" style="padding: var(--space-2) var(--space-3);">›</button>
         </div>
+
+        <div class="cal-summary" id="cal-summary"></div>
+
         <div class="cal-weekdays" id="cal-weekdays"></div>
         <div class="cal-grid" id="cal-grid"></div>
-        <div class="flex gap-3 justify-center" style="margin-top: var(--space-3); font-size: var(--font-size-2xs); color: var(--text-muted);">
+        <div class="flex gap-3 justify-center flex-wrap" style="margin-top: var(--space-3); font-size: var(--font-size-2xs); color: var(--text-muted);">
           <span><span class="cal-dot cal-dot-sleep" style="display:inline-block;vertical-align:middle;"></span> 수면</span>
           <span><span class="cal-dot cal-dot-worry" style="display:inline-block;vertical-align:middle;"></span> 고민</span>
+          <span>막대 = 수면 시간</span>
         </div>
       </section>
 
@@ -145,14 +242,18 @@
 
   <script type="module">
     import { initCommon } from '../js/app.js';
+    import { getSettings } from '../js/storage.js';
     import {
       buildMonthGrid,
       getMonthDataMap,
+      getMonthStats,
       getDayEntry,
       formatMonthTitle,
+      formatDateLabel,
       todayKey,
       moodEmoji,
       formatDuration,
+      sleepLevel,
       WEEKDAY_LABELS,
     } from '../js/calendar.js';
 
@@ -165,24 +266,50 @@
       let selectedDate = todayKey();
 
       const monthTitle = document.getElementById('cal-month-title');
+      const calSummary = document.getElementById('cal-summary');
       const calWeekdays = document.getElementById('cal-weekdays');
       const calGrid = document.getElementById('cal-grid');
       const detailTitle = document.getElementById('detail-date-title');
       const detailBody = document.getElementById('day-detail-body');
+      const sleepGoal = getSettings().sleepGoal ?? 480;
 
       calWeekdays.innerHTML = WEEKDAY_LABELS.map(d => `<span>${d}</span>`).join('');
 
+      function renderSummary() {
+        const stats = getMonthStats(viewYear, viewMonth, sleepGoal);
+        calSummary.innerHTML = `
+          <div class="cal-summary-item">
+            <div class="cal-summary-val">${stats.sleepDays}일</div>
+            <div class="cal-summary-label">수면 기록</div>
+          </div>
+          <div class="cal-summary-item">
+            <div class="cal-summary-val">${stats.avgMinutes ? formatDuration(stats.avgMinutes) : '-'}</div>
+            <div class="cal-summary-label">평균 수면</div>
+          </div>
+          <div class="cal-summary-item">
+            <div class="cal-summary-val">${stats.goalDays}일</div>
+            <div class="cal-summary-label">목표 달성 (${formatDuration(sleepGoal)})</div>
+          </div>
+          <div class="cal-summary-item">
+            <div class="cal-summary-val">${stats.worryDays}일</div>
+            <div class="cal-summary-label">고민 기록</div>
+          </div>
+        `;
+      }
+
       function renderDetail(dateStr) {
         const entry = getDayEntry(dateStr);
-        const [y, m, d] = dateStr.split('-');
-        detailTitle.textContent = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 기록`;
+        detailTitle.textContent = formatDateLabel(dateStr);
 
         if (!entry.hasAny) {
           detailBody.innerHTML = `
-            <p class="text-muted text-center" style="font-size: var(--font-size-sm); line-height: 1.6; padding: var(--space-3) 0;">
-              이 날은 아직 기록이 없어요.<br>
-              수면 기록이나 마음 상담소를 이용해 보세요.
+            <p class="text-muted text-center" style="font-size: var(--font-size-sm); line-height: 1.6; padding: var(--space-2) 0;">
+              이 날은 아직 기록이 없어요.
             </p>
+            <div class="detail-actions">
+              <a href="sleep.html" class="btn btn-secondary">😴 수면 기록하기</a>
+              <a href="worry.html" class="btn btn-secondary">💭 고민 쓰러가기</a>
+            </div>
           `;
           return;
         }
@@ -191,11 +318,16 @@
 
         if (entry.sleep) {
           const s = entry.sleep;
+          const badge = entry.sleepMetGoal
+            ? '<span class="goal-badge ok">목표 달성 ✓</span>'
+            : '<span class="goal-badge no">목표 미달</span>';
           html += `
             <div style="margin-bottom: var(--space-4);">
-              <h4 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2);">😴 수면</h4>
-              <div class="day-detail-row"><span class="text-muted">취침</span><span class="font-bold">${s.bedtime}</span></div>
-              <div class="day-detail-row"><span class="text-muted">기상</span><span class="font-bold">${s.wakeTime}</span></div>
+              <h4 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2);">
+                😴 수면 ${badge}
+              </h4>
+              <div class="day-detail-row"><span class="text-muted">취침</span><span class="font-bold">${escapeHtml(s.bedtime)}</span></div>
+              <div class="day-detail-row"><span class="text-muted">기상</span><span class="font-bold">${escapeHtml(s.wakeTime)}</span></div>
               <div class="day-detail-row"><span class="text-muted">수면 시간</span><span class="font-bold">${formatDuration(s.duration)}</span></div>
               <div class="day-detail-row"><span class="text-muted">기분</span><span class="font-bold">${moodEmoji(s.mood)}</span></div>
               ${s.note ? `<div class="day-detail-row"><span class="text-muted">메모</span><span style="text-align:right;max-width:65%;">${escapeHtml(s.note)}</span></div>` : ''}
@@ -203,16 +335,28 @@
           `;
         }
 
-        if (entry.worry) {
+        if (entry.worryThread?.length) {
           html += `
-            <div>
-              <h4 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2);">💭 오늘의 고민</h4>
-              <div class="day-quote" style="margin-bottom: var(--space-3);">${escapeHtml(entry.worry.content)}</div>
-              <h4 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2);">🐑 드리미의 답변</h4>
-              <div class="day-quote">${escapeHtml(entry.worry.reply)}</div>
+            <div style="margin-bottom: var(--space-3);">
+              <h4 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-2);">💭 마음 상담 기록</h4>
+              <div class="worry-thread">
+                ${entry.worryThread.map(turn => `
+                  <div class="worry-bubble ${turn.role}">
+                    <div class="worry-bubble-label">${turn.role === 'user' ? '나' : '🐑 드리미'}</div>
+                    ${escapeHtml(turn.content)}
+                  </div>
+                `).join('')}
+              </div>
             </div>
           `;
         }
+
+        html += `
+          <div class="detail-actions">
+            ${!entry.hasSleep ? '<a href="sleep.html" class="btn btn-secondary">😴 수면 기록하기</a>' : ''}
+            ${!entry.hasWorry ? '<a href="worry.html" class="btn btn-secondary">💭 고민 쓰러가기</a>' : ''}
+          </div>
+        `;
 
         detailBody.innerHTML = html;
       }
@@ -227,6 +371,7 @@
 
       function renderCalendar() {
         monthTitle.textContent = formatMonthTitle(viewYear, viewMonth);
+        renderSummary();
         const { sleepMap, worryMap } = getMonthDataMap(viewYear, viewMonth);
         const cells = buildMonthGrid(viewYear, viewMonth);
         const today = todayKey();
@@ -240,14 +385,28 @@
             return;
           }
 
-          const hasSleep = !!sleepMap[cell.date];
+          const sleepRec = sleepMap[cell.date];
+          const hasSleep = !!sleepRec;
           const hasWorry = !!worryMap[cell.date];
+          const [cy, cm, cd] = cell.date.split('-');
+          const dow = new Date(Number(cy), Number(cm) - 1, Number(cd)).getDay();
+
           el.className = 'cal-cell';
+          if (dow === 0) el.classList.add('sun');
+          if (dow === 6) el.classList.add('sat');
+          if (hasSleep) el.classList.add(`has-sleep-${sleepLevel(sleepRec.duration, sleepGoal)}`);
           if (cell.date === today) el.classList.add('today');
           if (cell.date === selectedDate) el.classList.add('selected');
 
+          const barPct = hasSleep
+            ? Math.min(100, Math.round((sleepRec.duration / sleepGoal) * 100))
+            : 0;
+          const mood = hasSleep ? moodEmoji(sleepRec.mood) : '';
+
           el.innerHTML = `
+            ${hasSleep ? `<div class="cal-sleep-bar" style="width:${barPct}%;"></div>` : ''}
             <span class="cal-day-num">${cell.day}</span>
+            ${mood ? `<span class="cal-mood">${mood}</span>` : ''}
             <div class="cal-dots">
               ${hasSleep ? '<span class="cal-dot cal-dot-sleep"></span>' : ''}
               ${hasWorry ? '<span class="cal-dot cal-dot-worry"></span>' : ''}
@@ -258,12 +417,21 @@
             selectedDate = cell.date;
             renderCalendar();
             renderDetail(cell.date);
+            document.getElementById('day-detail-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           });
 
           calGrid.appendChild(el);
         });
 
         if (selectedDate) renderDetail(selectedDate);
+      }
+
+      function goToToday() {
+        const t = new Date();
+        viewYear = t.getFullYear();
+        viewMonth = t.getMonth();
+        selectedDate = todayKey();
+        renderCalendar();
       }
 
       document.getElementById('btn-prev-month').addEventListener('click', () => {
@@ -277,6 +445,8 @@
         if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
         renderCalendar();
       });
+
+      document.getElementById('btn-today').addEventListener('click', goToToday);
 
       renderCalendar();
     });

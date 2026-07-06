@@ -119,6 +119,9 @@
             <span>방 꾸미기</span>
           </button>
         </div>
+        <p class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.5;">
+          양 몸을 살짝 문지르면 쓰다듬을 수 있어요 🖐️
+        </p>
       </section>
 
       <!-- 양 이름 지어주기 -->
@@ -163,11 +166,13 @@
   </main>
 
   <script type="module">
-    import { initCommon, spawnHearts, showToast } from '../js/app.js';
+    import { initCommon, showToast } from '../js/app.js';
     import { readSheep, renderSheepTo, updateStatBar, petSheep, feedSheep, playSheepAnim } from '../js/sheep.js';
     import { saveSheep } from '../js/storage.js';
     import { SHEEP_POSE, DAILY_QUOTES } from '../js/constants.js';
-    import { initSound, resumeAudio, playSoundPet, playSoundFeed } from '../js/sound.js';
+    import { initSound, resumeAudio, playSoundFeed } from '../js/sound.js';
+    import { runPetInteraction } from '../js/pet-effects.js';
+    import { initSheepStrokePet } from '../js/sheep-stroke.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
@@ -223,20 +228,31 @@
         renderSheepTo(sheepContainer, sheep.step, SHEEP_POSE.IDLE);
       }
 
+      function handlePetSuccess(res) {
+        showToast(res.msg, 'success');
+        runPetInteraction({
+          container: sheepContainer,
+          step: readSheep().step,
+          speechEl: speechBubble,
+        });
+        refreshPage();
+      }
+
+      initSheepStrokePet({
+        container: sheepContainer,
+        onPet: (res) => {
+          resumeAudio();
+          handlePetSuccess(res);
+        },
+        onPetFail: (res) => showToast(res.msg, 'error'),
+      });
+
       // 쓰다듬기
       btnPet.addEventListener('click', () => {
         resumeAudio();
         const res = petSheep();
-        if (res.success) {
-          playSoundPet();
-          showToast(res.msg, 'success');
-          spawnHearts(sheepContainer);
-          playSheepAnim(sheepContainer, 'sheep-pet-anim', 600);
-          speechBubble.textContent = `"기분 최고야! 메에~ 🥰"`;
-          refreshPage();
-        } else {
-          showToast(res.msg, 'error');
-        }
+        if (res.success) handlePetSuccess(res);
+        else showToast(res.msg, 'error');
       });
 
       // 먹이주기
