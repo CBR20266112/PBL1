@@ -2,7 +2,7 @@
  * sheep.js — 양 상태 관리, XP, 레벨업, 상호작용
  */
 
-import { GROWTH_TABLE, SHEEP_POSE, DAILY_QUOTES, NAME_REJECT_HAPPINESS_DELTA } from './constants.js';
+import { GROWTH_TABLE, SHEEP_POSE, DAILY_QUOTES, NAME_REJECT_HAPPINESS_DELTA, INTERACTION_XP } from './constants.js';
 import { getSheep, saveSheep } from './storage.js';
 import { getSheepSVG } from './sheep-renderer.js';
 import { showToast } from './app.js';
@@ -125,7 +125,7 @@ export function petSheep() {
     return { success: false, msg: `${remain}초 후에 다시 쓰다듬을 수 있어요!` };
   }
 
-  const xpRes = addXP(5);
+  const xpRes = addXP(INTERACTION_XP.PET);
   const currentSheep = xpRes.sheep;
 
   currentSheep.happiness = Math.min(STAT_MAX, currentSheep.happiness + 12);
@@ -133,7 +133,13 @@ export function petSheep() {
   const woolGrew = tryWoolGrowthFromStats(currentSheep);
   if (!woolGrew) saveSheep(currentSheep);
 
-  const msgs = ['메에~ 좋아! (+5 XP) 🥰', '좋아! 더 해줘~ (+5 XP) 💕', '행복해요 ♥ (+5 XP)', '메메메~ (+5 XP) 🎵'];
+  const xp = INTERACTION_XP.PET;
+  const msgs = [
+    `메에~ 좋아! (+${xp} XP) 🥰`,
+    `좋아! 더 해줘~ (+${xp} XP) 💕`,
+    `행복해요 ♥ (+${xp} XP)`,
+    `메메메~ (+${xp} XP) 🎵`,
+  ];
   return {
     success: true,
     msg: msgs[Math.floor(Math.random() * msgs.length)],
@@ -152,7 +158,7 @@ export function feedSheep() {
     return { success: false, msg: `${remain}초 후에 먹이를 줄 수 있어요!` };
   }
 
-  const xpRes = addXP(8);
+  const xpRes = addXP(INTERACTION_XP.FEED);
   const currentSheep = xpRes.sheep;
 
   currentSheep.hunger    = Math.min(STAT_MAX, currentSheep.hunger + 15);
@@ -160,7 +166,13 @@ export function feedSheep() {
   const woolGrew = tryWoolGrowthFromStats(currentSheep);
   if (!woolGrew) saveSheep(currentSheep);
 
-  const msgs = ['냠냠~ 맛있어! (+8 XP) 🥕', '당근 최고야! (+8 XP) 😋', '배 불러! 고마워 (+8 XP) 💕', '메에~ 맛있다! (+8 XP) 🌟'];
+  const xp = INTERACTION_XP.FEED;
+  const msgs = [
+    `냠냠~ 맛있어! (+${xp} XP) 🥕`,
+    `당근 최고야! (+${xp} XP) 😋`,
+    `배 불러! 고마워 (+${xp} XP) 💕`,
+    `메에~ 맛있다! (+${xp} XP) 🌟`,
+  ];
   return {
     success: true,
     msg: msgs[Math.floor(Math.random() * msgs.length)],

@@ -30,6 +30,10 @@
     <!-- 헤더 -->
     <header class="header">
       <div class="header-left">
+        <button type="button" class="btn-attendance" id="btn-attendance" title="출석체크" aria-label="출석체크">
+          <span aria-hidden="true">📅</span>
+          <span class="att-badge" id="attendance-header-badge">0</span>
+        </button>
         <div>
           <h1 id="sheep-name-header">드리미</h1>
           <p class="subtitle">나만의 힐링 수면 메이트</p>
@@ -56,6 +60,19 @@
           <div>양이 곤히 자고 있어요. 기상하면 기록을 완료해주세요.</div>
         </div>
       </div>
+
+      <!-- ASMR (메인) -->
+      <section class="glass card home-asmr-card" id="home-asmr-section">
+        <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
+          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">🎵 수면 ASMR</h3>
+          <a href="pages/asmr.html" class="home-link">전체 ›</a>
+        </div>
+        <div id="home-asmr-now" class="home-asmr-now idle">
+          <span>🎵</span>
+          <span id="home-asmr-now-label">재생할 소리를 골라 보세요</span>
+        </div>
+        <div class="home-asmr-scroll" id="home-asmr-chips"></div>
+      </section>
 
       <!-- 메인 캐릭터 카드 -->
       <section class="hero-card glass">
@@ -99,15 +116,11 @@
             <div class="progress-fill fill-xp" id="xp-fill" style="width: 0%"></div>
           </div>
         </div>
-      </section>
 
-      <!-- 양 상태 (행복·포만·양털 성장) -->
-      <section class="glass card" style="padding: var(--space-4);">
-        <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-3); color: var(--text-secondary);">📊 현재 상태</h3>
-        <div class="status-grid">
+        <div class="home-stats-compact">
           <div class="status-item">
             <span class="stat-icon">❤️</span>
-            <span class="stat-label">행복도</span>
+            <span class="stat-label">행복</span>
             <div class="progress-bar">
               <div class="progress-fill fill-happiness" id="fill-happiness"></div>
             </div>
@@ -115,7 +128,7 @@
           </div>
           <div class="status-item">
             <span class="stat-icon">🍽️</span>
-            <span class="stat-label">포만감</span>
+            <span class="stat-label">포만</span>
             <div class="progress-bar">
               <div class="progress-fill fill-hunger" id="fill-hunger"></div>
             </div>
@@ -123,30 +136,17 @@
           </div>
           <div class="status-item">
             <span class="stat-icon">🧶</span>
-            <span class="stat-label">양털 성장</span>
+            <span class="stat-label">양털</span>
             <div class="progress-bar">
               <div class="progress-fill fill-wool" id="fill-wool"></div>
             </div>
             <span class="stat-value" id="val-wool">0/3</span>
           </div>
         </div>
-        <p class="text-center text-muted" id="regularity-hint" style="font-size: var(--font-size-2xs); margin-top: var(--space-3); line-height: 1.5;"></p>
+        <p class="text-center text-muted" id="regularity-hint" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.4;"></p>
       </section>
 
-      <!-- 연속 수면 & 오늘 통계 -->
-      <section class="glass card" style="padding: var(--space-4);">
-        <div class="streak-banner">
-          <span class="streak-number" id="streak-count">0</span>
-          <div class="streak-text">
-            <div class="font-bold" style="color: #fff;">일 연속 목표 달성 중!</div>
-            <div id="streak-desc">규칙적인 수면은 포만감을 채워줘요.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 상호작용 액션 버튼 -->
-      <section class="glass card" style="padding: var(--space-4);">
-        <h3 class="font-bold" style="font-size: var(--font-size-sm); margin-bottom: var(--space-3); color: var(--text-secondary);">🖐️ 상호작용</h3>
+      <section class="glass card" style="padding: var(--space-3) var(--space-4);">
         <div class="action-row">
           <button class="btn btn-action" id="btn-pet">
             <span class="btn-icon">🖐️</span>
@@ -161,108 +161,18 @@
             <span>양털깎기</span>
           </button>
         </div>
-        <div id="shear-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2);">
-          행복·포만이 MAX면 양털이 한 칸 자라요. 3칸 차면 깎을 수 있어요!
-        </div>
-        <p class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.5;">
-          양 몸을 살짝 문지르면 쓰다듬을 수 있어요 🖐️
+        <p id="shear-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.4;">
+          행복·포만 MAX → 양털 성장 · 3칸이면 깎기
         </p>
       </section>
 
-      <!-- 메뉴 그리드 -->
-      <nav class="menu-grid" style="grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
-        <a href="pages/worry.html" class="menu-item" style="border: 1px solid rgba(167, 139, 250, 0.25); box-shadow: 0 0 10px rgba(167, 139, 250, 0.1);">
-          <span class="menu-icon">💭</span>
-          <span class="menu-label" style="color: var(--color-purple-soft); font-weight:800;">마음 상담소</span>
-        </a>
-        <a href="pages/asmr.html" class="menu-item">
-          <span class="menu-icon">🎵</span>
-          <span class="menu-label">ASMR</span>
-        </a>
-        <a href="pages/attendance.html" class="menu-item">
-          <span class="menu-icon">📅</span>
-          <span class="menu-label">출석체크</span>
-        </a>
-        <a href="pages/gallery.html" class="menu-item">
-          <span class="menu-icon">🖼️</span>
-          <span class="menu-label">갤러리</span>
-        </a>
-      </nav>
-
-      <!-- 수면 기록 섹션 -->
-      <section class="glass card" id="sleep-section" style="padding: var(--space-4); margin-top: var(--space-3);">
-        <div class="section-header" style="margin-bottom: var(--space-3);">
-          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">📊 수면 기록</h3>
-          <a href="pages/calendar.html" class="text-small" style="color: var(--color-purple-soft); text-decoration: none;">캘린더 ›</a>
-        </div>
-
-        <div class="hero-card glass" id="today-record-card" style="padding: var(--space-4); margin-bottom: var(--space-3);">
-          <h2 style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">오늘의 수면</h2>
-          <h1 style="font-size: var(--font-size-2xl); margin: var(--space-1) 0;" id="today-sleep-duration">기록 없음</h1>
-          <p class="text-muted" id="today-sleep-comment" style="font-size: var(--font-size-xs);">수면을 시작하거나 아래에서 직접 입력해보세요.</p>
-        </div>
-
-        <div class="status-grid" id="today-detail-card" style="margin-bottom: var(--space-4);">
-          <div class="flex justify-between items-center" style="border-bottom: 1px solid var(--glass-border); padding-bottom: var(--space-2);">
-            <span class="text-muted font-bold text-small">💤 취침</span>
-            <span class="font-bold" id="today-bedtime">-</span>
-          </div>
-          <div class="flex justify-between items-center" style="padding-top: var(--space-2);">
-            <span class="text-muted font-bold text-small">☀️ 기상</span>
-            <span class="font-bold" id="today-waketime">-</span>
-          </div>
-        </div>
-
-        <h4 class="font-bold text-small text-muted" style="margin-bottom: var(--space-2);">✍️ 직접 기록하기</h4>
-        <p class="text-muted" id="alarm-hint" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-3); line-height: 1.5;"></p>
-        <div class="time-input-group" style="margin-bottom: var(--space-3);">
-          <div class="time-input-card">
-            <span class="time-input-label">💤 취침</span>
-            <input type="time" id="input-bedtime" class="time-input" value="23:00">
-          </div>
-          <div class="time-input-card">
-            <span class="time-input-label">☀️ 기상</span>
-            <input type="time" id="input-waketime" class="time-input" value="07:00">
-          </div>
-        </div>
-        <div style="margin-bottom: var(--space-3);">
-          <span class="time-input-label" style="display:block; margin-bottom: 8px;">🥰 기분</span>
-          <div class="mood-row" id="manual-mood-row">
-            <button type="button" class="mood-btn" data-mood="1">😢</button>
-            <button type="button" class="mood-btn" data-mood="2">🥱</button>
-            <button type="button" class="mood-btn selected" data-mood="3">😐</button>
-            <button type="button" class="mood-btn" data-mood="4">😊</button>
-            <button type="button" class="mood-btn" data-mood="5">🥰</button>
-          </div>
-        </div>
-        <button class="btn btn-secondary w-full" id="btn-save-manual-sleep" style="margin-bottom: var(--space-4);">수면 기록 저장</button>
-
-        <div class="tab-bar" style="margin-bottom: var(--space-3);">
-          <div class="tab-item active" id="tab-weekly">주간</div>
-          <div class="tab-item" id="tab-monthly">월간</div>
-        </div>
-        <div class="stat-row" style="margin-bottom: var(--space-3);">
-          <div class="stat-chip">
-            <span class="chip-icon">🕒</span>
-            <span class="chip-value" id="stat-weekly-avg">0분</span>
-            <span class="chip-label">평균 수면</span>
-          </div>
-          <div class="stat-chip">
-            <span class="chip-icon">🎯</span>
-            <span class="chip-value" id="stat-goal-attain">0 / 7회</span>
-            <span class="chip-label">목표 달성</span>
-          </div>
-        </div>
-        <div class="chart-area">
-          <canvas id="sleep-chart"></canvas>
-        </div>
-      </section>
-
-      <!-- 잠자기 메인 액션 버튼 -->
-      <section style="margin-top: var(--space-2);">
-        <button class="btn btn-sleep" id="btn-main-sleep">
+      <section class="glass card home-sleep-actions">
+        <button class="btn btn-sleep w-full" id="btn-main-sleep">
           😴 오늘 잠자기 시작
         </button>
+        <a href="pages/sleep.html" class="btn btn-secondary w-full" style="display:block;text-align:center;text-decoration:none;margin-top:var(--space-3);">
+          📊 수면 기록 · 꿈일기
+        </a>
       </section>
 
     </div>
@@ -272,6 +182,11 @@
       <div class="nav-item active" data-href="index.html">
         <span class="nav-icon">🏠</span>
         <span class="nav-label">홈</span>
+        <span class="nav-dot"></span>
+      </div>
+      <div class="nav-item" data-href="pages/sleep.html">
+        <span class="nav-icon">😴</span>
+        <span class="nav-label">수면</span>
         <span class="nav-dot"></span>
       </div>
       <div class="nav-item" data-href="pages/workshop.html">
@@ -411,19 +326,51 @@
     </div>
   </div>
 
+  <!-- 출석체크 시트 -->
+  <div class="overlay" id="attendance-overlay"></div>
+  <div class="modal" id="attendance-modal">
+    <div class="modal-handle"></div>
+    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);">📅 출석체크</h3>
+
+    <div class="att-dual-streak">
+      <div class="att-streak-card">
+        <div class="num" id="modal-att-streak">0</div>
+        <div class="lbl">일 연속 출석</div>
+      </div>
+      <div class="att-streak-card">
+        <div class="num" id="modal-sleep-streak">0</div>
+        <div class="lbl">일 연속 수면 목표</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--space-4);">
+      <div class="flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: 6px;">
+        <span>이번 주기 보상</span>
+        <span id="modal-att-cycle-label">1 / 7</span>
+      </div>
+      <div class="flex gap-2" id="modal-att-cycle-dots" style="justify-content: center; font-size: 1rem;"></div>
+      <p id="modal-att-reward-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.5;"></p>
+    </div>
+
+    <button class="btn btn-primary w-full" id="btn-modal-check-in" style="margin-bottom: var(--space-2);">✨ 오늘 출석하기</button>
+    <p id="modal-att-status" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-3);"></p>
+    <a href="pages/attendance.html" class="home-link" style="display:block; text-align:center;">출석·스토리 자세히 보기 ›</a>
+    <button type="button" class="btn btn-secondary w-full" id="btn-close-attendance" style="margin-top: var(--space-3);">닫기</button>
+  </div>
+
 
   <script type="module">
     import { initCommon, showToast } from './js/app.js';
     import { readSheep, renderSheepTo, updateXPBar, updateStatBar, petSheep, feedSheep, decaySheepStats, playSheepAnim, addXP, touchSheep, rejectNaming } from './js/sheep.js';
-    import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm } from './js/sound.js';
+    import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm, getAsmrList, playAsmr, stopAsmr, getCurrentAsmrId } from './js/sound.js';
     import { runPetInteraction } from './js/pet-effects.js';
     import { initSheepStrokePet, getLastStrokeTravel } from './js/sheep-stroke.js';
-    import { recordSleep, getStreak, getTodaySleep, formatDuration, getWeeklyAvg, getMonthlySuccess, getRecentRecords, drawSleepChart, getSleepRegularity, applyDailyRegularityBonus } from './js/sleep.js';
+    import { recordSleep, getStreak, getSleepRegularity, applyDailyRegularityBonus } from './js/sleep.js';
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
     import { saveSheep, setItem, getItem, removeItem, getSettings } from './js/storage.js';
     import { checkAndShowOpening } from './js/opening.js';
     import { pickMorningAction, MORNING_ACTION, initWakeAlarmScheduler, saveMorningCallSchedule, getSleepTimeDefaults, formatAlarmHint } from './js/morningcall.js';
-    import { recordAttendance, getAttendanceRewardMessages } from './js/attendance.js';
+    import { recordAttendance, getAttendanceRewardMessages, getAttendance, isCheckedInToday, getWeekCycleProgress, getNextCycleReward, getTodayCycleRewardPreview } from './js/attendance.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
@@ -466,7 +413,10 @@
       const xpText           = document.getElementById('xp-text');
       const xpFill           = document.getElementById('xp-fill');
       const woolCount        = document.getElementById('wool-count');
-      const streakCount      = document.getElementById('streak-count');
+      const attHeaderBadge   = document.getElementById('attendance-header-badge');
+      const btnAttendance    = document.getElementById('btn-attendance');
+      const attendanceOverlay = document.getElementById('attendance-overlay');
+      const attendanceModal  = document.getElementById('attendance-modal');
       const btnPet           = document.getElementById('btn-pet');
       const btnFeed          = document.getElementById('btn-feed');
       const btnShearGame     = document.getElementById('btn-shear-game');
@@ -502,22 +452,6 @@
       const valHunger       = document.getElementById('val-hunger');
       const valWool         = document.getElementById('val-wool');
       const regularityHint  = document.getElementById('regularity-hint');
-      const todaySleepDuration = document.getElementById('today-sleep-duration');
-      const todaySleepComment  = document.getElementById('today-sleep-comment');
-      const todayBedtime       = document.getElementById('today-bedtime');
-      const todayWaketime      = document.getElementById('today-waketime');
-      const inputBedtime       = document.getElementById('input-bedtime');
-      const inputWaketime      = document.getElementById('input-waketime');
-      const alarmHint          = document.getElementById('alarm-hint');
-      const btnSaveManualSleep = document.getElementById('btn-save-manual-sleep');
-      const tabWeekly          = document.getElementById('tab-weekly');
-      const tabMonthly         = document.getElementById('tab-monthly');
-      const statWeeklyAvg      = document.getElementById('stat-weekly-avg');
-      const statGoalAttain     = document.getElementById('stat-goal-attain');
-      const sleepChartCanvas   = document.getElementById('sleep-chart');
-
-      let sleepChartTab = 'weekly';
-      let manualMood = 3;
 
       let currentPose = SHEEP_POSE.IDLE;
       let activeMood  = 3;
@@ -535,12 +469,103 @@
       applyDailyRegularityBonus();
       let sheep = readSheep();
 
+      function updateAttendanceHeaderBadge() {
+        if (!attHeaderBadge) return;
+        const att = getAttendance();
+        const checked = isCheckedInToday();
+        attHeaderBadge.classList.toggle('pending', !checked);
+        attHeaderBadge.textContent = checked ? String(att.streak || 0) : '';
+      }
+
+      function rewardHintText(streak) {
+        const preview = getTodayCycleRewardPreview(streak);
+        if (preview.type === 'wool') return `오늘 보상: 양털 +${preview.wool}`;
+        if (preview.type === 'single') return '오늘 보상: 단일 일러스트 🎨';
+        if (preview.type === 'strip') return '오늘 보상: 4컷 만화 📜';
+        const next = getNextCycleReward(streak);
+        if (next.daysLeft === 0) return `이번 주기: ${next.label}`;
+        return `${next.daysLeft}일 후 ${next.label}`;
+      }
+
+      function renderAttendanceModal() {
+        const att = getAttendance();
+        const sleepStreak = getStreak();
+        const checked = isCheckedInToday();
+        const cycleDay = getWeekCycleProgress(att.streak);
+
+        document.getElementById('modal-att-streak').textContent = att.streak;
+        document.getElementById('modal-sleep-streak').textContent = sleepStreak;
+        document.getElementById('modal-att-cycle-label').textContent = `${cycleDay} / 7`;
+
+        const dotsEl = document.getElementById('modal-att-cycle-dots');
+        if (dotsEl) {
+          dotsEl.innerHTML = '';
+          for (let i = 1; i <= 7; i++) {
+            const dot = document.createElement('span');
+            const isWool = [1, 2, 4, 5, 6].includes(i);
+            const isSingle = i === 3;
+            const isStrip = i === 7;
+            const done = i <= cycleDay;
+            dot.textContent = isSingle ? (done ? '🎨' : '○') : isStrip ? (done ? '📜' : '○') : (done ? '●' : '○');
+            dot.title = isSingle ? '3일: 일러스트' : isStrip ? '7일: 4컷' : `${i}일: 양털`;
+            dot.style.color = done ? 'var(--color-purple-soft)' : 'rgba(255,255,255,0.25)';
+            dotsEl.appendChild(dot);
+          }
+        }
+
+        const hintEl = document.getElementById('modal-att-reward-hint');
+        if (hintEl) hintEl.textContent = rewardHintText(att.streak);
+
+        const btnModalCheckIn = document.getElementById('btn-modal-check-in');
+        const statusEl = document.getElementById('modal-att-status');
+        if (btnModalCheckIn) {
+          btnModalCheckIn.disabled = checked;
+          btnModalCheckIn.textContent = checked ? '✅ 오늘 출석 완료' : '✨ 오늘 출석하기';
+        }
+        if (statusEl) {
+          statusEl.textContent = checked
+            ? `누적 출석 ${att.total}일 · 모닝콜로도 출석됩니다.`
+            : '모닝콜 없이도 여기서 출석할 수 있어요.';
+        }
+      }
+
+      function openAttendanceModal() {
+        renderAttendanceModal();
+        attendanceOverlay?.classList.add('active');
+        attendanceModal?.classList.add('active');
+      }
+
+      function closeAttendanceModal() {
+        attendanceOverlay?.classList.remove('active');
+        attendanceModal?.classList.remove('active');
+      }
+
+      btnAttendance?.addEventListener('click', openAttendanceModal);
+      attendanceOverlay?.addEventListener('click', closeAttendanceModal);
+      document.getElementById('btn-close-attendance')?.addEventListener('click', closeAttendanceModal);
+
+      document.getElementById('btn-modal-check-in')?.addEventListener('click', () => {
+        const res = recordAttendance();
+        if (res.alreadyChecked) {
+          showToast('오늘은 이미 출석했어요!', 'info');
+          return;
+        }
+        getAttendanceRewardMessages(res).forEach((msg, i) => {
+          setTimeout(() => showToast(msg, 'success'), i * 400);
+        });
+        if (res.newlyUnlocked?.length) {
+          setTimeout(() => showToast(`🎉 「${res.newlyUnlocked[0].title}」 해금!`, 'success'), 500);
+        }
+        refreshUI();
+        renderAttendanceModal();
+      });
+
       // ─── UI 갱신 ───
       function refreshUI() {
         sheep = readSheep();
         sheepNameHeader.textContent = sheep.name;
         woolCount.textContent = sheep.wool;
-        streakCount.textContent = getStreak();
+        updateAttendanceHeaderBadge();
 
         const stepName = ['새끼양','솜털양','통통양','포실양','뭉실양','구름양','복슬양','솜구름','털뭉치','성체양'][Math.min(sheep.step - 1, 9)];
         levelBadge.textContent = `Lv.${sheep.level} ${stepName}`;
@@ -567,8 +592,6 @@
           shearHint.textContent = `양털 성장: ${'🐑'.repeat(sheep.woolGrowth)}${'⬜'.repeat(3 - sheep.woolGrowth)} — 행복·포만 MAX 시 한 칸씩 자라요`;
         }
 
-        refreshSleepSection();
-
         const sleepingSince = getItem('ss_sleeping_since');
         if (sleepingSince) {
           currentPose = SHEEP_POSE.SLEEP;
@@ -586,102 +609,45 @@
         renderSheepTo(sheepContainer, sheep.step, currentPose);
       }
 
-      function refreshSleepSection() {
-        if (!todaySleepDuration) return;
+      function initHomeAsmr() {
+        const chipsEl = document.getElementById('home-asmr-chips');
+        const nowEl = document.getElementById('home-asmr-now');
+        const nowLabel = document.getElementById('home-asmr-now-label');
+        if (!chipsEl) return;
 
-        const today = getTodaySleep();
-        const settings = getSettings();
-        if (today) {
-          todaySleepDuration.textContent = formatDuration(today.duration);
-          todaySleepComment.textContent = today.duration >= settings.sleepGoal
-            ? '오늘 목표 수면을 달성했어요! 규칙적인 잠은 포만감을 채워줘요.'
-            : '조금 모자란 수면이었어요. 오늘 밤은 더 깊게 쉬어 봐요.';
-          todayBedtime.textContent = today.bedtime;
-          todayWaketime.textContent = today.wakeTime;
-        } else {
-          todaySleepDuration.textContent = '기록 없음';
-          todaySleepComment.textContent = '수면을 시작하거나 아래에서 직접 입력해보세요.';
-          todayBedtime.textContent = '-';
-          todayWaketime.textContent = '-';
-        }
+        const list = getAsmrList();
+        list.forEach(item => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'home-asmr-chip';
+          chip.dataset.id = item.id;
+          chip.innerHTML = `<span class="emoji">${item.emoji}</span><span>${item.name}</span>`;
+          chip.addEventListener('click', () => {
+            resumeAudio();
+            if (getCurrentAsmrId() === item.id) stopAsmr();
+            else playAsmr(item.id);
+            updateHomeAsmrUI();
+          });
+          chipsEl.appendChild(chip);
+        });
 
-        if (statWeeklyAvg) statWeeklyAvg.textContent = formatDuration(getWeeklyAvg());
-
-        if (sleepChartCanvas) {
-          if (sleepChartTab === 'weekly') {
-            const weeklyRecords = getRecentRecords(7);
-            const successCount = weeklyRecords.filter(r => r.duration >= settings.sleepGoal).length;
-            if (statGoalAttain) statGoalAttain.textContent = `${successCount} / 7회`;
-            drawSleepChart(sleepChartCanvas, 'weekly');
+        function updateHomeAsmrUI() {
+          const cur = getCurrentAsmrId();
+          const playing = list.find(i => i.id === cur);
+          chipsEl.querySelectorAll('.home-asmr-chip').forEach(c => {
+            c.classList.toggle('playing', c.dataset.id === cur);
+          });
+          if (!nowEl || !nowLabel) return;
+          if (playing) {
+            nowEl.classList.remove('idle');
+            nowLabel.textContent = `${playing.emoji} ${playing.name} 재생 중`;
           } else {
-            const successData = getMonthlySuccess();
-            if (statGoalAttain) statGoalAttain.textContent = `${successData.success} / ${successData.total}회`;
-            drawSleepChart(sleepChartCanvas, 'monthly');
+            nowEl.classList.add('idle');
+            nowLabel.textContent = '재생할 소리를 골라 보세요';
           }
         }
-      }
 
-      function syncHomeAlarmSchedule() {
-        if (!inputBedtime || !inputWaketime) return;
-        saveMorningCallSchedule(inputBedtime.value, inputWaketime.value);
-        if (alarmHint) alarmHint.textContent = formatAlarmHint(inputBedtime.value, inputWaketime.value);
-      }
-
-      function initHomeSleepInputs() {
-        const { bedtime, wakeTime } = getSleepTimeDefaults();
-        if (inputBedtime) inputBedtime.value = bedtime;
-        if (inputWaketime) inputWaketime.value = wakeTime;
-        syncHomeAlarmSchedule();
-      }
-
-      initHomeSleepInputs();
-      inputBedtime?.addEventListener('change', syncHomeAlarmSchedule);
-      inputWaketime?.addEventListener('change', syncHomeAlarmSchedule);
-
-      document.querySelectorAll('#manual-mood-row .mood-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('#manual-mood-row .mood-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          manualMood = parseInt(btn.dataset.mood, 10);
-        });
-      });
-
-      btnSaveManualSleep?.addEventListener('click', () => {
-        if (!inputBedtime?.value || !inputWaketime?.value) {
-          showToast('취침·기상 시간을 확인해 주세요.', 'error');
-          return;
-        }
-        const res = recordSleep({
-          bedtime: inputBedtime.value,
-          wakeTime: inputWaketime.value,
-          mood: manualMood,
-          note: '',
-        });
-        syncHomeAlarmSchedule();
-        let msg = `수면 기록 저장! +${res.xpGained} XP`;
-        if (res.regularityBonus > 0) msg += ` · 포만감 +${res.regularityBonus} (${res.regularityLabel})`;
-        showToast(msg, 'success');
-        refreshUI();
-      });
-
-      tabWeekly?.addEventListener('click', () => {
-        if (sleepChartTab === 'weekly') return;
-        sleepChartTab = 'weekly';
-        tabWeekly.classList.add('active');
-        tabMonthly.classList.remove('active');
-        refreshSleepSection();
-      });
-
-      tabMonthly?.addEventListener('click', () => {
-        if (sleepChartTab === 'monthly') return;
-        sleepChartTab = 'monthly';
-        tabMonthly.classList.add('active');
-        tabWeekly.classList.remove('active');
-        refreshSleepSection();
-      });
-
-      if (window.location.hash === '#sleep-section') {
-        setTimeout(() => document.getElementById('sleep-section')?.scrollIntoView({ behavior: 'smooth' }), 300);
+        updateHomeAsmrUI();
       }
 
       // ─── 자동 타이머 ───
@@ -1080,9 +1046,9 @@
       }
 
       function applyMorningBonus(success, simple) {
-        if (simple) return { bonusXp: 5, bonusWool: 5 };
-        if (success) return { bonusXp: 10, bonusWool: 8 };
-        return { bonusXp: 2, bonusWool: 2 };
+        if (simple) return { bonusXp: 0, bonusWool: 5 };
+        if (success) return { bonusXp: 0, bonusWool: 8 };
+        return { bonusXp: 0, bonusWool: 2 };
       }
 
       function finalizeWakeRecord({ success, simple = false }) {
@@ -1108,8 +1074,8 @@
         );
 
         const { bonusXp, bonusWool } = applyMorningBonus(success, simple);
-        const bonusRes = addXP(bonusXp);
-        const bonusSheep = bonusRes.sheep;
+        if (bonusXp > 0) addXP(bonusXp);
+        const bonusSheep = readSheep();
         bonusSheep.wool += bonusWool;
         saveSheep(bonusSheep);
 
@@ -1120,18 +1086,19 @@
         morningCallModal.classList.remove('active');
         sleepOverlay.classList.remove('active');
 
-        if (res.xpGained + bonusXp > 0) playSoundXP();
+        if (res.xpGained > 0) playSoundXP();
 
         if (session) {
-          let toastMsg = success || simple
-            ? `기상 완료! 수면 XP +${res.xpGained}, 모닝콜 보너스 +${bonusXp}XP / 양털 +${bonusWool}`
-            : `기상 완료! 수면 XP +${res.xpGained}, 모닝콜 실패로 보상 축소(+${bonusXp}XP / 양털 +${bonusWool})`;
+          const toastMsg = success || simple
+            ? `기상 완료! 수면 +${res.xpGained} XP · 양털 +${bonusWool}`
+            : `기상 완료! 수면 +${res.xpGained} XP · 모닝콜 실패(양털 +${bonusWool})`;
+          let fullMsg = toastMsg;
           if (res.regularityBonus > 0) {
-            toastMsg += ` · 포만감 +${res.regularityBonus} (${res.regularityLabel})`;
+            fullMsg += ` · 포만감 +${res.regularityBonus} (${res.regularityLabel})`;
           }
-          showToast(toastMsg, success || simple ? 'success' : 'info');
+          showToast(fullMsg, success || simple ? 'success' : 'info');
         } else if (attResult && !attResult.alreadyChecked) {
-          showToast(`모닝콜 완료! +${bonusXp}XP / 양털 +${bonusWool}`, 'success');
+          showToast(`모닝콜 완료! 양털 +${bonusWool}`, 'success');
         }
 
         if (attResult && !attResult.alreadyChecked) {
@@ -1286,6 +1253,7 @@
       });
 
       // ─── 초기 실행 ───
+      initHomeAsmr();
       refreshUI();
       speechBubble.textContent = `"${getRandomQuote()}"`;
       setTimeout(startAutoTimers, 1500);

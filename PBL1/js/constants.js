@@ -4,7 +4,7 @@
  */
 
 /** 앱 버전 (설정 화면·배포 기준) */
-export const APP_VERSION = '1.72.8';
+export const APP_VERSION = '1.73.0';
 
 // ─── localStorage 키 ───
 export const STORAGE_KEYS = Object.freeze({
@@ -77,15 +77,24 @@ export function calcShearReward(percent, step) {
   return Math.floor(step * coeff);
 }
 
+// ─── 경험치 ───
+/** 상호작용 보상 (소량) */
+export const INTERACTION_XP = Object.freeze({
+  PET:  1,
+  FEED: 1,
+});
+
 // ─── 수면 시간 → XP 환산 ───
 /**
+ * 기록된 수면 시간(분)에 비례해 XP 지급
  * @param {number} minutes 수면 시간(분)
  * @param {number} goalMinutes 목표 수면(분, 기본 480=8h)
- * @returns {{ xp: number, woolGrowth: number }}
+ * @returns {{ xp: number }}
  */
 export function calcSleepReward(minutes, goalMinutes = 480) {
-  const ratio = Math.min(minutes / goalMinutes, 1.2); // 최대 120%까지
-  const xp = Math.floor(ratio * 50);         // 목표 달성 시 최대 50xp
+  if (!minutes || minutes <= 0) return { xp: 0 };
+  const capped = Math.min(minutes, Math.floor(goalMinutes * 1.2));
+  const xp = Math.max(1, Math.round((capped / goalMinutes) * 60));
   return { xp };
 }
 

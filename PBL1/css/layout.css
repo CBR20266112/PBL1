@@ -269,3 +269,185 @@
 .page-enter {
   animation: pageEnter 0.3s ease forwards;
 }
+
+/* ─── 홈 출석 버튼 ─── */
+.btn-attendance {
+  position: relative;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: transform var(--transition-base), background var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-attendance:active {
+  transform: scale(0.94);
+  background: rgba(167, 139, 250, 0.15);
+}
+.btn-attendance .att-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #A78BFA, #7C6EFA);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(124, 110, 250, 0.45);
+}
+.btn-attendance .att-badge.pending {
+  background: #f59e0b;
+  min-width: 10px;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  top: 2px;
+  right: 2px;
+}
+
+/* ─── 홈 미니멀 링크 ─── */
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-3);
+  padding-bottom: var(--space-2);
+}
+.home-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  -webkit-tap-highlight-color: transparent;
+}
+.home-link:active {
+  color: var(--color-purple-soft);
+}
+
+/* ─── 홈 컴팩트 상태 ─── */
+.home-stats-compact {
+  margin-top: var(--space-4);
+  text-align: left;
+}
+.home-stats-compact .status-item {
+  margin-bottom: var(--space-2);
+}
+.home-stats-compact .stat-label {
+  font-size: var(--font-size-2xs);
+}
+.home-stats-compact .stat-value {
+  font-size: var(--font-size-2xs);
+  min-width: 2.2rem;
+}
+.home-stats-compact .progress-bar {
+  height: 6px;
+}
+
+.modal.modal-scroll {
+  max-height: 88vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.att-dual-streak {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.att-streak-card {
+  text-align: center;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+}
+.att-streak-card .num {
+  font-size: var(--font-size-2xl);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+}
+.att-streak-card .lbl {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ─── 홈 ASMR ─── */
+.home-asmr-card {
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+.home-asmr-now {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.25);
+  margin-bottom: var(--space-3);
+  min-height: 44px;
+  font-size: var(--font-size-xs);
+}
+.home-asmr-now.idle {
+  opacity: 0.55;
+  background: rgba(255,255,255,0.04);
+  border-color: var(--glass-border);
+}
+.home-asmr-scroll {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.home-asmr-scroll::-webkit-scrollbar { display: none; }
+.home-asmr-chip {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 72px;
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.home-asmr-chip .emoji { font-size: 1.4rem; }
+.home-asmr-chip.playing {
+  border-color: var(--color-purple);
+  background: rgba(167,139,250,0.15);
+  color: #fff;
+}
+.home-sleep-actions {
+  padding: var(--space-4);
+  margin-top: var(--space-2);
+}
+
