@@ -394,8 +394,57 @@
 
 /* ─── 홈 ASMR ─── */
 .home-asmr-card {
-  padding: var(--space-4);
+  padding: var(--space-3);
   margin-bottom: var(--space-3);
+}
+.home-asmr-compact {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.home-asmr-toggle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  cursor: pointer;
+}
+.home-asmr-toggle.playing {
+  border-color: rgba(167,139,250,0.55);
+  background: rgba(167,139,250,0.16);
+}
+.home-asmr-toggle-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(167,139,250,0.16);
+  color: var(--color-purple-soft);
+  font-weight: 900;
+}
+.home-asmr-toggle strong,
+.home-asmr-toggle small {
+  display: block;
+}
+.home-asmr-toggle strong {
+  font-size: var(--font-size-sm);
+}
+.home-asmr-toggle small {
+  color: var(--text-muted);
+  font-size: var(--font-size-2xs);
+  margin-top: 2px;
+}
+.home-asmr-detail-link {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .home-asmr-now {
   display: flex;
@@ -574,4 +623,3 @@
   padding: var(--space-4);
   margin-top: var(--space-2);
 }
-

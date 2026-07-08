@@ -1,6 +1,5 @@
-/**
- * asmr.js - ASMR UI 공통 바인딩
- */
+﻿/**
+ * asmr.js - ASMR UI 怨듯넻 諛붿씤?? */
 import {
   resumeAudio,
   getAsmrList,
@@ -8,6 +7,7 @@ import {
   playAsmr,
   stopAsmr,
   getCurrentAsmrId,
+  getLastAsmrId,
   setAsmrSleepTimer,
   clearAsmrSleepTimer,
   getAsmrTimerMinutesLeft,
@@ -28,6 +28,8 @@ export const ASMR_CATEGORIES = [
   { id: 'preset', label: '추천 믹스' },
   { id: 'nature', label: '자연' },
   { id: 'cozy',   label: '포근함' },
+  { id: 'music',  label: '테마 음악' },
+  { id: 'texture', label: '사각사각' },
   { id: 'focus',  label: '집중·수면' },
 ];
 
@@ -52,7 +54,7 @@ export function createAsmrCard(item) {
     <div class="asmr-emoji">${item.emoji}</div>
     <div class="asmr-name">${item.name}</div>
     <div class="asmr-desc">${item.desc}</div>
-    <div class="asmr-badge">▶ 재생 중</div>
+    <div class="asmr-badge">???ъ깮 以?/div>
   `;
   card.addEventListener('click', () => {
     resumeAudio();
@@ -111,8 +113,8 @@ export function updateNowPlayingBar(item) {
     if (btnStop) btnStop.style.display = '';
   } else {
     bar.classList.add('idle');
-    if (icon) icon.textContent = '🔇';
-    if (name) name.textContent = '재생 중인 사운드 없음';
+    if (icon) icon.textContent = '?뵁';
+    if (name) name.textContent = '?ъ깮 以묒씤 ?ъ슫???놁쓬';
     bars?.forEach(b => b.classList.add('paused'));
     if (btnStop) btnStop.style.display = 'none';
   }
@@ -140,7 +142,7 @@ export function createBinauralCard(item) {
     <div class="asmr-emoji">${item.emoji}</div>
     <div class="asmr-name">${item.name}</div>
     <div class="asmr-desc">${item.desc}</div>
-    <div class="asmr-badge">▶ 재생 중</div>
+    <div class="asmr-badge">???ъ깮 以?/div>
   `;
   card.addEventListener('click', () => {
     resumeAudio();
@@ -188,11 +190,11 @@ export function updateBinauralNowBar(item) {
   if (!bar) return;
   if (item) {
     bar.classList.remove('idle');
-    if (label) label.textContent = `${item.emoji} ${item.name} · ${item.beat}Hz`;
+    if (label) label.textContent = `${item.emoji} ${item.name} 쨌 ${item.beat}Hz`;
     if (btnStop) btnStop.style.display = '';
   } else {
     bar.classList.add('idle');
-    if (label) label.textContent = '바이노럴 비트 꺼짐';
+    if (label) label.textContent = '諛붿씠?몃윺 鍮꾪듃 爰쇱쭚';
     if (btnStop) btnStop.style.display = 'none';
   }
 }
@@ -297,10 +299,10 @@ function refreshTimerLabel() {
   const left = getAsmrTimerMinutesLeft();
   const set = getAsmrSleepTimerMinutes();
   if (!set) {
-    _timerLabelEl.textContent = '타이머 꺼짐';
+    _timerLabelEl.textContent = '??대㉧ 爰쇱쭚';
     return;
   }
-  _timerLabelEl.textContent = left > 0 ? `${left}분 후 자동 정지` : '곧 정지…';
+  _timerLabelEl.textContent = left > 0 ? `${left}분 후 자동 정지` : '곧 정지...';
 }
 
 export function bindAsmrTimer(container) {
@@ -368,7 +370,8 @@ export function initHomeAsmrSection() {
   const chipsEl = document.getElementById('home-asmr-chips');
   const nowEl = document.getElementById('home-asmr-now');
   const nowLabel = document.getElementById('home-asmr-now-label');
-  if (!presetsEl && !chipsEl) return;
+  const toggleBtn = document.getElementById('btn-home-asmr-toggle');
+  if (!presetsEl && !chipsEl && !toggleBtn) return;
 
   const list = getAsmrList();
   const presets = list.filter(i => i.category === 'preset').slice(0, 3);
@@ -386,17 +389,32 @@ export function initHomeAsmrSection() {
     const playing = list.find(i => i.id === cur);
     syncAsmrPlayingState();
     const btnStop = document.getElementById('btn-home-asmr-stop');
-    if (!nowEl || !nowLabel) return;
+    if (toggleBtn) {
+      toggleBtn.classList.toggle('playing', !!playing);
+      toggleBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+    }
+    if (!nowLabel) return;
     if (playing) {
-      nowEl.classList.remove('idle');
-      nowLabel.textContent = `${playing.emoji} ${playing.name} 재생 중`;
+      nowEl?.classList.remove('idle');
+      nowLabel.textContent = `${playing.emoji} ${playing.name} 켜짐`;
       if (btnStop) btnStop.style.display = '';
     } else {
-      nowEl.classList.add('idle');
-      nowLabel.textContent = '재생할 소리를 골라 보세요';
+      nowEl?.classList.add('idle');
+      nowLabel.textContent = '꺼짐';
       if (btnStop) btnStop.style.display = 'none';
     }
   }
+
+  toggleBtn?.addEventListener('click', () => {
+    resumeAudio();
+    if (getCurrentAsmrId()) {
+      stopAsmr();
+    } else {
+      playAsmr(getLastAsmrId() || 'preset_deep', { fadeIn: true });
+    }
+    document.dispatchEvent(new CustomEvent('ss-asmr-change'));
+    updateHomeAsmrUI();
+  });
 
   function updateHomeBinauralUI() {
     syncBinauralPlayingState();
@@ -436,7 +454,6 @@ export function initHomeAsmrSection() {
   updateHomeAsmrUI();
   updateHomeBinauralUI();
 }
-
 export function initSleepAsmrMini() {
   const presetsEl = document.getElementById('sleep-asmr-presets');
   const nowLabel = document.getElementById('sleep-asmr-now');

@@ -1,6 +1,5 @@
-/**
- * sound.js - Sleepy Sheep 사운드 시스템
- * Web Audio API를 사용한 프로시저럴 사운드 합성
+﻿/**
+ * sound.js - Sleepy Sheep ?ъ슫???쒖뒪?? * Web Audio API瑜??ъ슜???꾨줈?쒖????ъ슫???⑹꽦
  */
 
 let _ctx = null;
@@ -26,7 +25,7 @@ function getCtx() {
     _binauralGain.gain.value = 0;
     _binauralGain.connect(_masterGain);
     _bgmGain = _ctx.createGain();
-    _bgmGain.gain.value = 0.18; // 배경음악은 기본적으로 작게
+    _bgmGain.gain.value = 0.18; // 諛곌꼍?뚯븙? 湲곕낯?곸쑝濡??묎쾶
     _bgmGain.connect(_masterGain);
   }
   if (_ctx.state === 'suspended') _ctx.resume();
@@ -98,13 +97,13 @@ function createGain(val) {
 
 // --- SFX ---
 
-// --- 쓰다듬기 전용 합성음 (효과음·울음 다양 변주) ---
+// --- ?곕떎?ш린 ?꾩슜 ?⑹꽦??(?④낵?뙿룹슱???ㅼ뼇 蹂二? ---
 
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-/** 공통 양 울음 합성 */
+/** 怨듯넻 ???몄쓬 ?⑹꽦 */
 function synthSheepBaa({
   now,
   baseFreq = 320,
@@ -154,7 +153,7 @@ function synthSheepBaa({
   o2.stop(t + duration + 0.05);
 }
 
-// ── 쓰다듬기 효과음 변주 ──
+// ?? ?곕떎?ш린 ?④낵??蹂二???
 
 function playPetStrokeBoing() {
   if (!isSfxEnabled()) return;
@@ -281,7 +280,7 @@ function playPetStrokeTickle() {
   }
 }
 
-// ── 양 울음 변주 ──
+// ?? ???몄쓬 蹂二???
 
 function playPetBaaClassic() {
   const ctx = getCtx();
@@ -428,14 +427,14 @@ function playRandomPetBaa() {
   pickRandom(PET_BAA_VARIANTS)();
 }
 
-/** @deprecated 호환용 — 랜덤 쓰다듬기+울음 */
+/** @deprecated ?명솚?????쒕뜡 ?곕떎?ш린+?몄쓬 */
 export function playSoundPet() {
   playRandomPetStroke();
   setTimeout(playRandomPetBaa, rand(100, 280));
 }
 
 /**
- * 쓰다듬기 랜덤 사운드 묶음 (효과음 + 울음, 매번 다른 조합)
+ * ?곕떎?ш린 ?쒕뜡 ?ъ슫??臾띠쓬 (?④낵??+ ?몄쓬, 留ㅻ쾲 ?ㅻⅨ 議고빀)
  */
 export function playPetSoundBundle() {
   if (!isSfxEnabled()) return;
@@ -478,7 +477,7 @@ export function playSoundFeed() {
   const ctx = getCtx();
   const now = ctx.currentTime;
 
-  // 1) 냠냠 씹는 소리 (높은 주파수 밴드패스 필터 노이즈)
+  // 1) ?좊깲 ?밸뒗 ?뚮━ (?믪? 二쇳뙆??諛대뱶?⑥뒪 ?꾪꽣 ?몄씠利?
   const bites = Math.floor(rand(3, 5));
   for (let i = 0; i < bites; i++) {
     const t   = now + i * rand(0.10, 0.18);
@@ -493,7 +492,7 @@ export function playSoundFeed() {
     noise.start(t); noise.stop(t + dur + 0.02);
   }
 
-  // 2) 만족스러운 짧은 "메에" 소리
+  // 2) 留뚯”?ㅻ윭??吏㏃? "硫붿뿉" ?뚮━
   const meeTime = now + bites * 0.14 + 0.06;
   const meeDur  = rand(0.22, 0.35);
   const baseF   = rand(380, 460);
@@ -580,9 +579,9 @@ export function playSoundXP() {
   });
 }
 
-// ─── 부위별 상호작용 효과음 ───
+// ??? 遺?꾨퀎 ?곹샇?묒슜 ?④낵?????
 
-/** 귀 간지럽히기: 높고 떨리는 당황 소리 */
+/** 洹 媛꾩??쏀엳湲? ?믨퀬 ?⑤━???뱁솴 ?뚮━ */
 export function playSoundEar() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx(); const now = ctx.currentTime;
@@ -601,7 +600,7 @@ export function playSoundEar() {
   vib.start(now); vib.stop(now+0.6); o.start(now); o.stop(now+0.6);
 }
 
-/** 머리 쓰다듬기: 낮고 부드러운 편안한 소리 */
+/** 癒몃━ ?곕떎?ш린: ??퀬 遺?쒕윭???몄븞???뚮━ */
 export function playSoundHead() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx(); const now = ctx.currentTime;
@@ -622,7 +621,7 @@ export function playSoundHead() {
   o1.start(now); o1.stop(now+dur+0.05); o2.start(now); o2.stop(now+dur+0.05);
 }
 
-/** 얼굴 쓰다듬기: 높고 짧은 행복 "메에!♡" 소리 */
+/** ?쇨뎬 ?곕떎?ш린: ?믨퀬 吏㏃? ?됰났 "硫붿뿉!?? ?뚮━ */
 export function playSoundFace() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx(); const now = ctx.currentTime;
@@ -648,7 +647,7 @@ export function playSoundFace() {
   });
 }
 
-/** 배 긁기: 통통 긁는 만족 소리 */
+/** 諛?湲곴린: ?듯넻 湲곷뒗 留뚯” ?뚮━ */
 export function playSoundBelly() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx(); const now = ctx.currentTime;
@@ -671,7 +670,7 @@ export function playSoundBelly() {
   o.start(humT); o.stop(humT+humDur+0.05);
 }
 
-/** 등 긁기: 졸린 낮은 릴랙스 "므르르~" 소리 */
+/** ??湲곴린: 議몃┛ ??? 由대옓??"誘瑜대Ⅴ~" ?뚮━ */
 export function playSoundBack() {
   if (!isSfxEnabled()) return;
   const ctx = getCtx(); const now = ctx.currentTime;
@@ -701,7 +700,7 @@ let _clipperLfo = null;
 let _clipperGain = null;
 
 /**
- * 바리깡 공회전 모터 진동음 시작
+ * 諛붾━源?怨듯쉶??紐⑦꽣 吏꾨룞???쒖옉
  */
 export function startClipperHum() {
   if (_clipperHumActive) return;
@@ -711,30 +710,29 @@ export function startClipperHum() {
   
   _clipperHumActive = true;
   
-  // 모터 기본음 (낮은 주파수 톱니파)
+  // 紐⑦꽣 湲곕낯??(??? 二쇳뙆???깅땲??
   _clipperOsc = ctx.createOscillator();
   _clipperOsc.type = 'sawtooth';
   _clipperOsc.frequency.setValueAtTime(105, now);
   
-  // 기계 떨림을 연출할 빠른 진동 LFO
+  // 湲곌퀎 ?⑤┝???곗텧??鍮좊Ⅸ 吏꾨룞 LFO
   _clipperLfo = ctx.createOscillator();
   _clipperLfo.type = 'sine';
   _clipperLfo.frequency.setValueAtTime(45, now); // 45Hz
   
   const lfoGain = ctx.createGain();
-  lfoGain.gain.setValueAtTime(6, now); // ±6Hz 주파수 변조
-  
-  // 저역 필터로 부드럽게 깎음
+  lfoGain.gain.setValueAtTime(6, now); // 짹6Hz 二쇳뙆??蹂議?
+  // ????꾪꽣濡?遺?쒕읇寃?源롮쓬
   const lpf = ctx.createBiquadFilter();
   lpf.type = 'lowpass';
   lpf.frequency.setValueAtTime(320, now);
   
   _clipperGain = ctx.createGain();
   _clipperGain.gain.setValueAtTime(0, now);
-  // 어택 효과 (점진적 켜짐)
+  // ?댄깮 ?④낵 (?먯쭊??耳쒖쭚)
   _clipperGain.gain.linearRampToValueAtTime(0.28, now + 0.15);
   
-  // 연결
+  // ?곌껐
   _clipperLfo.connect(lfoGain);
   lfoGain.connect(_clipperOsc.frequency);
   
@@ -747,7 +745,7 @@ export function startClipperHum() {
 }
 
 /**
- * 바리깡 공회전 모터 진동음 정지
+ * 諛붾━源?怨듯쉶??紐⑦꽣 吏꾨룞???뺤?
  */
 export function stopClipperHum() {
   if (!_clipperHumActive) return;
@@ -757,7 +755,7 @@ export function stopClipperHum() {
   const now = ctx.currentTime;
   
   if (_clipperGain) {
-    // 디케이 효과 (부드럽게 꺼짐)
+    // ?붿????④낵 (遺?쒕읇寃?爰쇱쭚)
     _clipperGain.gain.cancelScheduledValues(now);
     _clipperGain.gain.setValueAtTime(_clipperGain.gain.value, now);
     _clipperGain.gain.linearRampToValueAtTime(0, now + 0.12);
@@ -782,9 +780,9 @@ export function stopClipperHum() {
 
 let _shearNoiseTimeout = null;
 let _shearIsActive = false;
-let _shearMotion = 0; // 0~1, 포인터 속도 기반 강도
+let _shearMotion = 0; // 0~1, ?ъ씤???띾룄 湲곕컲 媛뺣룄
 
-/** 털깎기 마찰음 강도 (속도 0~20px/frame 정규화) */
+/** ?멸퉶湲?留덉같??媛뺣룄 (?띾룄 0~20px/frame ?뺢퇋?? */
 export function setShearMotion(speed) {
   _shearMotion = Math.min(1, Math.max(0, speed / 14));
 }
@@ -802,8 +800,7 @@ function _loopShearTick() {
   const motion = Math.max(0.25, _shearMotion);
   const dur = 0.05 + (1 - motion) * 0.04;
 
-  // 거친 마찰 레이어
-  const noise = createNoise(dur + 0.03);
+  // 嫄곗튇 留덉같 ?덉씠??  const noise = createNoise(dur + 0.03);
   const bpf1  = createFilter('bandpass', rand(2200, 4200) + motion * 1800, 1.8);
   const lpf   = createFilter('lowpass', rand(5000, 8000) + motion * 2000);
   const env   = createGain(0);
@@ -815,7 +812,7 @@ function _loopShearTick() {
   env.gain.linearRampToValueAtTime(0, now + dur);
   noise.start(now); noise.stop(now + dur + 0.02);
 
-  // 부드러운 솜 밀림 레이어 (속도 높을수록 두껍게)
+  // 遺?쒕윭????諛由??덉씠??(?띾룄 ?믪쓣?섎줉 ?먭퍖寃?
   if (motion > 0.35) {
     const soft = createNoise(dur * 1.2);
     const softLpf = createFilter('lowpass', rand(900, 1400), 0.8);
@@ -839,7 +836,7 @@ export function stopShearSound() {
   _shearNoiseTimeout = null;
 }
 
-/** 큰 덩어리 털이 벗겨질 때 짧은 카타르시스 팝 */
+/** ???⑹뼱由??몄씠 踰쀪꺼吏???吏㏃? 移댄?瑜댁떆????*/
 export function playShearPeelPop(intensity = 0.6) {
   if (!isSfxEnabled()) return;
   const ctx = getCtx();
@@ -870,29 +867,43 @@ export function playShearPeelPop(intensity = 0.6) {
 // --- ASMR ---
 
 export const ASMR_LIST = [
-  { id: 'sheep',   category: 'cozy',   icon: 'sheep-icon.svg',  emoji: '🐑', name: '양 울음소리',    desc: '메에~ 부드러운 양 울음' },
-  { id: 'ranch',   category: 'nature', icon: 'ranch-icon.svg',  emoji: '🌙', name: '밤의 목장',       desc: '고요한 밤 목장의 바람과 풀벌레' },
-  { id: 'bugs',    category: 'nature', icon: 'bugs-icon.svg',   emoji: '🦗', name: '풀벌레 소리',     desc: '여름밤 귀뚜라미와 풀벌레' },
-  { id: 'wind',    category: 'nature', icon: 'wind-icon.svg',   emoji: '🍃', name: '바람 소리',        desc: '살랑살랑 산들바람' },
-  { id: 'rain',    category: 'nature', icon: 'rain-icon.svg',   emoji: '🌧️', name: '빗소리',           desc: '창문에 떨어지는 빗방울 소리' },
-  { id: 'snow',    category: 'nature', icon: 'snow-icon.svg',   emoji: '❄️', name: '눈 내리는 밤',     desc: '고요한 겨울밤 눈발 소리' },
-  { id: 'ocean',   category: 'nature', icon: 'ocean-icon.svg',  emoji: '🌊', name: '파도 소리',        desc: '해변에 밀려오는 잔잔한 파도' },
-  { id: 'river',   category: 'nature', icon: 'river-icon.svg',  emoji: '💧', name: '시냇물',           desc: '졸졸 흐르는 맑은 시냇물' },
-  { id: 'forest',  category: 'nature', icon: 'forest-icon.svg', emoji: '🌲', name: '숲속 새벽',        desc: '새벽 숲에서 들려오는 새소리' },
-  { id: 'fire',    category: 'cozy',   icon: 'fire-icon.svg',   emoji: '🔥', name: '장작 타는 소리',  desc: '포근한 벽난로 장작불' },
-  { id: 'fan',     category: 'focus',  icon: 'fan-icon.svg',    emoji: '🌀', name: '선풍기',           desc: '규칙적인 팬 소음으로 숙면 유도' },
-  { id: 'white',   category: 'focus',  icon: 'white-icon.svg',  emoji: '⬜', name: '백색소음',         desc: '집중과 수면에 도움되는 화이트 노이즈' },
-  { id: 'brown',   category: 'focus',  icon: 'brown-icon.svg',  emoji: '🟤', name: '브라운 노이즈',    desc: '더 깊고 포근한 저음 노이즈' },
-  { id: 'heartbeat', category: 'focus', icon: 'heart-icon.svg', emoji: '💓', name: '심장 박동',        desc: '느린 리듬의 안정감' },
-  { id: 'piano',   category: 'cozy',   icon: 'piano-icon.svg',  emoji: '🎹', name: '잔잔한 피아노',   desc: '자연과 함께하는 피아노 선율' },
-  { id: 'musicbox', category: 'cozy', icon: 'box-icon.svg',    emoji: '🎠', name: '오르골',           desc: '자장가 같은 오르골 멜로디' },
-  { id: 'preset_rainy',  category: 'preset', emoji: '🌧️', name: '비 오는 밤',   desc: '빗소리 + 살랑 바람 믹스' },
-  { id: 'preset_cozy',   category: 'preset', emoji: '🔥', name: '포근한 난로',  desc: '장작불 + 잔잔한 바람' },
-  { id: 'preset_deep',   category: 'preset', emoji: '😴', name: '깊은 잠',      desc: '브라운 노이즈 + 심장 박동' },
-  { id: 'preset_starry', category: 'preset', emoji: '✨', name: '별빛 목장',    desc: '밤 목장 + 풀벌레' },
-  { id: 'preset_ocean',  category: 'preset', emoji: '🌊', name: '해변의 밤',    desc: '파도 + 귀뚜라미' },
+  { id: 'preset_rainy', category: 'preset', emoji: '🌧️', name: '비 오는 밤', desc: '빗소리와 부드러운 바람 믹스' },
+  { id: 'preset_ocean', category: 'preset', emoji: '🌊', name: '해변의 밤', desc: '파도와 먼 풀벌레가 섞인 밤바다' },
+  { id: 'preset_cottage', category: 'preset', emoji: '🏕️', name: '밤의 산장', desc: '장작불, 바람, 밤벌레가 있는 산장' },
+  { id: 'preset_zen', category: 'preset', emoji: '🪷', name: '젠 가든', desc: '물소리, 바람종, 작은 종소리' },
+  { id: 'preset_study', category: 'preset', emoji: '✏️', name: '조용한 필기방', desc: '연필, 책장, 잔잔한 실내 공기' },
+  { id: 'preset_traditional', category: 'preset', emoji: '🎐', name: '전통 악기 명상', desc: '동아시아 현악기와 부드러운 공간감' },
+  { id: 'preset_cozy', category: 'preset', emoji: '🔥', name: '포근한 난로', desc: '장작불과 잔잔한 바람' },
+  { id: 'preset_deep', category: 'preset', emoji: '😴', name: '깊은 잠', desc: '브라운 노이즈와 느린 심장 박동' },
+  { id: 'preset_starry', category: 'preset', emoji: '✨', name: '별빛 목장', desc: '밤 목장, 풀벌레, 먼 양 울음' },
+  { id: 'rain', category: 'nature', emoji: '🌧️', name: '빗소리', desc: '창문에 부딪히는 촉촉한 비' },
+  { id: 'ocean', category: 'nature', emoji: '🌊', name: '바다소리', desc: '멀리서 밀려오는 낮은 파도' },
+  { id: 'river', category: 'nature', emoji: '💧', name: '시냇물', desc: '작게 흐르는 맑은 물소리' },
+  { id: 'water', category: 'nature', emoji: '🚿', name: '잔잔한 물소리', desc: '작은 물방울과 흐르는 물' },
+  { id: 'forest', category: 'nature', emoji: '🌲', name: '숲속 새벽', desc: '새소리와 나뭇잎이 섞인 숲' },
+  { id: 'birds', category: 'nature', emoji: '🐦', name: '시골 새소리', desc: '멀리 들리는 아침 새소리' },
+  { id: 'bugs', category: 'nature', emoji: '🦗', name: '풀벌레', desc: '여름밤 귀뚜라미와 풀벌레' },
+  { id: 'wind', category: 'nature', emoji: '🍃', name: '바람소리', desc: '커튼을 스치는 부드러운 바람' },
+  { id: 'snow', category: 'nature', emoji: '❄️', name: '눈 내리는 밤', desc: '고요한 겨울밤의 공기' },
+  { id: 'fire', category: 'cozy', emoji: '🔥', name: '장작불', desc: '작게 타닥이는 벽난로' },
+  { id: 'cottage', category: 'cozy', emoji: '🏕️', name: '밤의 산장', desc: '산장 안팎의 밤 공기' },
+  { id: 'sheep', category: 'cozy', emoji: '🐑', name: '양 울음소리', desc: '멀리서 들리는 부드러운 양 울음' },
+  { id: 'ranch', category: 'cozy', emoji: '🌙', name: '밤 목장', desc: '목장 바람과 풀벌레' },
+  { id: 'fan', category: 'focus', emoji: '🌀', name: '선풍기', desc: '규칙적인 실내 바람' },
+  { id: 'pencil', category: 'texture', emoji: '✏️', name: '연필 필기', desc: '종이 위를 사각이는 연필' },
+  { id: 'brush', category: 'texture', emoji: '🖌️', name: '붓질', desc: '붓이 종이를 스치는 부드러운 소리' },
+  { id: 'chalk', category: 'texture', emoji: '🧑‍🏫', name: '분필', desc: '칠판에 작게 쓰는 분필 소리' },
+  { id: 'pages', category: 'texture', emoji: '📖', name: '책장 넘김', desc: '책장을 사락사락 넘기는 소리' },
+  { id: 'white', category: 'focus', emoji: '▫️', name: '화이트 노이즈', desc: '집중과 수면을 돕는 밝은 노이즈' },
+  { id: 'brown', category: 'focus', emoji: '🟫', name: '브라운 노이즈', desc: '낮고 포근한 깊은 노이즈' },
+  { id: 'heartbeat', category: 'focus', emoji: '💗', name: '심장 박동', desc: '느린 리듬의 안정감' },
+  { id: 'piano', category: 'music', emoji: '🎹', name: '잔잔한 피아노', desc: '느린 수면용 피아노 음색' },
+  { id: 'musicbox', category: 'music', emoji: '🎠', name: '오르골', desc: '자장가 같은 작은 오르골' },
+  { id: 'kalimba', category: 'music', emoji: '🎶', name: '칼림바', desc: '맑고 짧게 울리는 엄지 피아노' },
+  { id: 'koto', category: 'music', emoji: '🎐', name: '고토풍 현악기', desc: '일본 정원 느낌의 뜯는 현악기' },
+  { id: 'gayageum', category: 'music', emoji: '🪕', name: '가야금풍 현악기', desc: '한국 전통 현악기 느낌의 평온한 선율' },
+  { id: 'zen_garden', category: 'music', emoji: '🪷', name: '젠 가든', desc: '물, 바람종, 종소리의 명상 테마' },
 ];
-
 export function getAsmrItem(id) {
   return ASMR_LIST.find(i => i.id === id) ?? null;
 }
@@ -1010,20 +1021,35 @@ function _startAsmrById(id) {
     case 'rain':   _asmrRain();   break;
     case 'snow':   _asmrSnow();   break;
     case 'ocean':  _asmrOcean();  break;
+    case 'water':  _asmrWater();  break;
+    case 'birds':  _asmrBirds();  break;
     case 'fire':   _asmrFire();   break;
+    case 'cottage': _asmrCottage(); break;
     case 'fan':    _asmrFan();    break;
     case 'forest': _asmrForest(); break;
     case 'river':  _asmrRiver();  break;
+    case 'pencil': _asmrPencil(); break;
+    case 'brush':  _asmrBrush();  break;
+    case 'chalk':  _asmrChalk();  break;
+    case 'pages':  _asmrPages();  break;
     case 'white':  _asmrWhite();  break;
     case 'brown':  _asmrBrown();  break;
     case 'heartbeat': _asmrHeartbeat(); break;
     case 'piano':  _asmrPiano();  break;
     case 'musicbox': _asmrMusicbox(); break;
+    case 'kalimba': _asmrKalimba(); break;
+    case 'koto': _asmrKoto(); break;
+    case 'gayageum': _asmrGayageum(); break;
+    case 'zen_garden': _asmrZenGarden(); break;
     case 'preset_rainy':  _asmrPresetRainy();  break;
     case 'preset_cozy':   _asmrPresetCozy();   break;
     case 'preset_deep':   _asmrPresetDeep();   break;
     case 'preset_starry': _asmrPresetStarry(); break;
     case 'preset_ocean':  _asmrPresetOcean();  break;
+    case 'preset_cottage': _asmrPresetCottage(); break;
+    case 'preset_zen': _asmrPresetZen(); break;
+    case 'preset_study': _asmrPresetStudy(); break;
+    case 'preset_traditional': _asmrPresetTraditional(); break;
   }
 }
 
@@ -1422,6 +1448,129 @@ function _asmrPresetOcean() {
   _scheduleLoop('preset_ocean', dur * 1000);
 }
 
+function _asmrWater() {
+  const dur = 18;
+  const now = getCtx().currentTime;
+  _asmrRiverLayer(now, dur, 0.24);
+  _addWaterDrops(now, dur, 18, 0.12);
+  _scheduleLoop('water', dur * 1000);
+}
+
+function _asmrBirds() {
+  const dur = 18;
+  const now = getCtx().currentTime;
+  _addSoftWind(now, dur, 0.12);
+  _addBirdChirps(now, dur, 12, 0.09);
+  _scheduleLoop('birds', dur * 1000);
+}
+
+function _asmrCottage() {
+  const dur = 20;
+  const now = getCtx().currentTime;
+  _asmrFireLayer(now, dur, 0.16);
+  _addSoftWind(now, dur, 0.1);
+  _addCrickets(now, dur, 0.16);
+  _scheduleLoop('cottage', dur * 1000);
+}
+
+function _asmrPencil() {
+  const dur = 15;
+  const now = getCtx().currentTime;
+  _addWritingScratches(now, dur, 34, 0.12, 2200);
+  _scheduleLoop('pencil', dur * 1000);
+}
+
+function _asmrBrush() {
+  const dur = 16;
+  const now = getCtx().currentTime;
+  _addWritingScratches(now, dur, 22, 0.08, 900);
+  _addSoftWind(now, dur, 0.04);
+  _scheduleLoop('brush', dur * 1000);
+}
+
+function _asmrChalk() {
+  const dur = 15;
+  const now = getCtx().currentTime;
+  _addWritingScratches(now, dur, 28, 0.1, 3300);
+  _scheduleLoop('chalk', dur * 1000);
+}
+
+function _asmrPages() {
+  const dur = 16;
+  const now = getCtx().currentTime;
+  _addPageTurns(now, dur, 9, 0.16);
+  _scheduleLoop('pages', dur * 1000);
+}
+
+function _asmrKalimba() {
+  const dur = 18;
+  const now = getCtx().currentTime;
+  _addPluckedMelody(now, dur, [523.25, 659.25, 783.99, 880, 659.25], 0.12, 'sine');
+  _scheduleLoop('kalimba', dur * 1000);
+}
+
+function _asmrKoto() {
+  const dur = 20;
+  const now = getCtx().currentTime;
+  _addPluckedMelody(now, dur, [392, 493.88, 587.33, 659.25, 783.99], 0.1, 'triangle');
+  _addSoftWind(now, dur, 0.05);
+  _scheduleLoop('koto', dur * 1000);
+}
+
+function _asmrGayageum() {
+  const dur = 20;
+  const now = getCtx().currentTime;
+  _addPluckedMelody(now, dur, [440, 523.25, 587.33, 659.25, 783.99], 0.1, 'triangle');
+  _addSoftWind(now, dur, 0.04);
+  _scheduleLoop('gayageum', dur * 1000);
+}
+
+function _asmrZenGarden() {
+  const dur = 20;
+  const now = getCtx().currentTime;
+  _asmrRiverLayer(now, dur, 0.12);
+  _addSoftWind(now, dur, 0.08);
+  _addZenBells(now, dur, 5, 0.08);
+  _scheduleLoop('zen_garden', dur * 1000);
+}
+
+function _asmrPresetCottage() {
+  const dur = 22;
+  const now = getCtx().currentTime;
+  _asmrFireLayer(now, dur, 0.14);
+  _addSoftWind(now, dur, 0.09);
+  _addCrickets(now, dur, 0.14);
+  _addBirdChirps(now, dur, 3, 0.035);
+  _scheduleLoop('preset_cottage', dur * 1000);
+}
+
+function _asmrPresetZen() {
+  const dur = 22;
+  const now = getCtx().currentTime;
+  _asmrRiverLayer(now, dur, 0.11);
+  _addSoftWind(now, dur, 0.07);
+  _addZenBells(now, dur, 6, 0.075);
+  _scheduleLoop('preset_zen', dur * 1000);
+}
+
+function _asmrPresetStudy() {
+  const dur = 20;
+  const now = getCtx().currentTime;
+  _addWritingScratches(now, dur, 24, 0.09, 2100);
+  _addPageTurns(now, dur, 4, 0.1);
+  _addSoftWind(now, dur, 0.04);
+  _scheduleLoop('preset_study', dur * 1000);
+}
+
+function _asmrPresetTraditional() {
+  const dur = 22;
+  const now = getCtx().currentTime;
+  _addPluckedMelody(now, dur, [392, 440, 523.25, 587.33, 659.25, 783.99], 0.085, 'triangle');
+  _addZenBells(now, dur, 3, 0.045);
+  _addSoftWind(now, dur, 0.045);
+  _scheduleLoop('preset_traditional', dur * 1000);
+}
+
 function _asmrRainLayer(now, dur, vol) {
   const ctx = getCtx();
   const noise = createNoise(dur);
@@ -1508,6 +1657,119 @@ function _asmrOceanLayer(now, dur) {
   }
 }
 
+function _asmrRiverLayer(now, dur, vol) {
+  const noise = createNoise(dur);
+  const lpf = createFilter('lowpass', 1200);
+  const hpf = createFilter('highpass', 180);
+  const g = createGain(0);
+  noise.connect(lpf); lpf.connect(hpf); hpf.connect(g); g.connect(_asmrtGain);
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(vol, now + 1.2);
+  for (let t = 2; t < dur - 1; t += 2.2) {
+    g.gain.linearRampToValueAtTime(vol * rand(0.75, 1.1), now + t);
+  }
+  g.gain.linearRampToValueAtTime(0, now + dur);
+  _registerNode(noise); noise.start(now); noise.stop(now + dur + 0.1);
+}
+
+function _addWaterDrops(now, dur, count, vol) {
+  const ctx = getCtx();
+  for (let i = 0; i < count; i++) {
+    const t = now + rand(0.2, dur - 0.2);
+    const osc = ctx.createOscillator();
+    const g = createGain(0);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(rand(700, 1200), t);
+    osc.frequency.exponentialRampToValueAtTime(rand(280, 460), t + 0.12);
+    osc.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol * rand(0.4, 1), t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t + rand(0.12, 0.24));
+    _registerNode(osc); osc.start(t); osc.stop(t + 0.28);
+  }
+}
+
+function _addBirdChirps(now, dur, count, vol) {
+  const ctx = getCtx();
+  for (let i = 0; i < count; i++) {
+    const t = now + rand(0.4, dur - 0.4);
+    const osc = ctx.createOscillator();
+    const g = createGain(0);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(rand(1200, 2200), t);
+    osc.frequency.linearRampToValueAtTime(rand(1800, 3200), t + 0.08);
+    osc.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t + rand(0.12, 0.22));
+    _registerNode(osc); osc.start(t); osc.stop(t + 0.28);
+  }
+}
+
+function _addWritingScratches(now, dur, count, vol, freq) {
+  for (let i = 0; i < count; i++) {
+    const t = now + rand(0.1, dur - 0.1);
+    const scratch = createNoise(rand(0.045, 0.14));
+    const bpf = createFilter('bandpass', freq * rand(0.75, 1.25), rand(5, 12));
+    const g = createGain(0);
+    scratch.connect(bpf); bpf.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol * rand(0.4, 1), t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t + rand(0.05, 0.16));
+    _registerNode(scratch); scratch.start(t); scratch.stop(t + 0.2);
+  }
+}
+
+function _addPageTurns(now, dur, count, vol) {
+  for (let i = 0; i < count; i++) {
+    const t = now + rand(0.4, dur - 0.4);
+    const page = createNoise(rand(0.22, 0.42));
+    const hpf = createFilter('highpass', 900);
+    const lpf = createFilter('lowpass', 4200);
+    const g = createGain(0);
+    page.connect(hpf); hpf.connect(lpf); lpf.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol * rand(0.5, 1), t + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.001, t + rand(0.24, 0.45));
+    _registerNode(page); page.start(t); page.stop(t + 0.5);
+  }
+}
+
+function _addPluckedMelody(now, dur, notes, vol, type = 'triangle') {
+  const ctx = getCtx();
+  for (let t = 0.4, i = 0; t < dur - 0.5; t += rand(1.2, 2.2), i++) {
+    const start = now + t;
+    const freq = notes[i % notes.length] * rand(0.99, 1.01);
+    const osc = ctx.createOscillator();
+    const g = createGain(0);
+    osc.type = type;
+    osc.frequency.value = freq;
+    osc.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(vol, start + 0.018);
+    g.gain.exponentialRampToValueAtTime(0.001, start + rand(1.0, 1.8));
+    _registerNode(osc); osc.start(start); osc.stop(start + 2);
+  }
+}
+
+function _addZenBells(now, dur, count, vol) {
+  const ctx = getCtx();
+  for (let i = 0; i < count; i++) {
+    const t = now + rand(0.8, dur - 1.0);
+    [1, 2.01, 3.02].forEach((mul, idx) => {
+      const osc = ctx.createOscillator();
+      const g = createGain(0);
+      osc.type = 'sine';
+      osc.frequency.value = rand(440, 660) * mul;
+      osc.connect(g); g.connect(_asmrtGain);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(vol / (idx + 1), t + 0.025);
+      g.gain.exponentialRampToValueAtTime(0.001, t + rand(1.4, 2.6));
+      _registerNode(osc); osc.start(t); osc.stop(t + 2.8);
+    });
+  }
+}
+
 function createBrownNoise(duration) {
   const ctx = getCtx();
   const frames = Math.ceil(ctx.sampleRate * duration);
@@ -1524,21 +1786,21 @@ function createBrownNoise(duration) {
   return src;
 }
 
-// --- 바이노럴 비트 (ASMR과 동시 재생 가능) ---
+// --- 諛붿씠?몃윺 鍮꾪듃 (ASMR怨??숈떆 ?ъ깮 媛?? ---
 
 export const BINARURAL_LIST = [
-  { id: 'delta_2',  emoji: '🌙', name: '깊은 수면',  desc: '2Hz 델타 · 깊은 숙면 유도',     carrier: 200, beat: 2 },
-  { id: 'delta_1',  emoji: '💤', name: '초깊은 잠',  desc: '1Hz 델타 · 아주 느린 뇌파',     carrier: 180, beat: 1 },
-  { id: 'theta_6',  emoji: '🧘', name: '이완',       desc: '6Hz 세타 · 몸과 마음 풀기',     carrier: 220, beat: 6 },
-  { id: 'theta_4',  emoji: '😌', name: '명상',       desc: '4Hz 세타 · 호흡에 집중',        carrier: 210, beat: 4 },
-  { id: 'alpha_10', emoji: '☁️', name: '안정',       desc: '10Hz 알파 · 긴장 완화',         carrier: 240, beat: 10 },
+  { id: 'delta_2',  emoji: '🌙', name: '깊은 수면',   desc: '2Hz 델타, 깊은 수면 유도', carrier: 200, beat: 2 },
+  { id: 'delta_1',  emoji: '🌌', name: '초저속 델타', desc: '1Hz 델타, 아주 느린 뇌파', carrier: 180, beat: 1 },
+  { id: 'theta_6',  emoji: '🫧', name: '이완',        desc: '6Hz 세타, 몸과 마음 풀기', carrier: 220, beat: 6 },
+  { id: 'theta_4',  emoji: '🧘', name: '명상',        desc: '4Hz 세타, 잔잔한 집중', carrier: 210, beat: 4 },
+  { id: 'alpha_10', emoji: '🌤️', name: '안정',       desc: '10Hz 알파, 긴장 완화', carrier: 240, beat: 10 },
 ];
 
 let _binauralOscL = null;
 let _binauralOscR = null;
 let _currentBinauralId = null;
 
-const BINARURAL_MAX_GAIN = 0.38;
+const BINARURAL_MAX_GAIN = 0.22;
 
 function _binauralTargetGain() {
   return (getBinauralVolume() / 100) * BINARURAL_MAX_GAIN;
@@ -1556,7 +1818,7 @@ export function getBinauralItem(id) {
 }
 
 export function getBinauralVolume() {
-  const v = _prefs.binauralVol ?? 25;
+  const v = _prefs.binauralVol ?? 15;
   return Math.max(1, Math.min(100, Math.round(v)));
 }
 
@@ -1637,7 +1899,7 @@ export function fadeOutAndStopBinaural(sec = 4) {
   setTimeout(() => stopBinaural(), sec * 1000 + 50);
 }
 
-// --- 공유 블록 ---
+// --- 怨듭쑀 釉붾줉 ---
 
 function _addSoftWind(now, dur, vol) {
   const ctx = getCtx();
@@ -1690,29 +1952,27 @@ function _addCrickets(now, dur, vol) {
   _registerNode(noise); noise.start(now); noise.stop(now + dur + 0.1);
 }
 
-// ─── BGM (오르골 배경음악) ───
+// ??? BGM (?ㅻⅤ怨?諛곌꼍?뚯븙) ???
 
-// 잠자기 좋은 오르골 멜로디 노트 배열 (주파수, 박자길이)
-// C장조 계열의 잔잔한 멜로디
+// ?좎옄湲?醫뗭? ?ㅻⅤ怨?硫쒕줈???명듃 諛곗뿴 (二쇳뙆?? 諛뺤옄湲몄씠)
 const BGM_MELODY = [
-  // 1절: 자장가 느낌의 C장조 선율
+  // 1?? ?먯옣媛 ?먮굦??C?μ“ ?좎쑉
   [523.25, 0.5], [659.25, 0.5], [783.99, 0.5], [659.25, 0.5],
   [783.99, 0.5], [880.00, 0.5], [1046.5, 1.0],
   [880.00, 0.5], [783.99, 0.5], [659.25, 0.5], [523.25, 0.5],
   [392.00, 0.5], [440.00, 0.5], [523.25, 1.5],
-  // 2절: 조금 더 높게
+  // 2?? 議곌툑 ???믨쾶
   [659.25, 0.5], [783.99, 0.5], [880.00, 0.5], [783.99, 0.5],
   [659.25, 0.5], [587.33, 0.5], [523.25, 1.0],
   [440.00, 0.5], [523.25, 0.5], [587.33, 0.5], [523.25, 0.5],
   [493.88, 0.5], [440.00, 0.5], [392.00, 1.5],
-  // 3절: 마무리
-  [523.25, 0.5], [587.33, 0.5], [659.25, 0.5], [587.33, 0.5],
+  // 3?? 留덈Т由?  [523.25, 0.5], [587.33, 0.5], [659.25, 0.5], [587.33, 0.5],
   [523.25, 0.5], [493.88, 0.5], [440.00, 1.0],
   [392.00, 0.5], [440.00, 0.5], [493.88, 0.5], [523.25, 0.5],
   [659.25, 0.5], [783.99, 0.5], [523.25, 2.0],
 ];
 
-const BGM_BPM = 72; // 느리고 잔잔하게
+const BGM_BPM = 72; // ?먮━怨??붿옍?섍쾶
 const BGM_BEAT_SEC = 60 / BGM_BPM;
 
 let _bgmRunning = false;
@@ -1720,25 +1980,25 @@ let _bgmTimeout = null;
 let _bgmNodes = [];
 
 /**
- * 오르골 단일 노트 합성
- * 오르골 특성: 즉각적인 어택, 사인파+약간의 배음, 빠른 감쇠
+ * ?ㅻⅤ怨??⑥씪 ?명듃 ?⑹꽦
+ * ?ㅻⅤ怨??뱀꽦: 利됯컖?곸씤 ?댄깮, ?ъ씤???쎄컙??諛곗쓬, 鍮좊Ⅸ 媛먯뇿
  */
 function _playMusicBoxNote(ctx, freq, startTime, duration) {
   if (!_bgmGain) return;
 
-  // 기본 사인파 (오르골의 맑은 음색)
+  // 湲곕낯 ?ъ씤??(?ㅻⅤ怨⑥쓽 留묒? ?뚯깋)
   const osc = ctx.createOscillator();
   const env = ctx.createGain();
   osc.type = 'sine';
   osc.frequency.value = freq;
 
-  // 2배음 (약하게, 오르골 특유의 따듯한 배음)
+  // 2諛곗쓬 (?쏀븯寃? ?ㅻⅤ怨??뱀쑀???곕벏??諛곗쓬)
   const osc2 = ctx.createOscillator();
   const env2 = ctx.createGain();
   osc2.type = 'sine';
   osc2.frequency.value = freq * 2;
 
-  // 3배음 (매우 약하게)
+  // 3諛곗쓬 (留ㅼ슦 ?쏀븯寃?
   const osc3 = ctx.createOscillator();
   const env3 = ctx.createGain();
   osc3.type = 'sine';
@@ -1748,20 +2008,20 @@ function _playMusicBoxNote(ctx, freq, startTime, duration) {
   osc2.connect(env2); env2.connect(_bgmGain);
   osc3.connect(env3); env3.connect(_bgmGain);
 
-  const attackTime = 0.005; // 오르골의 즉각적인 어택
-  const decayTime  = Math.min(duration * 0.85, 1.8); // 오르골 특유의 긴 여운
+  const attackTime = 0.005; // ?ㅻⅤ怨⑥쓽 利됯컖?곸씤 ?댄깮
+  const decayTime  = Math.min(duration * 0.85, 1.8); // ?ㅻⅤ怨??뱀쑀??湲??ъ슫
 
-  // 기본음 엔벨로프
+  // 湲곕낯???붾꺼濡쒗봽
   env.gain.setValueAtTime(0, startTime);
   env.gain.linearRampToValueAtTime(0.7, startTime + attackTime);
   env.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime);
 
-  // 2배음 엔벨로프 (더 빨리 감쇠)
+  // 2諛곗쓬 ?붾꺼濡쒗봽 (??鍮⑤━ 媛먯뇿)
   env2.gain.setValueAtTime(0, startTime);
   env2.gain.linearRampToValueAtTime(0.2, startTime + attackTime);
   env2.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime * 0.5);
 
-  // 3배음 엔벨로프 (가장 빨리 감쇠)
+  // 3諛곗쓬 ?붾꺼濡쒗봽 (媛??鍮⑤━ 媛먯뇿)
   env3.gain.setValueAtTime(0, startTime);
   env3.gain.linearRampToValueAtTime(0.06, startTime + attackTime);
   env3.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime * 0.25);
@@ -1775,12 +2035,12 @@ function _playMusicBoxNote(ctx, freq, startTime, duration) {
 }
 
 /**
- * 오르골 배경음악 한 사이클 재생
+ * ?ㅻⅤ怨?諛곌꼍?뚯븙 ???ъ씠???ъ깮
  */
 function _playBgmCycle() {
   if (!_bgmRunning || !isBgmEnabled()) return;
   const ctx = getCtx();
-  const now = ctx.currentTime + 0.05; // 약간의 여유
+  const now = ctx.currentTime + 0.05; // ?쎄컙???ъ쑀
 
   let t = now;
   let totalDuration = 0;
@@ -1791,17 +2051,17 @@ function _playBgmCycle() {
     totalDuration += dur;
   });
 
-  // 마지막 노트 이후 잠시 쉬었다가 다시 반복 (자연스러운 루프)
+  // 留덉?留??명듃 ?댄썑 ?좎떆 ?ъ뿀?ㅺ? ?ㅼ떆 諛섎났 (?먯뿰?ㅻ윭??猷⑦봽)
   const loopAfter = (totalDuration + 2.0) * 1000;
   _bgmTimeout = setTimeout(() => {
-    // 이전 노드 정리
+    // ?댁쟾 ?몃뱶 ?뺣━
     _bgmNodes.forEach(n => { try { n.disconnect(); } catch(e) {} });
     _bgmNodes = [];
     if (_bgmRunning && isBgmEnabled()) _playBgmCycle();
   }, loopAfter);
 }
 
-/** 오르골 배경음악 시작 */
+/** ?ㅻⅤ怨?諛곌꼍?뚯븙 ?쒖옉 */
 export function startBgm() {
   if (_bgmRunning) return;
   if (!isBgmEnabled()) return;
@@ -1809,7 +2069,7 @@ export function startBgm() {
   _playBgmCycle();
 }
 
-/** 오르골 배경음악 정지 */
+/** ?ㅻⅤ怨?諛곌꼍?뚯븙 ?뺤? */
 export function stopBgm() {
   _bgmRunning = false;
   clearTimeout(_bgmTimeout);
@@ -1817,7 +2077,7 @@ export function stopBgm() {
   _bgmNodes = [];
 }
 
-/** 현재 BGM 재생 중 여부 */
+/** ?꾩옱 BGM ?ъ깮 以??щ? */
 export function isBgmPlaying() { return _bgmRunning; }
 
 let _morningAlarmRunning = false;
@@ -1825,7 +2085,7 @@ let _morningAlarmTimeout = null;
 let _morningAlarmNodes = [];
 
 /**
- * 모닝콜 알람: 잔잔한 오르골 아르페지오 + 드리미 "메에~" 반복
+ * 紐⑤떇肄??뚮엺: ?붿옍???ㅻⅤ怨??꾨Ⅴ?섏???+ ?쒕━誘?"硫붿뿉~" 諛섎났
  */
 export function playMorningCallAlarm() {
   if (!isSfxEnabled()) return;
@@ -1884,7 +2144,7 @@ function _playMorningAlarmCycle() {
   }, 2800);
 }
 
-/** 모닝콜 알람 정지 */
+/** 紐⑤떇肄??뚮엺 ?뺤? */
 export function stopMorningCallAlarm() {
   _morningAlarmRunning = false;
   clearTimeout(_morningAlarmTimeout);

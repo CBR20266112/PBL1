@@ -200,24 +200,20 @@
         <a href="pages/sleep.html" class="btn btn-secondary btn-block-link" style="margin-top:var(--space-3);">
           📊 수면 기록 · 꿈일기
         </a>
-        <a href="pages/gallery.html" class="btn btn-secondary btn-block-link" style="margin-top:var(--space-2);">
-          🌙 꿈나라 갤러리
-        </a>
       </section>
 
       <!-- ASMR 홈 요약 -->
       <section class="glass card home-asmr-card" id="home-asmr-section">
-        <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
-          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">수면 ASMR</h3>
-          <a href="pages/asmr.html" class="home-link">자세히 보기 ›</a>
+        <div class="home-asmr-compact">
+          <button type="button" class="home-asmr-toggle" id="btn-home-asmr-toggle" aria-pressed="false">
+            <span class="home-asmr-toggle-icon">♪</span>
+            <span>
+              <strong>수면 ASMR</strong>
+              <small id="home-asmr-now-label">꺼짐</small>
+            </span>
+          </button>
+          <a href="pages/asmr.html" class="home-link home-asmr-detail-link">상세 설정 ›</a>
         </div>
-        <div id="home-asmr-now" class="home-asmr-now idle">
-          <span>♪</span>
-          <span id="home-asmr-now-label">재생할 소리를 골라 보세요</span>
-          <button type="button" class="home-asmr-stop" id="btn-home-asmr-stop" style="display:none;" title="정지">정지</button>
-        </div>
-        <p class="home-asmr-subtitle">추천 믹스</p>
-        <div class="home-asmr-scroll home-asmr-presets" id="home-asmr-presets"></div>
       </section>
 
     </div>
@@ -239,9 +235,9 @@
         <span class="nav-label">공방</span>
         <span class="nav-dot"></span>
       </div>
-      <div class="nav-item" data-href="pages/friends.html">
-        <span class="nav-icon">👥</span>
-        <span class="nav-label">친구</span>
+      <div class="nav-item" data-href="pages/gallery.html">
+        <span class="nav-icon">🖼️</span>
+        <span class="nav-label">수집</span>
         <span class="nav-dot"></span>
       </div>
     </nav>
@@ -413,7 +409,7 @@
     import { initSheepStrokePet, getLastStrokeTravel } from './js/sheep-stroke.js';
     import { recordSleep, getStreak, getSleepRegularity, applyDailyRegularityBonus } from './js/sleep.js';
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
-    import { saveSheep, setItem, getItem, removeItem, getSettings } from './js/storage.js';
+    import { saveSheep, setItem, getItem, removeItem, getSettings, getLocalDateKey } from './js/storage.js';
     import { checkAndShowOpening } from './js/opening.js';
     import { pickMorningAction, MORNING_ACTION, initWakeAlarmScheduler, saveMorningCallSchedule, getSleepTimeDefaults, formatAlarmHint, markMorningCallCompleted } from './js/morningcall.js';
     import { recordAttendance, getAttendanceRewardMessages, getAttendance, isCheckedInToday, getWeekCycleProgress, getNextCycleReward, getTodayCycleRewardPreview } from './js/attendance.js';
@@ -500,6 +496,8 @@
       const valWool         = document.getElementById('val-wool');
       const regularityHint  = document.getElementById('regularity-hint');
 
+      const ATTENDANCE_PROMPT_DATE_KEY = 'ss_attendance_prompt_date';
+
       let currentPose = SHEEP_POSE.IDLE;
       let activeMood  = 3;
       let pendingWakeFinalize = null;
@@ -585,6 +583,14 @@
       function closeAttendanceModal() {
         attendanceOverlay?.classList.remove('active');
         attendanceModal?.classList.remove('active');
+      }
+
+      function showAttendancePromptOnFirstVisit() {
+        const today = getLocalDateKey();
+        if (isCheckedInToday()) return;
+        if (getItem(ATTENDANCE_PROMPT_DATE_KEY) === today) return;
+        setItem(ATTENDANCE_PROMPT_DATE_KEY, today);
+        setTimeout(openAttendanceModal, 700);
       }
 
       btnAttendance?.addEventListener('click', openAttendanceModal);
@@ -1271,6 +1277,7 @@
       // ─── 초기 실행 ───
       initHomeAsmrSection();
       refreshUI();
+      showAttendancePromptOnFirstVisit();
       speechBubble.textContent = `"${getRandomQuote()}"`;
       setTimeout(startAutoTimers, 1500);
 

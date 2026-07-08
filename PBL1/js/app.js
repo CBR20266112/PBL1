@@ -100,7 +100,7 @@ export function initNav() {
     'sleep.html':    1,
     'sheep.html':    0,
     'workshop.html': 2,
-    'friends.html':  3,
+    'gallery.html':  3,
   };
 
   const filename = path.split('/').pop() || 'index.html';
