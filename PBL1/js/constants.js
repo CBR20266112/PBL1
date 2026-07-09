@@ -4,7 +4,7 @@
  */
 
 /** 앱 버전 (설정 화면·배포 기준) */
-export const APP_VERSION = '1.94.0';
+export const APP_VERSION = '1.95.0';
 
 // ─── localStorage 키 ───
 export const STORAGE_KEYS = Object.freeze({
@@ -218,20 +218,19 @@ export const SHOP_CATALOG = [
 
 // ─── 카테고리 목록 ───
 export const SHOP_CATEGORIES = [
-  { id: 'all',        label: '전체',   icon: '🛍' },
+  { id: 'all',        label: '전체',   icon: '✨' },
   { id: 'ribbon',     label: '리본',   icon: '🎀' },
   { id: 'hat',        label: '모자',   icon: '🎩' },
   { id: 'scarf',      label: '목도리', icon: '🧣' },
-  { id: 'cushion',    label: '방석',   icon: '🪑' },
-  { id: 'carpet',     label: '카페트', icon: '🟣' },
+  { id: 'cushion',    label: '방석',   icon: '🛋️' },
+  { id: 'carpet',     label: '카펫',   icon: '🟪' },
   { id: 'light',      label: '조명',   icon: '💡' },
   { id: 'window',     label: '창문',   icon: '🪟' },
-  { id: 'wallpaper',  label: '벽지',   icon: '🖼' },
+  { id: 'wallpaper',  label: '벽지',   icon: '🖼️' },
   { id: 'furniture',  label: '가구',   icon: '🪑' },
   { id: 'background', label: '배경',   icon: '🌌' },
 ];
 
-// ─── 더미 친구 데이터 ───
 export const DUMMY_FRIENDS = [
   {
     id: 'friend_ridajol',
@@ -251,7 +250,7 @@ export const DUMMY_FRIENDS = [
   },
   {
     id: 'friend_001',
-    name: '나졸려',
+    name: '하주니',
     level: 7,
     step: 5,
     isSleeping: true,
@@ -267,7 +266,7 @@ export const DUMMY_FRIENDS = [
   },
   {
     id: 'friend_002',
-    name: '꿈나라',
+    name: '꿈나래',
     level: 3,
     step: 2,
     isSleeping: false,
@@ -299,7 +298,6 @@ export const DUMMY_FRIENDS = [
   },
 ];
 
-// ─── 일반 멘트 (랜덤) ───
 export const DAILY_QUOTES = [
   '오늘도 푹 쉬러 왔어?',
   '잠깐 쉬어가는 것도 괜찮아.',

@@ -101,6 +101,7 @@ export function initNav() {
     'sheep.html':    0,
     'workshop.html': 2,
     'gallery.html':  3,
+    'friends.html':  4,
   };
 
   const filename = path.split('/').pop() || 'index.html';

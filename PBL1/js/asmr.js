@@ -1,5 +1,6 @@
 ﻿/**
- * asmr.js - ASMR UI 怨듯넻 諛붿씤?? */
+ * asmr.js - ASMR shared UI bindings
+ */
 import {
   resumeAudio,
   getAsmrList,
@@ -54,7 +55,7 @@ export function createAsmrCard(item) {
     <div class="asmr-emoji">${item.emoji}</div>
     <div class="asmr-name">${item.name}</div>
     <div class="asmr-desc">${item.desc}</div>
-    <div class="asmr-badge">???ъ깮 以?/div>
+    <div class="asmr-badge">재생 중</div>
   `;
   card.addEventListener('click', () => {
     resumeAudio();
@@ -113,8 +114,8 @@ export function updateNowPlayingBar(item) {
     if (btnStop) btnStop.style.display = '';
   } else {
     bar.classList.add('idle');
-    if (icon) icon.textContent = '?뵁';
-    if (name) name.textContent = '?ъ깮 以묒씤 ?ъ슫???놁쓬';
+    if (icon) icon.textContent = '🎧';
+    if (name) name.textContent = '재생 중인 사운드 없음';
     bars?.forEach(b => b.classList.add('paused'));
     if (btnStop) btnStop.style.display = 'none';
   }
@@ -142,7 +143,7 @@ export function createBinauralCard(item) {
     <div class="asmr-emoji">${item.emoji}</div>
     <div class="asmr-name">${item.name}</div>
     <div class="asmr-desc">${item.desc}</div>
-    <div class="asmr-badge">???ъ깮 以?/div>
+    <div class="asmr-badge">재생 중</div>
   `;
   card.addEventListener('click', () => {
     resumeAudio();
@@ -190,11 +191,11 @@ export function updateBinauralNowBar(item) {
   if (!bar) return;
   if (item) {
     bar.classList.remove('idle');
-    if (label) label.textContent = `${item.emoji} ${item.name} 쨌 ${item.beat}Hz`;
+    if (label) label.textContent = `${item.emoji} ${item.name} · ${item.beat}Hz`;
     if (btnStop) btnStop.style.display = '';
   } else {
     bar.classList.add('idle');
-    if (label) label.textContent = '諛붿씠?몃윺 鍮꾪듃 爰쇱쭚';
+    if (label) label.textContent = '바이노럴 비트 꺼짐';
     if (btnStop) btnStop.style.display = 'none';
   }
 }
@@ -299,7 +300,7 @@ function refreshTimerLabel() {
   const left = getAsmrTimerMinutesLeft();
   const set = getAsmrSleepTimerMinutes();
   if (!set) {
-    _timerLabelEl.textContent = '??대㉧ 爰쇱쭚';
+    _timerLabelEl.textContent = '타이머 꺼짐';
     return;
   }
   _timerLabelEl.textContent = left > 0 ? `${left}분 후 자동 정지` : '곧 정지...';
