@@ -127,7 +127,7 @@
       buildCategoryTabsHTML 
     } from '../js/shop.js';
     import { getItems } from '../js/storage.js';
-    import { enableWearableDrag, getItemImagePath } from '../js/decor.js';
+    import { enableWearableDrag, getItemImagePath, saveWearablePlacement, WEARABLE_SLOTS } from '../js/decor.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCommon();
@@ -232,16 +232,135 @@
       btnPurchaseConfirm.addEventListener('click', () => {
         if (!pendingPurchaseItemId) return;
 
-        const res = purchaseItem(pendingPurchaseItemId);
+        const itemId = pendingPurchaseItemId;
+        const item = findItem(itemId);
+        const res = purchaseItem(itemId);
         if (res.success) {
           showToast(res.msg, 'success');
-          // 장착까지 자동 진행
-          toggleEquip(pendingPurchaseItemId);
           pendingPurchaseItemId = null;
-          
+
           purchaseModal.classList.remove('active');
           shopOverlay.classList.remove('active');
-          refreshUI();
+
+          // 착용형 아이템(악세사리)은 구매 후 강제 장착하지 않고 드래그로 부착하도록 안내
+          const wearableCategories = WEARABLE_SLOTS || ['hat','ribbon','glasses','scarf'];
+          if (item && wearableCategories.includes(item.slot)) {
+            // 렌더를 업데이트하고, 임시 드롭 아이템을 방 프리뷰에 추가
+            renderRoom(roomPreviewContainer, null, undefined, 'idle', '../');
+            const viewport = roomPreviewContainer.querySelector('.room-viewport');
+            if (viewport) {
+              const temp = document.createElement('img');
+              temp.src = getItemImagePath(item.id, '../');
+              temp.alt = item.name;
+              temp.className = 'shop-temp-drag';
+              temp.style.position = 'absolute';
+              temp.style.width = '18%';
+              temp.style.left = '8%';
+              temp.style.top = '8%';
+              temp.style.zIndex = '999';
+              temp.style.cursor = 'grab';
+              temp.style.touchAction = 'none';
+              viewport.appendChild(temp);
+
+              // 시각적 드래그 가이드 (양 wrapper 위치 강조)
+              const wrapper = viewport.querySelector('.room-sheep-wrapper');
+              let guideEl = null;
+              function showGuide() {
+                if (!wrapper) return;
+                const wr = wrapper.getBoundingClientRect();
+                const vp = viewport.getBoundingClientRect();
+                guideEl = document.createElement('div');
+                guideEl.className = 'drag-guide';
+                // 좌표를 viewport 기준 %로 변환하여 절대 위치 지정
+                const left = Math.max(0, Math.min(100, ((wr.left - vp.left) / vp.width) * 100));
+                const top = Math.max(0, Math.min(100, ((wr.top - vp.top) / vp.height) * 100));
+                const width = Math.max(12, Math.min(100, (wr.width / vp.width) * 100));
+                const height = Math.max(12, Math.min(100, (wr.height / vp.height) * 100));
+                guideEl.style.left = `${left}%`;
+                guideEl.style.top = `${top}%`;
+                guideEl.style.width = `${width}%`;
+                guideEl.style.height = `${height}%`;
+                guideEl.style.zIndex = '890';
+                viewport.appendChild(guideEl);
+              }
+              function hideGuide() { if (guideEl) { guideEl.remove(); guideEl = null; } }
+              showGuide();
+
+              // 드래그 로직: 드롭 시 room-sheep-wrapper 내부에 놓이면 장착 처리
+              let tracking = false;
+              const initialPos = { left: temp.style.left, top: temp.style.top };
+              let restoreTimer = null;
+n              function onPointerDown(e) {
+                e.preventDefault();
+                tracking = true;
+                temp.style.cursor = 'grabbing';
+                try { temp.setPointerCapture(e.pointerId); } catch (_) {}
+                temp.dataset.startX = e.clientX;
+                if (restoreTimer) { clearTimeout(restoreTimer); restoreTimer = null; }
+              }
+              function onPointerMove(e) {
+                if (!tracking) return;
+                const rect = viewport.getBoundingClientRect();
+                const left = ((e.clientX - rect.left) / rect.width) * 100;
+                const top = ((e.clientY - rect.top) / rect.height) * 100;
+                const clampedLeft = Math.max(0, Math.min(100, left));
+                const clampedTop = Math.max(0, Math.min(100, top));
+                temp.style.left = `${clampedLeft}%`;
+                temp.style.top = `${clampedTop}%`;
+                temp.dataset.left = clampedLeft;
+                temp.dataset.top = clampedTop;
+              }
+              function onPointerUp(e) {
+                if (tracking) {
+                  tracking = false;
+                  temp.style.cursor = 'grab';
+                  try { temp.releasePointerCapture(e.pointerId); } catch (_) {}
+                  // 검사: 드롭 위치가 sheep wrapper 안에 있는지
+                  const wrect = wrapper?.getBoundingClientRect();
+                  if (wrect && e.clientX >= wrect.left && e.clientX <= wrect.right && e.clientY >= wrect.top && e.clientY <= wrect.bottom) {
+                    // 장착 처리 및 위치 저장
+                    toggleEquip(item.id);
+                    // 상대 위치 저장 (wrapper 기준)
+                    const relLeft = ((e.clientX - wrect.left) / wrect.width) * 100;
+                    const relTop = ((e.clientY - wrect.top) / wrect.height) * 100;
+                    saveWearablePlacement(item.id, relLeft, relTop);
+                    showToast(`${item.name}을(를) 양에게 달았어요!`, 'success');
+                    hideGuide();
+                    temp.remove();
+                    refreshUI();
+                    return;
+                  }
+
+                  // 드롭 실패: 임시 아이템을 원위치로 애니메이션 후 일정 시간 동안 회수(재시도 가능)
+                  const origLeft = initialPos.left || '8%';
+                  const origTop = initialPos.top || '8%';
+                  temp.style.transition = 'left 0.32s ease, top 0.32s ease, transform 0.18s ease';
+                  temp.style.left = origLeft;
+                  temp.style.top = origTop;
+                  temp.style.transform = 'scale(0.98)';
+                  hideGuide();
+                  // 약간의 시간 후에 원상복구 (시각 효과)
+                  setTimeout(() => { temp.style.transform = ''; }, 340);
+                  showToast('양 위로 드래그해서 놓아야 장착됩니다. 잠시 후에 다시 선택해 보세요.', 'info');
+                  // 유지 후 자동 제거 (3초)
+                  restoreTimer = setTimeout(() => {
+                    try { temp.remove(); } catch (_) {}
+                    refreshUI();
+                  }, 3000);
+                }
+              }
+
+              temp.addEventListener('pointerdown', onPointerDown);
+              temp.addEventListener('pointermove', onPointerMove);
+              temp.addEventListener('pointerup', onPointerUp);
+              temp.addEventListener('pointercancel', onPointerUp);
+            }
+            showToast('아이템을 드래그해서 양에게 달아주세요.', 'info');
+          } else {
+            // 배경/가구 등은 자동으로 장착 처리 (즉시 적용)
+            toggleEquip(itemId);
+            refreshUI();
+          }
         } else {
           showToast(res.msg, 'error');
         }

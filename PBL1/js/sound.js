@@ -903,6 +903,8 @@ export const ASMR_LIST = [
   { id: 'koto', category: 'music', emoji: '🎐', name: '고토풍 현악기', desc: '일본 정원 느낌의 뜯는 현악기' },
   { id: 'gayageum', category: 'music', emoji: '🪕', name: '가야금풍 현악기', desc: '한국 전통 현악기 느낌의 평온한 선율' },
   { id: 'zen_garden', category: 'music', emoji: '🪷', name: '젠 가든', desc: '물, 바람종, 종소리의 명상 테마' },
+  { id: 'tingle_soft', category: 'texture', emoji: '✨', name: '부드러운 팅글', desc: '작은 고주파 펄스가 간질이는 느낌' },
+  { id: 'tingle_bell', category: 'texture', emoji: '🔔', name: '종소리 팅글', desc: '짧고 반짝이는 벨 텍스처' },
 ];
 export function getAsmrItem(id) {
   return ASMR_LIST.find(i => i.id === id) ?? null;
@@ -1050,6 +1052,8 @@ function _startAsmrById(id) {
     case 'preset_zen': _asmrPresetZen(); break;
     case 'preset_study': _asmrPresetStudy(); break;
     case 'preset_traditional': _asmrPresetTraditional(); break;
+    case 'tingle_soft': _asmrTingleSoft(); break;
+    case 'tingle_bell': _asmrTingleBell(); break;
   }
 }
 
@@ -1178,6 +1182,72 @@ function _asmrFire() {
     _registerNode(crk); crk.start(t); crk.stop(t + 0.1);
   }
   _scheduleLoop('fire', dur * 1000);
+}
+
+function _asmrTingleSoft() {
+  const ctx = getCtx();
+  const dur = 12;
+  const now = ctx.currentTime;
+
+  // 가벼운 하이밴드 노이즈 펄스들을 불규칙하게 배치
+  let t = 0;
+  while (t < dur) {
+    const offset = rand(0.02, 0.2);
+    const burstTime = now + t + offset;
+    const burstDur = rand(0.04, 0.12);
+    const noise = createNoise(burstDur);
+    const bpf = createFilter('bandpass', rand(4000, 9000), rand(0.8, 2.2));
+    const g = createGain(0);
+    noise.connect(bpf); bpf.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, burstTime);
+    g.gain.linearRampToValueAtTime(rand(0.04, 0.16), burstTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, burstTime + burstDur);
+    _registerNode(noise);
+    noise.start(burstTime); noise.stop(burstTime + burstDur + 0.02);
+    t += rand(0.35, 1.4);
+  }
+  // 은은한 저주파 배경을 살짝 추가해 공간감을 줌
+  _addSoftWind(now, dur, 0.04);
+  _scheduleLoop('tingle_soft', dur * 1000);
+}
+
+function _asmrTingleBell() {
+  const ctx = getCtx();
+  const dur = 14;
+  const now = ctx.currentTime;
+
+  // 짧은 벨 톤 네트워크: 여러 옥타브의 높은 톤을 작은 데케이로 재생
+  for (let i = 0; i < 10; i++) {
+    const offset = rand(0, dur - 0.08);
+    const t = now + offset;
+    const o = ctx.createOscillator();
+    const g = createGain(0);
+    o.type = 'triangle';
+    const base = rand(900, 2800);
+    o.frequency.setValueAtTime(base, t);
+    o.frequency.exponentialRampToValueAtTime(base * rand(0.9, 1.05), t + 0.02);
+    o.connect(g); g.connect(_asmrtGain);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(rand(0.06, 0.18), t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.001, t + rand(0.06, 0.18));
+    _registerNode(o);
+    o.start(t); o.stop(t + rand(0.06, 0.22));
+
+    // 작은 하이노이즈 반짝임 추가
+    const nDur = rand(0.03, 0.09);
+    const noise = createNoise(nDur);
+    const bpf = createFilter('bandpass', base * rand(0.6, 1.4), rand(1, 2.5));
+    const ng = createGain(0);
+    noise.connect(bpf); bpf.connect(ng); ng.connect(_asmrtGain);
+    ng.gain.setValueAtTime(rand(0.02, 0.08), t);
+    ng.gain.exponentialRampToValueAtTime(0.001, t + nDur);
+    _registerNode(noise);
+    noise.start(t); noise.stop(t + nDur + 0.02);
+  }
+
+  _addSoftWind(now, dur, 0.03);
+  _scheduleLoop('tingle_bell', dur * 1000);
+}
 }
 
 function _asmrForest() {

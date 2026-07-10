@@ -64,6 +64,38 @@ export function buildFriendRoomHTML(friend) {
 </div>`;
   }
 
+  // 수면왕 (friend_003) — 사용자 제공 이미지
+  if (friend.id === 'friend_003') {
+    return `
+<div class="friend-room-container glass" style="border-radius: var(--radius-xl); padding: 0; overflow: hidden; position: relative;">
+  <div style="padding: 16px 20px 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 10; position: relative;">
+    <div style="font-size: 1rem; font-weight: 800; color: #fff;">${title}</div>
+    <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 2px;">
+      Lv.${friend.level} · 🔥 ${friend.streak}일 연속
+    </div>
+  </div>
+  <div style="position: relative; width: 100%; display: flex; justify-content: center; align-items: center; background: #000;">
+    <img src="../assets/friends/49f560ba-45d0-44f5-87d7-11db7eea4b23.png" alt="${friend.name}의 침실" style="width: 100%; max-height: 480px; object-fit: contain; display: block;">
+  </div>
+</div>`;
+  }
+
+  // 꿈나래 (friend_002) — 사용자 제공 이미지
+  if (friend.id === 'friend_002') {
+    return `
+<div class="friend-room-container glass" style="border-radius: var(--radius-xl); padding: 0; overflow: hidden; position: relative;">
+  <div style="padding: 16px 20px 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 10; position: relative;">
+    <div style="font-size: 1rem; font-weight: 800; color: #fff;">${title}</div>
+    <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 2px;">
+      Lv.${friend.level} · 🔥 ${friend.streak}일 연속
+    </div>
+  </div>
+  <div style="position: relative; width: 100%; display: flex; justify-content: center; align-items: center; background: #000;">
+    <img src="../assets/friends/3a278dbe-16e9-41fe-96a3-5dd9e58bf8ec.png" alt="${friend.name}의 침실" style="width: 100%; max-height: 480px; object-fit: contain; display: block;">
+  </div>
+</div>`;
+  }
+
   return `
 <div class="glass" style="border-radius: var(--radius-xl); padding: 40px 20px; text-align: center; background: linear-gradient(180deg, #1a1040 0%, #2D1B4E 100%)">
   <div style="font-size: 3rem; margin-bottom: 16px;">🔒</div>

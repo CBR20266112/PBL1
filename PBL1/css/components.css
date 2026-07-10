@@ -139,6 +139,43 @@
   z-index: 10;
 }
 
+/* 임시 드래그 아이템 (구매 직후 드래그하여 양에게 부착) */
+.shop-temp-drag {
+  transition: transform 0.12s ease, opacity 0.12s ease, left 0.18s ease, top 0.18s ease;
+  pointer-events: auto;
+  touch-action: none;
+  will-change: left, top, transform;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+}
+
+/* 드래그 가이드: 양 위로 드래그하라는 시각적 안내 */
+.drag-guide {
+  position: absolute;
+  pointer-events: none;
+  border: 2px dashed rgba(255,255,255,0.9);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(124,110,250,0.15);
+  animation: guidePulse 1.2s ease-in-out infinite;
+  z-index: 800;
+}
+
+@keyframes guidePulse {
+  0% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.03); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 0.95; }
+}
+
+
+.heart-particle {
+  position: absolute;
+  font-size: 1.2rem;
+  pointer-events: none;
+  animation: floatHeart 1.2s ease forwards;
+  z-index: 10;
+}
+
 .pet-effect-particle {
   position: absolute;
   width: 40px;

@@ -408,11 +408,15 @@
   <script type="module">
     import { initCommon, showToast } from './js/app.js';
     import { readSheep, renderSheepTo, updateXPBar, updateStatBar, petSheep, feedSheep, decaySheepStats, playSheepAnim, addXP, touchSheep, rejectNaming } from './js/sheep.js';
+        import { enableWearableDrag } from './js/decor.js';
     import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm, playAsmr, getLastAsmrId, isAsmrSleepAutoplay } from './js/sound.js';
     import { initHomeAsmrSection } from './js/asmr.js';
     import { runPetInteraction } from './js/pet-effects.js';
     import { initSheepStrokePet, getLastStrokeTravel } from './js/sheep-stroke.js';
     import { recordSleep, getStreak, getSleepRegularity, applyDailyRegularityBonus } from './js/sleep.js';
+    // Expose sound helpers to window for automation/testing (temporary)
+    window.resumeAudio = resumeAudio;
+    window.playAsmr = playAsmr;
     import { SHEEP_POSE, NAME_DIALOG_SCRIPT, getRandomQuote } from './js/constants.js';
     import { saveSheep, setItem, getItem, removeItem, getSettings, getLocalDateKey } from './js/storage.js';
     import { checkAndShowOpening, startImageSlideshow } from './js/opening.js';
@@ -702,6 +706,8 @@
           document.getElementById('sleeping-banner').classList.add('hidden');
         }
         renderSheepTo(sheepRenderTarget, sheep.step, currentPose);
+        // 양에 붙인 악세사리 드래그 가능하게 활성화 (홈 화면)
+        try { enableWearableDrag(sheepRenderTarget, { onSave: () => showToast('아이템 위치를 저장했어요.', 'success') }); } catch (e) { /* noop */ }
       }
 
       let quoteTimer = null;
