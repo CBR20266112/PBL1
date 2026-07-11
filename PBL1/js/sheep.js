@@ -4,7 +4,7 @@
 
 import { GROWTH_TABLE, SHEEP_POSE, DAILY_QUOTES, NAME_REJECT_HAPPINESS_DELTA, INTERACTION_XP } from './constants.js';
 import { getSheep, saveSheep } from './storage.js';
-import { getSheepSVG } from './sheep-renderer.js';
+import { getSheepSVG, getSheepAnimClass } from './sheep-renderer.js';
 import { buildWearableOverlays } from './decor.js';
 import { showToast } from './app.js';
 
@@ -222,7 +222,7 @@ export function renderSheepTo(container, step, pose = SHEEP_POSE.IDLE, equipped 
 
   const wearablesHTML = buildWearableOverlays(equipped);
   container.innerHTML = `
-    <div class="sheep-render-wrap" style="position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
+    <div class="sheep-render-wrap ${getSheepAnimClass(pose)}" style="position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
       ${getSheepSVG(step, pose)}
       ${wearablesHTML}
     </div>`;

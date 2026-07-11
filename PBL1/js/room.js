@@ -4,7 +4,7 @@
 
 import { getItems, getSheep } from './storage.js';
 import { SHOP_CATALOG } from './constants.js';
-import { getSheepSVG } from './sheep-renderer.js';
+import { getSheepSVG, getSheepAnimClass } from './sheep-renderer.js';
 import {
   getEquippedItems,
   getBackgroundStyle,
@@ -61,7 +61,7 @@ export function renderRoom(container, equipped = null, step = 1, pose = 'idle', 
 <div class="room-viewport" style="width:100%;aspect-ratio:1.2;position:relative;overflow:hidden;border-radius:var(--radius-lg);background:${bgFallback};${bgStyle}box-shadow:var(--shadow-lg);">
   ${wallpaperHTML}
   ${propsHTML}
-  <div class="room-sheep-wrapper" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:140px;height:140px;z-index:4;display:flex;justify-content:center;align-items:center;overflow:visible;">
+  <div class="room-sheep-wrapper ${getSheepAnimClass(pose)}" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:140px;height:140px;z-index:4;display:flex;justify-content:center;align-items:center;overflow:visible;">
     ${getSheepSVG(currentStep, pose)}
     ${wearablesHTML}
   </div>

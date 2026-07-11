@@ -103,6 +103,11 @@ export function buildShopItemHTML(item, owned, equipped) {
 
   const iconHTML = `<img class="shop-item-thumb" src="${getItemImagePath(item.id)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="shop-item-icon" style="display:none">${item.icon}</span>`;
 
+  const isWearable = ['hat', 'ribbon', 'glasses', 'scarf'].includes(item.slot);
+  const typeLabel = isWearable
+    ? `<span style="font-size:0.6rem; color:var(--color-purple-soft); display:block; margin-bottom:2px; font-weight:800;">🐑 양 꾸미기</span>`
+    : `<span style="font-size:0.6rem; color:var(--color-secondary); display:block; margin-bottom:2px; font-weight:800;">🏡 방 꾸미기</span>`;
+
   return `
 <div class="shop-item ${isOwned ? 'owned' : ''} ${isEquipped ? 'equipped' : ''}"
      data-item-id="${item.id}"
@@ -111,7 +116,10 @@ export function buildShopItemHTML(item, owned, equipped) {
      aria-label="${item.name} ${item.price}양털">
   ${badgeHTML}
   <div class="shop-item-icon-wrap">${iconHTML}</div>
-  <div class="shop-item-name">${item.name}</div>
+  <div class="shop-item-name" style="margin-top: 4px;">
+    ${typeLabel}
+    ${item.name}
+  </div>
   ${priceHTML}
 </div>`;
 }

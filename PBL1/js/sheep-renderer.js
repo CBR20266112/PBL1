@@ -38,7 +38,7 @@ export function getSheepSVG(step = 1, pose = SHEEP_POSE.IDLE) {
     const assetName = pose === SHEEP_POSE.IDLE ? 'growth_idle' : pose;
     const imgPath = `${basePath}assets/sheep/step${step}/${assetName}.png`;
     // CSS 클래스로 크기를 지정하므로 인라인 스타일 불필요
-    return `<img src="${imgPath}" class="sheep-svg ${getSheepAnimClass(pose)}" alt="양 step${step} ${pose}" decoding="async" loading="eager">`;
+    return `<img src="${imgPath}" class="sheep-svg" alt="양 step${step} ${pose}" decoding="async" loading="eager">`;
   }
 
   const cfg = GROWTH_TABLE[step] ?? GROWTH_TABLE[1];
@@ -76,7 +76,7 @@ export function getSheepSVG(step = 1, pose = SHEEP_POSE.IDLE) {
   const expression = getExpression(pose);
 
   return `
-<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" class="sheep-svg ${getSheepAnimClass(pose)}">
+<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" class="sheep-svg">
   <!-- 그림자 -->
   <ellipse cx="100" cy="212" rx="${30 + wScale * 15}" ry="6" fill="rgba(0,0,0,0.12)"/>
 
@@ -248,7 +248,7 @@ function getPoseAccessory(pose, cx, cy, woolR) {
 }
 
 /** 애니메이션 클래스 결정 */
-function getSheepAnimClass(pose) {
+export function getSheepAnimClass(pose) {
   const map = {
     [SHEEP_POSE.IDLE]:  'sheep-idle',
     [SHEEP_POSE.SLEEP]: 'sheep-sleep-anim',
@@ -264,7 +264,7 @@ function getSheepAnimClass(pose) {
 function buildSleepSVG(step, wScale, bubbles) {
   const woolR = Math.round(22 + wScale * 24);
   return `
-<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" class="sheep-svg sheep-sleep-anim">
+<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" class="sheep-svg">
   <!-- 그림자 -->
   <ellipse cx="110" cy="148" rx="${40 + wScale * 15}" ry="7" fill="rgba(0,0,0,0.1)"/>
 
