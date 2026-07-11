@@ -411,7 +411,7 @@
         import { enableWearableDrag } from './js/decor.js';
     import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm, playAsmr, getLastAsmrId, isAsmrSleepAutoplay } from './js/sound.js';
     import { initHomeAsmrSection } from './js/asmr.js';
-    import { runPetInteraction } from './js/pet-effects.js';
+    import { runPetInteraction, spawnPetEffects } from './js/pet-effects.js';
     import { initSheepStrokePet, getLastStrokeTravel } from './js/sheep-stroke.js';
     import { recordSleep, getStreak, getSleepRegularity, applyDailyRegularityBonus } from './js/sleep.js';
     // Expose sound helpers to window for automation/testing (temporary)
@@ -949,8 +949,15 @@
         cfg.sound();
         spawnZoneParticle(sheepContainer, emoji, cfg.color);
 
-        const touchRes = touchSheep();
-        if (touchRes.woolGrew) showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success');
+        // 부위 탭 → touchSheep + petSheep 둘 다 적용 (쓰다듬기 전체 효과)
+        touchSheep();
+        const petRes = petSheep();
+        if (petRes.success) {
+          if (petRes.woolGrew) setTimeout(() => showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success'), 400);
+          // 부위별 말풍선·포즈는 zone 전용으로 덮어씀 (runPetInteraction 생략)
+          spawnPetEffects(sheepRenderTarget);
+          refreshUI();
+        }
 
         sheep = readSheep();
         renderSheepTo(sheepRenderTarget, sheep.step, pose);
