@@ -97,10 +97,11 @@ export function buildWearableOverlays(equipped = null, prefix = null) {
 }
 
 export function enableWearableDrag(container, { onSave = null } = {}) {
-  const scope = container?.querySelector('.room-sheep-wrapper, .sheep-render-wrap') || container;
+  // room-viewport 전체에서 드래그 대상을 찾을 수 있게 scope를 조절합니다.
+  const scope = container?.querySelector('.room-viewport') || container;
   if (!scope) return;
 
-  scope.querySelectorAll('.decor-wearable[data-item-id]').forEach(img => {
+  scope.querySelectorAll('.decor-wearable[data-item-id], .decor-room-prop[data-item-id]').forEach(img => {
     img.style.pointerEvents = 'auto';
     img.style.cursor = 'grab';
     img.style.touchAction = 'none';
@@ -119,6 +120,11 @@ export function enableWearableDrag(container, { onSave = null } = {}) {
         const clampedTop = Math.max(0, Math.min(100, top));
         img.style.left = `${clampedLeft}%`;
         img.style.top = `${clampedTop}%`;
+        
+        // 가구 드래그 시 transform 및 bottom 덮어쓰기 보정
+        img.style.bottom = 'auto';
+        img.style.transform = 'translate(-50%, -50%)';
+        
         img.dataset.left = String(clampedLeft);
         img.dataset.top = String(clampedTop);
       };
@@ -147,13 +153,23 @@ export function enableWearableDrag(container, { onSave = null } = {}) {
 /** 방 소품 img HTML */
 export function buildRoomPropImg(item, prefix = null) {
   const p = prefix ?? getDecorAssetPrefix();
-  const lay = ROOM_LAYOUT[item.category] ?? { bottom: '10%', left: '50%', width: '40%', transform: 'translateX(-50%)', zIndex: 2 };
-  const style = Object.entries(lay)
-    .map(([k, v]) => `${k.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}:${v}`)
-    .join(';');
+  const custom = getItems().placements?.[item.id];
+  let style = '';
+  
+  if (custom) {
+    // 저장된 위치가 있는 경우 커스텀 좌표 적용
+    style = `top:${custom.top}%;left:${custom.left}%;transform:translate(-50%, -50%);z-index:${ROOM_LAYOUT[item.category]?.zIndex ?? 2};`;
+  } else {
+    // 기본 레이아웃 사용
+    const lay = ROOM_LAYOUT[item.category] ?? { bottom: '10%', left: '50%', width: '40%', transform: 'translateX(-50%)', zIndex: 2 };
+    style = Object.entries(lay)
+      .map(([k, v]) => `${k.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}:${v}`)
+      .join(';');
+  }
+  
   const anim = item.category === 'light' ? 'animation:twinkleSlow 3s ease infinite;' : '';
   const extraClass = item.category === 'cushion' ? 'decor-cushion' : '';
-  return `<img class="decor-room-prop decor-${item.category} ${extraClass}" src="${getItemImagePath(item.id, p)}" alt="${item.name}" style="position:absolute;object-fit:contain;pointer-events:none;${style}${anim}" loading="lazy" decoding="async">`;
+  return `<img class="decor-room-prop decor-${item.category} ${extraClass}" data-item-id="${item.id}" src="${getItemImagePath(item.id, p)}" alt="${item.name}" style="position:absolute;object-fit:contain;pointer-events:auto;cursor:grab;touch-action:none;${style}${anim}" loading="lazy" decoding="async">`;
 }
 
 /** 배경 이미지 스타일 */
