@@ -927,11 +927,21 @@
         document.head.appendChild(s);
       }
 
+      // pointerup 기반 zone 탭 감지 (모바일 click 미발생 문제 대응)
       let _zoneCD = false;
-      document.getElementById('sheep-touch-overlay').addEventListener('click', (e) => {
+      let _zoneTouchStartZone = null;
+      const _overlay = document.getElementById('sheep-touch-overlay');
+
+      _overlay.addEventListener('pointerdown', (e) => {
         const zone = e.target.closest('[data-zone]');
+        _zoneTouchStartZone = zone || null;
+      });
+
+      _overlay.addEventListener('pointerup', (e) => {
+        const zone = e.target.closest('[data-zone]') || _zoneTouchStartZone;
+        _zoneTouchStartZone = null;
         if (!zone || _zoneCD) return;
-        if (getLastStrokeTravel() > 35) return;
+        if (getLastStrokeTravel() > 35) return;  // 스트로크 후 탭 이벤트 무시
         if (getItem('ss_sleeping_since')) return; // 자는 중이면 반응 안 함
         _zoneCD = true;
         setTimeout(() => _zoneCD = false, 900);
@@ -954,9 +964,10 @@
         const petRes = petSheep();
         if (petRes.success) {
           if (petRes.woolGrew) setTimeout(() => showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success'), 400);
-          // 부위별 말풍선·포즈는 zone 전용으로 덮어씀 (runPetInteraction 생략)
           spawnPetEffects(sheepRenderTarget);
           refreshUI();
+        } else {
+          showToast(petRes.msg, 'info');
         }
 
         sheep = readSheep();
