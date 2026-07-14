@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="assets/icon/app_icon_candidate_night.png">
   <link rel="icon" href="assets/icon/app_icon_candidate_night.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <title>SleepySheep | 홈</title>
+  <title data-i18n="page.title.home">SleepySheep | 홈</title>
   
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/style.css">
@@ -30,22 +30,22 @@
     <!-- 헤더 -->
     <header class="header">
       <div class="header-left">
-        <button type="button" class="btn-attendance" id="btn-attendance" title="출석체크" aria-label="출석체크">
+        <button type="button" class="btn-attendance" id="btn-attendance" data-i18n-title="home.attendanceButtonTitle" title="출석체크" aria-label="출석체크">
           <span aria-hidden="true">📅</span>
           <span class="att-badge" id="attendance-header-badge">0</span>
         </button>
         <div>
-          <h1 id="sheep-name-header">드리미</h1>
-          <p class="subtitle" data-i18n="page.subtitle">나만의 힐링 수면 메이트</p>
+          <h1 id="sheep-name-header" data-i18n="home.defaultName">드리미</h1>
+          <p class="subtitle" data-i18n="page.subtitle.home">나만의 힐링 수면 메이트</p>
         </div>
       </div>
       <div class="header-right">
-        <div class="chip-box" id="wool-display" title="보유 양털">
+        <div class="chip-box" id="wool-display" data-i18n-title="home.wool.title" title="보유 양털">
           <span class="icon">🧶</span>
           <span id="wool-count">0</span>
         </div>
-        <button class="btn-back" onclick="location.href='pages/settings.html'" style="font-size: 1rem;" title="설정">⚙️</button>
-        <button class="btn-back" id="btn-bgm-toggle" style="font-size: 1rem;" title="배경음악 온/오프">🎵</button>
+        <button class="btn-back" onclick="location.href='pages/settings.html'" style="font-size: 1rem;" data-i18n-title="site.settingsButtonTitle" title="설정">⚙️</button>
+        <button class="btn-back" id="btn-bgm-toggle" style="font-size: 1rem;" data-i18n-title="home.bgmButtonTitle" title="배경음악 온/오프">🎵</button>
       </div>
     </header>
 
@@ -56,46 +56,46 @@
       <div id="sleeping-banner" class="streak-banner hidden" style="background: linear-gradient(135deg, rgba(124, 110, 250, 0.25), rgba(79, 70, 229, 0.25)); border-color: rgba(167, 139, 250, 0.4);">
         <span class="streak-number" style="font-size: 1.5rem;">💤</span>
         <div class="streak-text">
-          <div class="font-bold" style="color: #fff;">수면 기록 중...</div>
-          <div>양이 곤히 자고 있어요. 기상하면 기록을 완료해주세요.</div>
+          <div class="font-bold" style="color: #fff;" data-i18n="home.sleepingBanner.title">수면 기록 중...</div>
+          <div data-i18n="home.sleepingBanner.desc">양이 곤히 자고 있어요. 기상하면 기록을 완료해주세요.</div>
         </div>
       </div>
 
       <!-- ASMR (메인) -->
       <section class="glass card home-asmr-card" id="home-asmr-section-legacy" style="display:none;">
         <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
-          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">🎵 수면 ASMR</h3>
-          <a href="pages/asmr.html" class="home-link">전체 ›</a>
+          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);" data-i18n="home.asmr.title">🎵 수면 ASMR</h3>
+          <a href="pages/asmr.html" class="home-link" data-i18n="home.asmr.viewAll">전체 ›</a>
         </div>
         <div id="home-asmr-now-legacy" class="home-asmr-now idle">
           <span>🎵</span>
-          <span id="home-asmr-now-label-legacy">재생할 소리를 골라 보세요</span>
-          <button type="button" class="home-asmr-stop" id="btn-home-asmr-stop-legacy" style="display:none;" title="정지">⏹</button>
+          <span id="home-asmr-now-label-legacy" data-i18n="home.asmr.chooseSound">재생할 소리를 골라 보세요</span>
+          <button type="button" class="home-asmr-stop" id="btn-home-asmr-stop-legacy" style="display:none;" data-i18n-title="home.asmr.stopButtonTitle" title="정지">⏹</button>
         </div>
-        <p class="home-asmr-subtitle">✨ 추천 믹스</p>
+        <p class="home-asmr-subtitle" data-i18n="home.asmr.recommendedMix">✨ 추천 믹스</p>
         <div class="home-asmr-scroll home-asmr-presets" id="home-asmr-presets-legacy"></div>
-        <p class="home-asmr-subtitle">🌙 사운드</p>
+        <p class="home-asmr-subtitle" data-i18n="home.asmr.soundSection">🌙 사운드</p>
         <div class="home-asmr-scroll" id="home-asmr-chips-legacy"></div>
         <div class="home-asmr-timer" id="home-asmr-timer-legacy">
           <div class="asmr-timer-row" data-asmr-timer-row></div>
-          <p class="asmr-timer-label" data-asmr-timer-label>타이머 꺼짐</p>
+          <p class="asmr-timer-label" data-i18n="home.asmr.timerOffLabel">타이머 꺼짐</p>
         </div>
         <div class="home-asmr-autoplay">
-          <span class="home-asmr-autoplay-label">잠자기 시 자동 재생</span>
+          <span class="home-asmr-autoplay-label" data-i18n="home.asmr.autoplayLabel">잠자기 시 자동 재생</span>
           <label class="switch switch-sm">
             <input type="checkbox" id="switch-home-asmr-autoplay-legacy" checked>
             <span class="switch-slider"></span>
           </label>
         </div>
-        <p class="home-asmr-subtitle">🎧 바이노럴 비트 <span class="home-asmr-hint">ASMR과 함께 · 이어폰 권장</span></p>
+        <p class="home-asmr-subtitle" data-i18n-html="home.asmr.binauralHint">🎧 바이노럴 비트 <span class="home-asmr-hint">ASMR과 함께 · 이어폰 권장</span></p>
         <div id="home-binaural-now-legacy" class="home-asmr-now home-binaural-now idle">
           <span>🎧</span>
-          <span id="home-binaural-now-label-legacy">바이노럴 비트 끄기</span>
-          <button type="button" class="home-asmr-stop" id="btn-home-binaural-stop-legacy" style="display:none;" title="정지">⏹</button>
+          <span id="home-binaural-now-label-legacy" data-i18n="home.asmr.binauralOffLabel">바이노럴 비트 끄기</span>
+          <button type="button" class="home-asmr-stop" id="btn-home-binaural-stop-legacy" style="display:none;" data-i18n-title="home.asmr.stopButtonTitle" title="정지">⏹</button>
         </div>
         <div class="home-asmr-scroll" id="home-binaural-chips-legacy"></div>
         <div class="binaural-vol-row">
-          <span class="binaural-vol-label">비트 볼륨</span>
+          <span class="binaural-vol-label" data-i18n="home.asmr.volumeLabel">비트 볼륨</span>
           <input type="range" class="binaural-vol-slider" id="slider-home-binaural-vol-legacy" min="1" max="100" step="1" value="25">
           <span class="binaural-vol-val" id="home-binaural-vol-val-legacy">25</span>
         </div>
@@ -105,7 +105,7 @@
       <section class="hero-card glass">
         <!-- 레벨 배지 -->
         <div style="margin-bottom: var(--space-3);">
-          <span class="level-badge" id="level-badge">Lv.1 새끼양</span>
+          <span class="level-badge" id="level-badge" data-i18n="home.levelBadge">Lv.1 새끼양</span>
         </div>
 
         <!-- 양 캐릭터 그래픽 컨테이너 -->
@@ -129,15 +129,15 @@
         </div>
 
         <!-- 말풍선 -->
-        <div class="speech-bubble" id="speech-bubble">
+        <div class="speech-bubble" id="speech-bubble" data-i18n="home.speechBubble">
           "오늘도 잘 자고 좋은 꿈 꾸자, 양!"
         </div>
 
         <!-- XP 진행 바 -->
         <div class="xp-section">
           <div class="xp-label">
-            <span>경험치</span>
-            <span id="xp-text">0 / 100 XP</span>
+            <span data-i18n="home.xpLabel">경험치</span>
+            <span id="xp-text" data-i18n="home.xpStatus">0 / 100 XP</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill fill-xp" id="xp-fill" style="width: 0%"></div>
@@ -147,7 +147,7 @@
         <div class="home-stats-compact">
           <div class="status-item">
             <span class="stat-icon">❤️</span>
-            <span class="stat-label">행복</span>
+            <span class="stat-label" data-i18n="home.stat.happiness">행복</span>
             <div class="progress-bar">
               <div class="progress-fill fill-happiness" id="fill-happiness"></div>
             </div>
@@ -155,7 +155,7 @@
           </div>
           <div class="status-item">
             <span class="stat-icon">🍽️</span>
-            <span class="stat-label">포만</span>
+            <span class="stat-label" data-i18n="home.stat.hunger">포만감</span>
             <div class="progress-bar">
               <div class="progress-fill fill-hunger" id="fill-hunger"></div>
             </div>
@@ -163,7 +163,7 @@
           </div>
           <div class="status-item">
             <span class="stat-icon">🧶</span>
-            <span class="stat-label">양털</span>
+            <span class="stat-label" data-i18n="home.stat.wool">양털</span>
             <div class="progress-bar">
               <div class="progress-fill fill-wool" id="fill-wool"></div>
             </div>
@@ -177,27 +177,27 @@
         <div class="action-row">
           <button class="btn btn-action" id="btn-pet">
             <span class="btn-icon">🖐️</span>
-            <span>쓰다듬기</span>
+            <span data-i18n="home.action.pet">쓰다듬기</span>
           </button>
           <button class="btn btn-action" id="btn-feed">
             <span class="btn-icon">🥕</span>
-            <span>먹이주기</span>
+            <span data-i18n="home.action.feed">먹이주기</span>
           </button>
           <button class="btn btn-action btn-shear" id="btn-shear-game" disabled>
             <span class="btn-icon">✂️</span>
-            <span>양털깎기</span>
+            <span data-i18n="home.action.shear">양털깎기</span>
           </button>
         </div>
-        <p id="shear-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.4;">
+        <p id="shear-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.4;" data-i18n="home.shearHint">
           행복·포만 MAX → 양털 성장 · 3칸이면 깎기
         </p>
       </section>
 
       <section class="glass card home-sleep-actions">
-        <button class="btn btn-sleep w-full" id="btn-main-sleep">
+        <button class="btn btn-sleep w-full" id="btn-main-sleep" data-i18n="home.sleepAction.startButton">
           😴 오늘 잠자기 시작
         </button>
-        <a href="pages/sleep.html" class="btn btn-secondary btn-block-link" style="margin-top:var(--space-3);">
+        <a href="pages/sleep.html" class="btn btn-secondary btn-block-link" style="margin-top:var(--space-3);" data-i18n="home.sleepAction.recordLink">
           📊 수면 기록 · 꿈일기
         </a>
       </section>
@@ -208,11 +208,11 @@
           <button type="button" class="home-asmr-toggle" id="btn-home-asmr-toggle" aria-pressed="false">
             <span class="home-asmr-toggle-icon">♪</span>
             <span>
-              <strong>수면 ASMR</strong>
-              <small id="home-asmr-now-label">꺼짐</small>
+              <strong data-i18n="home.asmr.compact.title">수면 ASMR</strong>
+              <small id="home-asmr-now-label" data-i18n="home.asmr.compact.status">꺼짐</small>
             </span>
           </button>
-          <a href="pages/asmr.html" class="home-link home-asmr-detail-link">상세 설정 ›</a>
+          <a href="pages/asmr.html" class="home-link home-asmr-detail-link" data-i18n="home.asmr.compact.detailLink">상세 설정 ›</a>
         </div>
       </section>
 
@@ -252,40 +252,40 @@
   <div class="overlay" id="sleep-overlay"></div>
   <div class="modal" id="sleep-modal">
     <div class="modal-handle"></div>
-    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);">😴 안녕히 주무세요, 양!</h3>
-    <p class="text-center text-muted" style="font-size: var(--font-size-sm); margin-bottom: var(--space-4); line-height: 1.6;">
+    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="home.sleepModal.title">😴 안녕히 주무세요, 양!</h3>
+    <p class="text-center text-muted" style="font-size: var(--font-size-sm); margin-bottom: var(--space-4); line-height: 1.6;" data-i18n="home.sleepModal.description">
       취침·기상 시간을 정해 주세요.<br>
       <strong>기상 시간</strong>에 드리미 모닝콜이 울립니다.
     </p>
     <div class="time-input-group" style="margin-bottom: var(--space-4);">
       <div class="time-input-card">
-        <span class="time-input-label">💤 취침 시간</span>
+        <span class="time-input-label" data-i18n="home.sleepModal.bedtimeLabel">💤 취침 시간</span>
         <input type="time" id="sleep-modal-bedtime" class="time-input" value="23:00">
       </div>
       <div class="time-input-card">
-        <span class="time-input-label">☀️ 기상 시간 (모닝콜)</span>
+        <span class="time-input-label" data-i18n="home.sleepModal.waketimeLabel">☀️ 기상 시간 (모닝콜)</span>
         <input type="time" id="sleep-modal-waketime" class="time-input" value="07:00">
       </div>
     </div>
     <p class="text-center text-muted" id="sleep-modal-alarm-hint" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-4);"></p>
-    <p class="text-center text-muted" style="font-size: var(--font-size-sm); margin-bottom: var(--space-5); line-height: 1.6;">
+    <p class="text-center text-muted" style="font-size: var(--font-size-sm); margin-bottom: var(--space-5); line-height: 1.6;" data-i18n="home.sleepModal.hint">
       일어나신 후 '기상하기' 버튼을 눌러 수면 기록을 완료해 주세요.
     </p>
     <div class="flex flex-col gap-3">
-      <button class="btn btn-primary" id="btn-start-sleep-confirm">😴 지금 자러가기</button>
-      <button class="btn btn-secondary" id="btn-close-sleep-modal">취소</button>
+      <button class="btn btn-primary" id="btn-start-sleep-confirm" data-i18n="home.sleepModal.startButton">😴 지금 자러가기</button>
+      <button class="btn btn-secondary" id="btn-close-sleep-modal" data-i18n="home.sleepModal.cancelButton">취소</button>
     </div>
   </div>
 
   <!-- 기상(기록) 모달 -->
   <div class="modal" id="wake-modal">
     <div class="modal-handle"></div>
-    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);">☀️ 잘 일어나셨나요, 양!</h3>
+    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="home.wakeModal.title">☀️ 잘 일어나셨나요, 양!</h3>
     
     <div class="flex flex-col gap-4" style="margin-bottom: var(--space-5);">
       <!-- 기분 선택 -->
       <div>
-        <label class="font-bold text-small text-muted" style="display:block; margin-bottom:8px;">오늘 일어났을 때 기분은 어떤가요?</label>
+        <label class="font-bold text-small text-muted" style="display:block; margin-bottom:8px;" data-i18n="home.wakeModal.moodLabel">오늘 일어났을 때 기분은 어떤가요?</label>
         <div class="mood-row">
           <button class="mood-btn" data-mood="1">😢</button>
           <button class="mood-btn" data-mood="2">🥱</button>
@@ -297,13 +297,13 @@
 
       <!-- 간단 메모 -->
       <div>
-        <label class="font-bold text-small text-muted" style="display:block; margin-bottom:8px;">간단한 메모</label>
-        <input type="text" id="wake-note" class="glass" style="width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); padding: var(--space-3); color: #fff; font-size: var(--font-size-sm);" placeholder="오늘 수면 상태는 어땠나요?">
+        <label class="font-bold text-small text-muted" style="display:block; margin-bottom:8px;" data-i18n="home.wakeModal.noteLabel">간단한 메모</label>
+        <input type="text" id="wake-note" class="glass" style="width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); padding: var(--space-3); color: #fff; font-size: var(--font-size-sm);" data-i18n-placeholder="home.wakeModal.notePlaceholder" placeholder="오늘 수면 상태는 어땠나요?">
       </div>
     </div>
 
     <div class="flex flex-col gap-3">
-      <button class="btn btn-primary" id="btn-wake-confirm">☀️ 기상 및 수면기록 완료</button>
+      <button class="btn btn-primary" id="btn-wake-confirm" data-i18n="home.wakeModal.confirmButton">☀️ 기상 및 수면기록 완료</button>
     </div>
   </div>
 
@@ -311,30 +311,30 @@
   <div class="overlay" id="privacy-overlay"></div>
   <div class="modal" id="privacy-modal" style="max-width: 92%; width: 360px;">
     <div class="modal-handle"></div>
-    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);">개인정보 보호 및 이용약관</h3>
-    <div class="text-muted" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4);">
+    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="privacy.modal.title">개인정보 보호 및 이용약관</h3>
+    <div class="text-muted" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4);" data-i18n-html="privacy.modal.text">
       SleepySheep는 이 앱에서 사용하는 모든 데이터를 브라우저 로컬에 안전하게 저장합니다.<br>
       개인 식별 정보는 수집하지 않으며, 이용 기록은 오직 앱 동작과 설정 보존을 위해 저장됩니다.<br>
       본 앱을 계속 사용하려면 아래 약관에 동의해 주세요.
     </div>
     <div class="flex flex-col gap-3">
-      <button class="btn btn-primary w-full" id="btn-privacy-consent-agree">동의하고 시작하기</button>
+      <button class="btn btn-primary w-full" id="btn-privacy-consent-agree" data-i18n="privacy.modal.confirm">동의하고 시작하기</button>
     </div>
   </div>
 
   <!-- Sleepy Sheep 전용 모닝콜 미니게임 모달 -->
   <div class="modal" id="morningcall-modal">
     <div class="modal-handle"></div>
-    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-3);">⏰ 드리미 모닝콜</h3>
+    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-3);" data-i18n="home.morningCallModal.title">⏰ 드리미 모닝콜</h3>
 
     <!-- 상호작용 모드 -->
     <div id="morningcall-interactive-section">
-      <p id="morningcall-mission" class="text-center text-muted" style="font-size: var(--font-size-sm); line-height: 1.6; margin-bottom: var(--space-3);">
+      <p id="morningcall-mission" class="text-center text-muted" style="font-size: var(--font-size-sm); line-height: 1.6; margin-bottom: var(--space-3);" data-i18n="home.morningCallModal.mission">
         20초 안에 드리미를 깨워주세요!
       </p>
       <div class="glass" style="padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-3);">
         <div class="flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: 6px;">
-          <span>남은 시간</span>
+          <span data-i18n="home.morningCallModal.timeLeftLabel">남은 시간</span>
           <span id="morningcall-timer">20초</span>
         </div>
         <div class="progress-bar" style="height: 8px;">
@@ -342,18 +342,18 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <button class="btn btn-primary" id="btn-morningcall-action">🖐️ 드리미 쓰다듬기</button>
-        <button class="btn btn-secondary" id="btn-morningcall-skip">보상 줄어들어도 바로 종료</button>
+        <button class="btn btn-primary" id="btn-morningcall-action" data-i18n="home.morningCallModal.actionButton">🖐️ 드리미 쓰다듬기</button>
+        <button class="btn btn-secondary" id="btn-morningcall-skip" data-i18n="home.morningCallModal.skipButton">보상 줄어들어도 바로 종료</button>
       </div>
     </div>
 
     <!-- 간편 끄기 모드 -->
     <div id="morningcall-simple-section" class="hidden">
-      <p class="text-center text-muted" style="font-size: var(--font-size-sm); line-height: 1.6; margin-bottom: var(--space-4);">
+      <p class="text-center text-muted" style="font-size: var(--font-size-sm); line-height: 1.6; margin-bottom: var(--space-4);" data-i18n="home.morningCallModal.simpleDescription">
         드리미가 아침 인사를 보내고 있어요.<br>
         알람을 끄면 하루가 시작됩니다.
       </p>
-      <button class="btn btn-primary w-full" id="btn-morningcall-dismiss">🔕 알람 끄기</button>
+      <button class="btn btn-primary w-full" id="btn-morningcall-dismiss" data-i18n="home.morningCallModal.dismissButton">🔕 알람 끄기</button>
     </div>
   </div>
   <!-- 이름 짓기 대화 모달 -->
@@ -362,7 +362,7 @@
     <div class="modal-handle"></div>
     <!-- 양 이미지 -->
     <div style="margin-bottom: var(--space-3); display: flex; justify-content: center;">
-      <img src="assets/sheep/givemename.png" alt="이름을 지어줘" style="width: 130px; height: 130px; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+      <img src="assets/sheep/givemename.png" alt="이름을 지어줘" data-i18n-alt="home.nameDialogImageAlt" style="width: 130px; height: 130px; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     </div>
     <!-- 대사 -->
     <p id="name-dialog-text" class="text-center" style="font-size: var(--font-size-md); font-weight:700; color:var(--text-primary); line-height:1.7; margin-bottom: var(--space-5); white-space:pre-line;"></p>
@@ -374,16 +374,16 @@
   <div class="modal" id="name-input-modal" style="text-align:center;">
     <div class="modal-handle"></div>
     <div style="margin-bottom: var(--space-3); display: flex; justify-content: center;">
-      <img src="assets/sheep/givemename.png" alt="이름을 지어줘" style="width: 110px; height: 110px; object-fit: contain; border-radius: var(--radius-md);">
+      <img src="assets/sheep/givemename.png" alt="이름을 지어줘" data-i18n-alt="home.nameDialogImageAlt" style="width: 110px; height: 110px; object-fit: contain; border-radius: var(--radius-md);">
     </div>
-    <h3 class="font-bold" style="font-size:var(--font-size-lg); margin-bottom:var(--space-2);">이름을 지어줘!</h3>
-    <p class="text-muted" style="font-size:var(--font-size-sm); margin-bottom:var(--space-4); line-height:1.6;">드리미에게 특별한 이름을 선물해 줘. 💕</p>
+    <h3 class="font-bold" style="font-size:var(--font-size-lg); margin-bottom:var(--space-2);" data-i18n="home.nameInputModal.title">이름을 지어줘!</h3>
+    <p class="text-muted" style="font-size:var(--font-size-sm); margin-bottom:var(--space-4); line-height:1.6;" data-i18n="home.nameInputModal.description">드리미에게 특별한 이름을 선물해 줘. 💕</p>
     <input type="text" id="name-input-field" class="glass" maxlength="8"
       style="width:100%; border-radius:var(--radius-sm); border:1px solid var(--glass-border); padding:var(--space-3) var(--space-4); color:#fff; font-size:var(--font-size-lg); font-weight:800; text-align:center; background:rgba(255,255,255,0.08); margin-bottom:var(--space-4);"
-      placeholder="이름 (최대 8자)">
+      data-i18n-placeholder="home.nameInputModal.placeholder" placeholder="이름 (최대 8자)">
     <div class="flex gap-3">
-      <button class="btn btn-secondary" id="btn-name-cancel" style="flex:1;">나중에</button>
-      <button class="btn btn-primary" id="btn-name-confirm" style="flex:2;">💕 이 이름으로!</button>
+      <button class="btn btn-secondary" id="btn-name-cancel" style="flex:1;" data-i18n="home.nameInputModal.cancelButton">나중에</button>
+      <button class="btn btn-primary" id="btn-name-confirm" style="flex:2;" data-i18n="home.nameInputModal.confirmButton">💕 이 이름으로!</button>
     </div>
   </div>
 
@@ -391,37 +391,38 @@
   <div class="overlay" id="attendance-overlay"></div>
   <div class="modal" id="attendance-modal">
     <div class="modal-handle"></div>
-    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);">📅 출석체크</h3>
+    <h3 class="text-center font-bold" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="home.attendanceModal.title">📅 출석체크</h3>
 
     <div class="att-dual-streak">
       <div class="att-streak-card">
         <div class="num" id="modal-att-streak">0</div>
-        <div class="lbl">일 연속 출석</div>
+        <div class="lbl" data-i18n="home.attendanceModal.streakLabel">일 연속 출석</div>
       </div>
       <div class="att-streak-card">
         <div class="num" id="modal-sleep-streak">0</div>
-        <div class="lbl">일 연속 수면 목표</div>
+        <div class="lbl" data-i18n="home.attendanceModal.sleepStreakLabel">일 연속 수면 목표</div>
       </div>
     </div>
 
     <div style="margin-bottom: var(--space-4);">
       <div class="flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: 6px;">
-        <span>이번 주기 보상</span>
+        <span data-i18n="home.attendanceModal.rewardTitle">이번 주기 보상</span>
         <span id="modal-att-cycle-label">1 / 7</span>
       </div>
       <div class="flex gap-2" id="modal-att-cycle-dots" style="justify-content: center; font-size: 1rem;"></div>
       <p id="modal-att-reward-hint" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-top: var(--space-2); line-height: 1.5;"></p>
     </div>
 
-    <button class="btn btn-primary w-full" id="btn-modal-check-in" style="margin-bottom: var(--space-2);">✨ 오늘 출석하기</button>
+    <button class="btn btn-primary w-full" id="btn-modal-check-in" style="margin-bottom: var(--space-2);" data-i18n="home.attendanceModal.checkInButton">✨ 오늘 출석하기</button>
     <p id="modal-att-status" class="text-center text-muted" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-3);"></p>
-    <a href="pages/attendance.html" class="home-link" style="display:block; text-align:center;">출석·스토리 자세히 보기 ›</a>
-    <button type="button" class="btn btn-secondary w-full" id="btn-close-attendance" style="margin-top: var(--space-3);">닫기</button>
+    <a href="pages/attendance.html" class="home-link" style="display:block; text-align:center;" data-i18n="home.attendanceModal.detailLink">출석·스토리 자세히 보기 ›</a>
+    <button type="button" class="btn btn-secondary w-full" id="btn-close-attendance" style="margin-top: var(--space-3);" data-i18n="home.attendanceModal.closeButton">닫기</button>
   </div>
 
 
   <script type="module">
     import { initCommon, showToast } from './js/app.js';
+    import { t } from './js/i18n.js';
     import { readSheep, renderSheepTo, updateXPBar, updateStatBar, petSheep, feedSheep, decaySheepStats, playSheepAnim, addXP, touchSheep, rejectNaming } from './js/sheep.js';
         import { enableWearableDrag } from './js/decor.js';
     import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm, playAsmr, getLastAsmrId, isAsmrSleepAutoplay } from './js/sound.js';
@@ -455,9 +456,9 @@
         if (newState) {
           resumeAudio();
           startBgm();
-          showToast('🎵 오르골 배경음악 시작', 'success');
+          showToast(t('toast.bgmOn'), 'success');
         } else {
-          showToast('🔕 배경음악 꺼짐', 'success');
+          showToast(t('toast.bgmOff'), 'success');
         }
         updateBgmBtn();
       });
@@ -496,6 +497,7 @@
       const btnShearGame     = document.getElementById('btn-shear-game');
       const shearHint        = document.getElementById('shear-hint');
       const sheepNameHeader  = document.getElementById('sheep-name-header');
+      const defaultSheepName = t('home.defaultName');
       const btnMainSleep     = document.getElementById('btn-main-sleep');
       const sleepOverlay     = document.getElementById('sleep-overlay');
       const sleepModal       = document.getElementById('sleep-modal');
@@ -555,12 +557,12 @@
 
       function rewardHintText(streak) {
         const preview = getTodayCycleRewardPreview(streak);
-        if (preview.type === 'wool') return `오늘 보상: 양털 +${preview.wool}`;
-        if (preview.type === 'single') return '오늘 보상: 단일 일러스트 🎨';
-        if (preview.type === 'strip') return '오늘 보상: 4컷 만화 📜';
+        if (preview.type === 'wool') return t('home.attendance.rewardHint.wool', { wool: preview.wool });
+        if (preview.type === 'single') return t('home.attendance.rewardHint.single');
+        if (preview.type === 'strip') return t('home.attendance.rewardHint.strip');
         const next = getNextCycleReward(streak);
-        if (next.daysLeft === 0) return `이번 주기: ${next.label}`;
-        return `${next.daysLeft}일 후 ${next.label}`;
+        if (next.daysLeft === 0) return t('home.attendance.rewardHint.cycle', { label: next.label });
+        return t('home.attendance.rewardHint.next', { daysLeft: next.daysLeft, label: next.label });
       }
 
       function renderAttendanceModal() {
@@ -583,7 +585,11 @@
             const isStrip = i === 7;
             const done = i <= cycleDay;
             dot.textContent = isSingle ? (done ? '🎨' : '○') : isStrip ? (done ? '📜' : '○') : (done ? '●' : '○');
-            dot.title = isSingle ? '3일: 일러스트' : isStrip ? '7일: 4컷' : `${i}일: 양털`;
+            dot.title = isSingle
+              ? t('home.attendance.dotTitle.illustration')
+              : isStrip
+                ? t('home.attendance.dotTitle.comic')
+                : t('home.attendance.dotTitle.wool', { day: i });
             dot.style.color = done ? 'var(--color-purple-soft)' : 'rgba(255,255,255,0.25)';
             dotsEl.appendChild(dot);
           }
@@ -596,12 +602,14 @@
         const statusEl = document.getElementById('modal-att-status');
         if (btnModalCheckIn) {
           btnModalCheckIn.disabled = checked;
-          btnModalCheckIn.textContent = checked ? '✅ 오늘 출석 완료' : '✨ 오늘 출석하기';
+          btnModalCheckIn.textContent = checked
+            ? t('home.attendanceModal.checkedButton')
+            : t('home.attendanceModal.checkInButton');
         }
         if (statusEl) {
           statusEl.textContent = checked
-            ? `누적 출석 ${att.total}일 · 모닝콜로도 출석됩니다.`
-            : '모닝콜 없이도 여기서 출석할 수 있어요.';
+            ? t('home.attendanceModal.status.checked', { total: att.total })
+            : t('home.attendanceModal.status.unchecked');
         }
       }
 
@@ -625,7 +633,7 @@
         setPrivacyConsent(true);
         hidePrivacyConsentPrompt();
         checkAndShowOpening(document.querySelector('.phone'));
-        showToast('앱의 개인정보 처리 방침에 동의하셨습니다.', 'success');
+        showToast(t('privacy.toast.consentAgree'), 'success');
       });
 
       function closeAttendanceModal() {
@@ -641,19 +649,19 @@
         if (res.newSingle) {
           queue.push({
             images: [res.newSingle.path],
-            hintText: `${res.newSingle.title} 해금! × 버튼으로 닫을 수 있어요.`,
+            hintText: t('home.attendance.unlockHint', { title: res.newSingle.title }),
           });
         }
         if (res.newStrip) {
           queue.push({
             images: [res.newStrip.path],
-            hintText: `${res.newStrip.title} 해금! × 버튼으로 닫을 수 있어요.`,
+            hintText: t('home.attendance.unlockHint', { title: res.newStrip.title }),
           });
         }
         (res.newlyUnlocked || []).forEach(story => {
           queue.push({
             images: getStoryImages(story),
-            hintText: `${story.title} 해금! 화면을 터치하면 다음 장으로 넘어가요.`,
+            hintText: t('home.attendance.unlockHint', { title: story.title }),
           });
         });
 
@@ -684,14 +692,14 @@
       document.getElementById('btn-modal-check-in')?.addEventListener('click', () => {
         const res = recordAttendance();
         if (res.alreadyChecked) {
-          showToast('오늘은 이미 출석했어요!', 'info');
+          showToast(t('home.attendance.alreadyChecked'), 'info');
           return;
         }
         getAttendanceRewardMessages(res).forEach((msg, i) => {
           setTimeout(() => showToast(msg, 'success'), i * 400);
         });
         if (res.newlyUnlocked?.length) {
-          setTimeout(() => showToast(`🎉 「${res.newlyUnlocked[0].title}」 해금!`, 'success'), 500);
+          setTimeout(() => showToast(t('home.attendance.toast.unlocked', { title: res.newlyUnlocked[0].title }), 'success'), 500);
         }
         refreshUI();
         renderAttendanceModal();
@@ -701,12 +709,15 @@
       // ─── UI 갱신 ───
       function refreshUI() {
         sheep = readSheep();
-        sheepNameHeader.textContent = sheep.name;
+        sheepNameHeader.textContent = (!sheep.name || sheep.name === defaultSheepName)
+          ? defaultSheepName
+          : sheep.name;
         woolCount.textContent = sheep.wool;
         updateAttendanceHeaderBadge();
 
-        const stepName = ['새끼양','솜털양','통통양','포실양','뭉실양','구름양','복슬양','솜구름','털뭉치','성체양'][Math.min(sheep.step - 1, 9)];
-        levelBadge.textContent = `Lv.${sheep.level} ${stepName}`;
+        const stepNameIndex = Math.min(sheep.step - 1, 9) + 1;
+        const stepName = t(`home.stepName.${stepNameIndex}`);
+        levelBadge.textContent = t('home.levelBadge', { level: sheep.level, stepName });
         updateXPBar(xpFill, xpText, sheep);
         updateStatBar(fillHappiness, sheep.happiness);
         updateStatBar(fillHunger, sheep.hunger);
@@ -718,35 +729,37 @@
         const reg = getSleepRegularity();
         if (regularityHint) {
           regularityHint.textContent = reg.days >= 2
-            ? `수면 패턴: ${reg.label} — 규칙적일수록 포만감이 잘 차요`
-            : '수면을 기록하면 패턴 분석으로 포만감 보너스를 받아요';
+            ? t('home.regularity.patternRegular', { label: reg.label })
+            : t('home.regularity.patternNotRecorded');
         }
 
         if (sheep.woolGrowth >= 3 || sheep.canShear) {
           btnShearGame.removeAttribute('disabled');
-          shearHint.innerHTML = `<span style="color:var(--color-secondary);font-weight:800;">✂️ 양털을 깎을 준비가 되었습니다!</span>`;
+          shearHint.innerHTML = `<span style="color:var(--color-secondary);font-weight:800;">${t('home.shearHint.ready')}</span>`;
         } else {
           btnShearGame.setAttribute('disabled', 'true');
-          shearHint.textContent = `양털 성장: ${'🐑'.repeat(sheep.woolGrowth)}${'⬜'.repeat(3 - sheep.woolGrowth)} — 행복·포만 MAX 시 한 칸씩 자라요`;
+          shearHint.textContent = t('home.shearHint.progress', {
+            progress: `${'🐑'.repeat(sheep.woolGrowth)}${'⬜'.repeat(3 - sheep.woolGrowth)}`,
+          });
         }
 
         const sleepingSince = getItem('ss_sleeping_since');
         if (sleepingSince) {
           currentPose = SHEEP_POSE.SLEEP;
-          btnMainSleep.textContent = '☀️ 일어났어요! 기상 기록하기';
+          btnMainSleep.textContent = t('home.sleepAction.wakeButton');
           btnMainSleep.classList.add('btn-primary');
           btnMainSleep.classList.remove('btn-sleep');
           document.getElementById('sleeping-banner').classList.remove('hidden');
         } else {
           currentPose = SHEEP_POSE.IDLE;
-          btnMainSleep.textContent = '😴 오늘 잠자기 시작';
+          btnMainSleep.textContent = t('home.sleepAction.startButton');
           btnMainSleep.classList.add('btn-sleep');
           btnMainSleep.classList.remove('btn-primary');
           document.getElementById('sleeping-banner').classList.add('hidden');
         }
         renderSheepTo(sheepRenderTarget, sheep.step, currentPose);
         // 양에 붙인 악세사리 드래그 가능하게 활성화 (홈 화면)
-        try { enableWearableDrag(sheepRenderTarget, { onSave: () => showToast('아이템 위치를 저장했어요.', 'success') }); } catch (e) { /* noop */ }
+        try { enableWearableDrag(sheepRenderTarget, { onSave: () => showToast(t('shop.toast.positionSaved'), 'success') }); } catch (e) { /* noop */ }
       }
 
       let quoteTimer = null;
@@ -759,7 +772,7 @@
 
         // 기본 이름이고 7번 이상 멘트 뒤 15% 확률로 이름 대화 시작
         sheep = readSheep();
-        const isDefaultName = (sheep.name === '드리미');
+        const isDefaultName = (sheep.name === defaultSheepName);
         if (isDefaultName && quoteCount >= 7 && Math.random() < 0.15) {
           quoteCount = 0;
           setTimeout(startNameDialog, 1000);
@@ -817,7 +830,7 @@
           const btn = document.createElement('button');
           btn.className = 'btn btn-primary';
           btn.style.minWidth = '120px';
-          btn.textContent = '다음 ›';
+          btn.textContent = t('home.nameDialog.next');
           btn.onclick = () => {
             dialogStep++;
             if (dialogStep === 1) renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.WORRIED);
@@ -828,13 +841,13 @@
           const btnNo = document.createElement('button');
           btnNo.className = 'btn btn-secondary';
           btnNo.style.flex = '1';
-          btnNo.textContent = '미안해...';
+          btnNo.textContent = t('home.nameDialog.no');
           btnNo.onclick = () => closeNameDialog(false);
 
           const btnYes = document.createElement('button');
           btnYes.className = 'btn btn-primary';
           btnYes.style.flex = '2';
-          btnYes.textContent = '이름 지어줄게! 💕';
+          btnYes.textContent = t('home.nameDialog.yes');
           btnYes.onclick = () => openNameInput();
 
           nameDialogBtns.style.display = 'flex';
@@ -852,8 +865,8 @@
         sheep = readSheep();
         renderSheepTo(sheepRenderTarget, sheep.step, accepted ? SHEEP_POSE.HAPPY : SHEEP_POSE.SAD);
         speechBubble.textContent = accepted
-          ? `"새 이름, 마음에 들어! 메에~ 🥰"`
-          : `"...괜찮아. 드리미도 좋은 이름이야." (행복도가 조금 떨어졌어요)`;
+          ? t('home.nameDialog.likedNewName')
+          : t('home.nameDialog.rejectName');
         if (!accepted) refreshUI();
         setTimeout(startAutoTimers, 3000);
       }
@@ -874,8 +887,8 @@
         closeNameDialog(true);
         sheepNameHeader.textContent = newName;
         renderSheepTo(sheepRenderTarget, sheep.step, SHEEP_POSE.EXCITED);
-        showToast(`"${newName}"라는 이름, 너무 좋아! 메에~ 🎉`, 'success');
-        speechBubble.textContent = `"${newName}! 이제 내 이름은 ${newName}이야! 🥰"`;
+        showToast(t('home.nameDialog.saved', { name: newName }), 'success');
+        speechBubble.textContent = t('home.nameDialog.confirmed', { name: newName });
       });
 
       btnNameCancel.addEventListener('click', () => {
@@ -891,42 +904,66 @@
       const ZONE_CONFIG = {
         'ear-left':  {
           poses:    [SHEEP_POSE.SURPRISED, SHEEP_POSE.WORRIED],
-          bubbles:  ['"어?! 귀는 좀... 간지러워! 메에!"', '"귀 만지지 마! 부끄럽잖아~"', '"킁...? 뭐야 갑자기 🐑"'],
+          bubbles: [
+            t('home.zone.earLeft.bubble1'),
+            t('home.zone.earLeft.bubble2'),
+            t('home.zone.earLeft.bubble3'),
+          ],
           emoji:    ['😳','❓','👂'],
           sound:    playSoundEar,
           color:    '#c084fc'
         },
         'ear-right': {
           poses:    [SHEEP_POSE.SURPRISED, SHEEP_POSE.SHY],
-          bubbles:  ['"아 간지러워! 메에~!"', '"거기는... 좀 예민해요~ 😳"', '"뾱! 귀 건드리지 마!"'],
+          bubbles: [
+            t('home.zone.earRight.bubble1'),
+            t('home.zone.earRight.bubble2'),
+            t('home.zone.earRight.bubble3'),
+          ],
           emoji:    ['😳','👂','❗'],
           sound:    playSoundEar,
           color:    '#c084fc'
         },
         'head': {
           poses:    [SHEEP_POSE.HAPPY, SHEEP_POSE.SHY, SHEEP_POSE.WINK],
-          bubbles:  ['"머리 쓰다듬어 줘서 고마워~ 좋다 🥰"', '"므으~ 기분 좋아..."', '"머리 쓰다듬어 주면 기분이 좋아져! ♡"'],
+          bubbles: [
+            t('home.zone.head.bubble1'),
+            t('home.zone.head.bubble2'),
+            t('home.zone.head.bubble3'),
+          ],
           emoji:    ['🥰','💆','✨'],
           sound:    playSoundHead,
           color:    '#34d399'
         },
         'face': {
           poses:    [SHEEP_POSE.HAPPY, SHEEP_POSE.EXCITED, SHEEP_POSE.WINK],
-          bubbles:  ['"메에! 메에에!~ 기분 최고야! 💕"', '"얼굴 쓰다듬어 주니까 너무 좋아~!"', '"히히 간지러워~ 근데 좋아! 🐑♡"'],
+          bubbles: [
+            t('home.zone.face.bubble1'),
+            t('home.zone.face.bubble2'),
+            t('home.zone.face.bubble3'),
+          ],
           emoji:    ['💕','😊','🌟'],
           sound:    playSoundFace,
           color:    '#f9a8d4'
         },
         'belly': {
           poses:    [SHEEP_POSE.HAPPY, SHEEP_POSE.EXCITED, SHEEP_POSE.SMUG],
-          bubbles:  ['"배 긁어줘? 으으음~ 거기거기! 🐑"', '"뱃살 긁어주니까 너무 좋아~ 멈추지 마!"', '"으으음... 거기가 제일 좋아...💤"'],
+          bubbles: [
+            t('home.zone.belly.bubble1'),
+            t('home.zone.belly.bubble2'),
+            t('home.zone.belly.bubble3'),
+          ],
           emoji:    ['🐑','😍','✨'],
           sound:    playSoundBelly,
           color:    '#fbbf24'
         },
         'back': {
           poses:    [SHEEP_POSE.SLEEPY, SHEEP_POSE.HAPPY],
-          bubbles:  ['"므르르르... 등 긁어줘? 졸려..."', '"거기 긁어주면... 잠들 것 같아 😴💤"', '"아... 거기... 좋다... 므음~"'],
+          bubbles: [
+            t('home.zone.back.bubble1'),
+            t('home.zone.back.bubble2'),
+            t('home.zone.back.bubble3'),
+          ],
           emoji:    ['😴','💤','🌙'],
           sound:    playSoundBack,
           color:    '#60a5fa'
@@ -1002,7 +1039,7 @@
         touchSheep();
         const petRes = petSheep();
         if (petRes.success) {
-          if (petRes.woolGrew) setTimeout(() => showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success'), 400);
+          if (petRes.woolGrew) setTimeout(() => showToast(t('home.toast.woolGrew'), 'success'), 400);
           spawnPetEffects(sheepRenderTarget);
           refreshUI();
         } else {
@@ -1026,7 +1063,7 @@
 
       function handlePetSuccess(res) {
         showToast(res.msg, 'success');
-        if (res.woolGrew) setTimeout(() => showToast('행복·포만 MAX! 양털이 한 칸 자랐어요 🧶', 'success'), 400);
+        if (res.woolGrew) setTimeout(() => showToast(t('home.toast.woolGrew'), 'success'), 400);
         runPetInteraction({
           container: sheepRenderTarget,
           step: readSheep().step,
@@ -1064,9 +1101,9 @@
         if (res.success) {
           playSoundFeed();
           showToast(res.msg, 'success');
-          if (res.woolGrew) setTimeout(() => showToast('행복·포만 MAX! 양털이 한 칸 자랤어요 🧶', 'success'), 400);
+          if (res.woolGrew) setTimeout(() => showToast(t('home.toast.woolGrew'), 'success'), 400);
           playSheepAnim(sheepContainer, 'sheep-eat-anim', 800);
-          speechBubble.textContent = '"오물오물... 냠냠 당근 맛있다!"';
+          speechBubble.textContent = t('home.feedBubble');
           refreshUI();
         } else { showToast(res.msg, 'error'); }
       });
@@ -1137,7 +1174,7 @@
         });
         sleepModal.classList.remove('active');
         sleepOverlay.classList.remove('active');
-        showToast(`좋은 꿈 꾸세요! ${wakeTime}에 모닝콜이 울려요. 🌙`, 'success');
+        showToast(t('home.sleep.toast.started', { wakeTime }), 'success');
         refreshUI();
       });
 
@@ -1154,7 +1191,7 @@
         if (!morningCallState || morningCallState.simple) return;
         const remain = Math.max(0, morningCallState.durationSec - morningCallState.elapsedSec);
         const timePct = Math.max(0, (remain / morningCallState.durationSec) * 100);
-        morningCallTimer.textContent = `${remain}초`;
+        morningCallTimer.textContent = t('home.morningCallModal.timeRemaining', { seconds: remain });
         morningCallTimeFill.style.width = `${timePct}%`;
       }
 
@@ -1210,15 +1247,18 @@
 
         if (session) {
           const toastMsg = success || simple
-            ? `기상 완료! 수면 +${res.xpGained} XP · 양털 +${bonusWool}`
-            : `기상 완료! 수면 +${res.xpGained} XP · 모닝콜 실패(양털 +${bonusWool})`;
-          let fullMsg = toastMsg;
+            ? t('home.wake.toast.success', { xp: res.xpGained, wool: bonusWool })
+            : t('home.wake.toast.failure', { xp: res.xpGained, wool: bonusWool });
+          const messages = [toastMsg];
           if (res.regularityBonus > 0) {
-            fullMsg += ` · 포만감 +${res.regularityBonus} (${res.regularityLabel})`;
+            messages.push(t('home.wake.toast.regularityBonus', {
+              bonus: res.regularityBonus,
+              label: res.regularityLabel,
+            }));
           }
-          showToast(fullMsg, success || simple ? 'success' : 'info');
+          showToast(messages.join(' · '), success || simple ? 'success' : 'info');
         } else if (attResult && !attResult.alreadyChecked) {
-          showToast(`모닝콜 완료! 양털 +${bonusWool}`, 'success');
+          showToast(t('home.morningCall.attendanceCompleted', { wool: bonusWool }), 'success');
         }
 
         if (attResult && !attResult.alreadyChecked) {
@@ -1228,17 +1268,17 @@
         }
         if (attResult?.newlyUnlocked?.length) {
           const title = attResult.newlyUnlocked[0].title;
-          setTimeout(() => showToast(`🎉 스토리 해금! 「${title}」`, 'success'), 600);
+          setTimeout(() => showToast(t('home.attendance.toast.unlocked', { title }), 'success'), 600);
         }
 
         if (success || simple) {
           const streakText = attResult?.attendance?.streak
-            ? `출석 ${attResult.attendance.streak}일 연속!`
-            : '출석 인정!';
-          speechBubble.textContent = `"기상 성공! 메에~ 오늘도 응원해! ${streakText}"`;
+            ? t('home.morningCall.streakText', { streak: attResult.attendance.streak })
+            : t('home.morningCall.attendanceConfirmed');
+          speechBubble.textContent = `${t('home.morningCall.success', { streakText })}`;
           renderSheepTo(sheepRenderTarget, bonusSheep.step, SHEEP_POSE.EXCITED);
         } else {
-          speechBubble.textContent = '"조금 더 깨워줄걸... 그래도 오늘 하루 힘내자!"';
+          speechBubble.textContent = t('home.morningCall.fail');
           renderSheepTo(sheepRenderTarget, bonusSheep.step, SHEEP_POSE.SLEEPY);
         }
 
@@ -1271,9 +1311,11 @@
 
         const isPet = action === MORNING_ACTION.PET;
         morningCallMission.textContent = isPet
-          ? '20초 안에 드리미를 쓰다듬어 깨워주세요!'
-          : '20초 안에 당근을 줘서 드리미를 깨워주세요!';
-        btnMorningCallAction.textContent = isPet ? '🖐️ 드리미 쓰다듬기' : '🥕 당근 먹이기';
+          ? t('home.morningCallModal.petMission')
+          : t('home.morningCallModal.feedMission');
+        btnMorningCallAction.textContent = isPet
+          ? t('home.morningCallModal.actionButton')
+          : t('home.morningCallModal.actionButtonFeed');
         btnMorningCallAction.removeAttribute('disabled');
         renderSheepTo(sheepRenderTarget, readSheep().step, SHEEP_POSE.SLEEPY);
       }

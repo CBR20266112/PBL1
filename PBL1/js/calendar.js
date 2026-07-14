@@ -2,11 +2,20 @@
  * calendar.js — 메에메에 캘린더 (수면 + 고민 통합)
  */
 
-import { getSleepRecords, getWorries, getSettings } from './storage.js';
+import { getSleepRecords, getWorries, getSnoreRecords, getSettings } from './storage.js';
 import { formatDuration } from './sleep.js';
+import { t } from './i18n.js';
 
 const MOOD_EMOJIS = ['😢', '🥱', '😐', '😊', '🥰'];
-const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+const WEEKDAY_LABELS = [
+  t('weekday.sun'),
+  t('weekday.mon'),
+  t('weekday.tue'),
+  t('weekday.wed'),
+  t('weekday.thu'),
+  t('weekday.fri'),
+  t('weekday.sat'),
+];
 
 /** 로컬 기준 YYYY-MM-DD */
 export function toDateKey(year, month, day) {
@@ -47,6 +56,7 @@ export function getMonthDataMap(year, month) {
   const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
   const sleepMap = {};
   const worryMap = {};
+  const snoreMap = {};
 
   getSleepRecords().forEach(r => {
     if (r.date?.startsWith(prefix)) sleepMap[r.date] = r;
@@ -54,8 +64,11 @@ export function getMonthDataMap(year, month) {
   getWorries().forEach(w => {
     if (w.date?.startsWith(prefix)) worryMap[w.date] = w;
   });
+  getSnoreRecords().forEach(r => {
+    if (r.date?.startsWith(prefix)) snoreMap[r.date] = r;
+  });
 
-  return { sleepMap, worryMap };
+  return { sleepMap, worryMap, snoreMap };
 }
 
 /** 월간 통계 */
@@ -124,6 +137,7 @@ export function moodEmoji(mood) {
 export function getDayEntry(dateStr) {
   const sleep = getSleepRecords().find(r => r.date === dateStr) ?? null;
   const worryRaw = getWorries().find(w => w.date === dateStr) ?? null;
+  const snore = getSnoreRecords().find(r => r.date === dateStr) ?? null;
   const settings = getSettings();
   const goal = settings.sleepGoal ?? 480;
 
@@ -132,24 +146,26 @@ export function getDayEntry(dateStr) {
     sleep,
     worry: getWorryDisplay(worryRaw),
     worryThread: getWorryThread(worryRaw),
+    snore,
     sleepGoal: goal,
     sleepMetGoal: sleep ? (sleep.duration || 0) >= goal : false,
     hasSleep: !!sleep,
     hasWorry: !!worryRaw,
-    hasAny: !!(sleep || worryRaw),
+    hasSnore: !!snore,
+    hasAny: !!(sleep || worryRaw || snore),
   };
 }
 
 /** 월 제목 */
 export function formatMonthTitle(year, month) {
-  return `${year}년 ${month + 1}월`;
+  return t('calendar.monthTitle', { year, month: month + 1 });
 }
 
 /** 날짜 라벨 */
 export function formatDateLabel(dateStr) {
   const [y, m, d] = dateStr.split('-');
   const dow = WEEKDAY_LABELS[new Date(Number(y), Number(m) - 1, Number(d)).getDay()];
-  return `${y}년 ${parseInt(m, 10)}월 ${parseInt(d, 10)}일 (${dow})`;
+  return t('calendar.dateLabel', { year: y, month: parseInt(m, 10), day: parseInt(d, 10), dow });
 }
 
 export { WEEKDAY_LABELS, MOOD_EMOJIS, formatDuration };
