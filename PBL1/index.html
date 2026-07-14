@@ -27,6 +27,15 @@
   </div>
 
   <main class="phone">
+    <div class="onboarding-splash" id="onboarding-splash">
+      <div class="onboarding-splash-backdrop"></div>
+      <div class="onboarding-splash-content">
+        <div class="onboarding-logo">SleepySheep</div>
+        <div class="onboarding-subtitle" data-i18n="onboarding.splashSubtitle">나만의 수면 웰니스 루틴을 시작하세요</div>
+        <div class="onboarding-start" id="onboarding-start" data-i18n="onboarding.splashStart">터치하여 시작</div>
+      </div>
+    </div>
+
     <!-- 헤더 -->
     <header class="header">
       <div class="header-left">
@@ -311,15 +320,51 @@
   <div class="overlay" id="privacy-overlay"></div>
   <div class="modal" id="privacy-modal" style="max-width: 92%; width: 360px;">
     <div class="modal-handle"></div>
-    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="privacy.modal.title">개인정보 보호 및 이용약관</h3>
+    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="privacy.modal.title">Privacy & Terms</h3>
     <div class="text-muted" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4);" data-i18n-html="privacy.modal.text">
-      SleepySheep는 이 앱에서 사용하는 모든 데이터를 브라우저 로컬에 안전하게 저장합니다.<br>
-      개인 식별 정보는 수집하지 않으며, 이용 기록은 오직 앱 동작과 설정 보존을 위해 저장됩니다.<br>
-      본 앱을 계속 사용하려면 아래 약관에 동의해 주세요.
+      SleepySheep securely stores all app data locally in your browser.<br>
+      No personal identifying information is collected, and usage records are only kept to preserve app state and settings.<br>
+      Please review the terms below to continue.
     </div>
     <div class="flex flex-col gap-3">
-      <button class="btn btn-primary w-full" id="btn-privacy-consent-agree" data-i18n="privacy.modal.confirm">동의하고 시작하기</button>
+      <button class="btn btn-primary w-full" id="btn-privacy-consent-agree" data-i18n="privacy.modal.confirm">Agree and start</button>
     </div>
+  </div>
+
+  <div class="overlay" id="onboarding-overlay"></div>
+  <div class="modal" id="onboarding-modal" style="max-width: 92%; width: 400px;">
+    <div class="modal-handle"></div>
+    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="onboarding.title">Get started with SleepySheep</h3>
+    <div class="text-muted" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4);" data-i18n-html="onboarding.description"></div>
+    <div class="flex flex-col gap-3">
+      <button class="btn btn-secondary w-full" id="btn-show-terms" data-i18n="onboarding.showTerms">View terms</button>
+      <button class="btn btn-secondary w-full" id="btn-show-privacy-policy" data-i18n="onboarding.showPrivacy">View privacy policy</button>
+      <div class="glass" style="padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+        <label class="onboarding-checkbox-row"><input type="checkbox" id="onboarding-checkbox-terms"><span data-i18n="onboarding.checkbox.terms">I have reviewed and agree to the terms.</span></label>
+        <label class="onboarding-checkbox-row"><input type="checkbox" id="onboarding-checkbox-privacy"><span data-i18n="onboarding.checkbox.privacy">I have reviewed and agree to the privacy policy.</span></label>
+        <label class="onboarding-checkbox-row"><input type="checkbox" id="onboarding-checkbox-wellness"><span data-i18n="onboarding.checkbox.wellness">I understand this is a sleep wellness app, not medical treatment.</span></label>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary w-full" id="btn-onboarding-cancel" data-i18n="onboarding.cancel">Later</button>
+        <button class="btn btn-primary w-full" id="btn-onboarding-next" disabled data-i18n="onboarding.next">Agree & Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="terms-overlay"></div>
+  <div class="modal" id="terms-modal" style="max-width: 92%; width: 400px;">
+    <div class="modal-handle"></div>
+    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="terms.modal.title">Terms of Service</h3>
+    <div class="text-muted onboarding-modal-scroll" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4); white-space: pre-line;" data-i18n-html="terms.modal.text"></div>
+    <button class="btn btn-secondary w-full" id="btn-close-terms" data-i18n="terms.modal.close">Close</button>
+  </div>
+
+  <div class="overlay" id="privacy-policy-overlay"></div>
+  <div class="modal" id="privacy-policy-modal" style="max-width: 92%; width: 400px;">
+    <div class="modal-handle"></div>
+    <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="privacy.modal.title">Privacy Policy</h3>
+    <div class="text-muted onboarding-modal-scroll" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4); white-space: pre-line;" data-i18n-html="privacy.modal.text"></div>
+    <button class="btn btn-secondary w-full" id="btn-close-privacy-policy" data-i18n="privacy.modal.close">Close</button>
   </div>
 
   <!-- Sleepy Sheep 전용 모닝콜 미니게임 모달 -->
@@ -431,8 +476,15 @@
     import { initSheepStrokePet, getLastStrokeTravel } from './js/sheep-stroke.js';
     import { recordSleep, getStreak, getSleepRegularity, applyDailyRegularityBonus } from './js/sleep.js';
     import { SHEEP_POSE, getNameDialogScript, getRandomQuote } from './js/constants.js';
-    import { saveSheep, setItem, getItem, removeItem, getSettings, getLocalDateKey, getPrivacyConsent, setPrivacyConsent } from './js/storage.js';
+    import { saveSheep, setItem, getItem, removeItem, getSettings, getLocalDateKey, getPrivacyConsent, setPrivacyConsent, getOnboardingConsent, setOnboardingConsent } from './js/storage.js';
+    import { ATTENDANCE_SINGLE_COUNT, ATTENDANCE_STRIP_COUNT } from './js/constants.js';
     const t = i18nT;
+    const SUPPORTED_DEFAULT_NAME_LANGUAGES = ['ko', 'en', 'ja', 'zh'];
+    const getLocalizedDefaultSheepName = () => i18nT('home.defaultName');
+    const isLocalizedDefaultSheepName = (name) => {
+      if (!name) return true;
+      return SUPPORTED_DEFAULT_NAME_LANGUAGES.some(lang => i18nT('home.defaultName', {}, lang) === name);
+    };
     const NAME_DIALOG_SCRIPT = getNameDialogScript(getSettings().language || 'en');
     // Expose sound helpers to window for automation/testing (temporary)
     window.resumeAudio = resumeAudio;
@@ -488,9 +540,152 @@
       const privacyModal     = document.getElementById('privacy-modal');
       const btnPrivacyAgree  = document.getElementById('btn-privacy-consent-agree');
       const btnPet           = document.getElementById('btn-pet');
+      const onboardingSplash = document.getElementById('onboarding-splash');
+      const onboardingSplashBackdrop = document.querySelector('.onboarding-splash-backdrop');
+      const onboardingStart = document.getElementById('onboarding-start');
+      const onboardingOverlay = document.getElementById('onboarding-overlay');
+      const onboardingModal = document.getElementById('onboarding-modal');
+      const btnShowTerms = document.getElementById('btn-show-terms');
+      const btnShowPrivacyPolicy = document.getElementById('btn-show-privacy-policy');
+      const btnOnboardingCancel = document.getElementById('btn-onboarding-cancel');
+      const btnOnboardingNext = document.getElementById('btn-onboarding-next');
+      const termsCheckbox = document.getElementById('onboarding-checkbox-terms');
+      const privacyCheckbox = document.getElementById('onboarding-checkbox-privacy');
+      const wellnessCheckbox = document.getElementById('onboarding-checkbox-wellness');
+      const termsOverlay = document.getElementById('terms-overlay');
+      const termsModal = document.getElementById('terms-modal');
+      const btnCloseTerms = document.getElementById('btn-close-terms');
+      const privacyPolicyOverlay = document.getElementById('privacy-policy-overlay');
+      const privacyPolicyModal = document.getElementById('privacy-policy-modal');
+      const btnClosePrivacyPolicy = document.getElementById('btn-close-privacy-policy');
+      const onboardingConsent = getOnboardingConsent();
+
+      function getOnboardingSplashImagePool() {
+        const pool = [];
+        for (let i = 1; i <= ATTENDANCE_SINGLE_COUNT; i += 1) {
+          const id = String(i).padStart(2, '0');
+          pool.push(`assets/attendance/singles/${id}.png`);
+        }
+        for (let i = 1; i <= ATTENDANCE_STRIP_COUNT; i += 1) {
+          const id = String(i).padStart(2, '0');
+          pool.push(`assets/attendance/strips/${id}.png`);
+        }
+        return pool;
+      }
+
+      const ONBOARDING_SPLASH_IMAGES = getOnboardingSplashImagePool();
+
+      function setOnboardingSplashBackground() {
+        if (!onboardingSplashBackdrop || !ONBOARDING_SPLASH_IMAGES.length) return;
+        const splash = ONBOARDING_SPLASH_IMAGES[Math.floor(Math.random() * ONBOARDING_SPLASH_IMAGES.length)];
+        onboardingSplashBackdrop.style.backgroundImage = `url('${splash}')`;
+      }
+
+      function showOnboardingSplash() {
+        setOnboardingSplashBackground();
+        onboardingSplash.classList.add('active');
+      }
+
+      function hideOnboardingSplash() {
+        onboardingSplash.classList.remove('active');
+      }
+
+      function showOnboardingModal() {
+        onboardingOverlay.classList.add('active');
+        onboardingModal.classList.add('active');
+      }
+
+      function hideOnboardingModal() {
+        onboardingOverlay.classList.remove('active');
+        onboardingModal.classList.remove('active');
+      }
+
+      function updateOnboardingNextState() {
+        if (!btnOnboardingNext) return;
+        btnOnboardingNext.disabled = !(termsCheckbox?.checked && privacyCheckbox?.checked && wellnessCheckbox?.checked);
+      }
+
+      function closeTermsModal() {
+        termsOverlay?.classList.remove('active');
+        termsModal?.classList.remove('active');
+      }
+
+      function closePrivacyPolicyModal() {
+        privacyPolicyOverlay?.classList.remove('active');
+        privacyPolicyModal?.classList.remove('active');
+      }
+
+      function completeOnboarding() {
+        setOnboardingConsent({
+          termsAccepted: true,
+          privacyAccepted: true,
+          wellnessNoticeAccepted: true,
+          onboardingCompleted: true,
+        });
+        setPrivacyConsent(true);
+        hideOnboardingModal();
+        checkAndShowOpening(document.querySelector('.phone'));
+      }
+
+      onboardingStart?.addEventListener('click', () => {
+        hideOnboardingSplash();
+        showOnboardingModal();
+      });
+
+      onboardingSplash?.addEventListener('click', () => {
+        hideOnboardingSplash();
+        showOnboardingModal();
+      });
+
+      btnShowTerms?.addEventListener('click', () => {
+        hideOnboardingModal();
+        termsOverlay?.classList.add('active');
+        termsModal?.classList.add('active');
+      });
+
+      btnShowPrivacyPolicy?.addEventListener('click', () => {
+        hideOnboardingModal();
+        privacyPolicyOverlay?.classList.add('active');
+        privacyPolicyModal?.classList.add('active');
+      });
+
+      btnCloseTerms?.addEventListener('click', () => {
+        closeTermsModal();
+        showOnboardingModal();
+      });
+
+      btnClosePrivacyPolicy?.addEventListener('click', () => {
+        closePrivacyPolicyModal();
+        showOnboardingModal();
+      });
+
+      btnOnboardingCancel?.addEventListener('click', () => {
+        hideOnboardingModal();
+      });
+
+      btnOnboardingNext?.addEventListener('click', () => {
+        if (btnOnboardingNext.disabled) return;
+        completeOnboarding();
+      });
+
+      [termsCheckbox, privacyCheckbox, wellnessCheckbox].forEach(el => {
+        el?.addEventListener('change', updateOnboardingNextState);
+      });
+
+      onboardingOverlay?.addEventListener('click', hideOnboardingModal);
+      termsOverlay?.addEventListener('click', () => {
+        closeTermsModal();
+        showOnboardingModal();
+      });
+      privacyPolicyOverlay?.addEventListener('click', () => {
+        closePrivacyPolicyModal();
+        showOnboardingModal();
+      });
 
       // 첫 로드 시 오프닝 스토리 노출 여부 체크
-      if (!getPrivacyConsent()) {
+      if (!onboardingConsent || !onboardingConsent.onboardingCompleted) {
+        showOnboardingSplash();
+      } else if (!getPrivacyConsent()) {
         showPrivacyConsentPrompt();
       } else {
         checkAndShowOpening(document.querySelector('.phone'));
@@ -499,7 +694,6 @@
       const btnShearGame     = document.getElementById('btn-shear-game');
       const shearHint        = document.getElementById('shear-hint');
       const sheepNameHeader  = document.getElementById('sheep-name-header');
-      const defaultSheepName = i18nT('home.defaultName');
       const btnMainSleep     = document.getElementById('btn-main-sleep');
       const sleepOverlay     = document.getElementById('sleep-overlay');
       const sleepModal       = document.getElementById('sleep-modal');
@@ -712,8 +906,10 @@
       // ─── UI 갱신 ───
       function refreshUI() {
         sheep = readSheep();
-        sheepNameHeader.textContent = (!sheep.name || sheep.name === defaultSheepName)
-          ? defaultSheepName
+        const defaultName = getLocalizedDefaultSheepName();
+        const isDefault = !sheep.name || isLocalizedDefaultSheepName(sheep.name);
+        sheepNameHeader.textContent = (!sheep.nameIsCustom && isDefault)
+          ? defaultName
           : sheep.name;
         woolCount.textContent = sheep.wool;
         updateAttendanceHeaderBadge();
@@ -775,7 +971,7 @@
 
         // 기본 이름이고 7번 이상 멘트 뒤 15% 확률로 이름 대화 시작
         sheep = readSheep();
-        const isDefaultName = (sheep.name === defaultSheepName);
+        const isDefaultName = !sheep.nameIsCustom && isLocalizedDefaultSheepName(sheep.name);
         if (isDefaultName && quoteCount >= 7 && Math.random() < 0.15) {
           quoteCount = 0;
           setTimeout(startNameDialog, 1000);
@@ -886,6 +1082,7 @@
         if (!newName) { nameInputField.focus(); return; }
         sheep = readSheep();
         sheep.name = newName;
+        sheep.nameIsCustom = true;
         saveSheep(sheep);
         closeNameDialog(true);
         sheepNameHeader.textContent = newName;

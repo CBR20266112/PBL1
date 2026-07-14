@@ -3,6 +3,7 @@
  */
 
 import { getItem, setItem } from './storage.js';
+import { t } from './i18n.js';
 
 const currentHref = typeof window !== 'undefined' ? window.location.href.toLowerCase() : '';
 const isSubPage = currentHref.includes('/pages/') || currentHref.includes('\\pages\\');
@@ -27,7 +28,7 @@ export function startImageSlideshow(parentContainer, images, options = {}) {
     onComplete = null,
     onClose = null,
     skipText = '×',
-    hintText = '화면을 터치하면 다음으로 넘어갑니다.',
+    hintText = t('opening.hint'),
   } = options;
 
   const existing = parentContainer.querySelector('.opening-overlay');

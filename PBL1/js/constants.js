@@ -16,8 +16,7 @@ export const STORAGE_KEYS = Object.freeze({
   SETTINGS: 'ss_settings',
   ROOM:     'ss_room',
   WORRIES:  'ss_worries',
-  PRIVACY_CONSENT: 'ss_privacy_consent',
-});
+  PRIVACY_CONSENT: 'ss_privacy_consent',  ONBOARDING_CONSENT: 'ss_onboarding_consent',});
 
 // ─── 성장 단계 테이블 ───
 export const GROWTH_TABLE = Object.freeze([
@@ -103,6 +102,7 @@ export function calcSleepReward(minutes, goalMinutes = 480) {
 // ─── 양 상태 초기값 ───
 export const DEFAULT_SHEEP = Object.freeze({
   name:         '드리미',
+  nameIsCustom: false,
   level:        1,
   xp:           0,
   xpToNext:     100,
