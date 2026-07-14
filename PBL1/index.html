@@ -422,8 +422,9 @@
 
   <script type="module">
     import { initCommon, showToast } from './js/app.js';
-    import { t } from './js/i18n.js';
+    import { t as i18nT } from './js/i18n.js';
     import { readSheep, renderSheepTo, updateXPBar, updateStatBar, petSheep, feedSheep, decaySheepStats, playSheepAnim, addXP, touchSheep, rejectNaming } from './js/sheep.js';
+    const t = i18nT;
         import { enableWearableDrag } from './js/decor.js';
     import { initSound, resumeAudio, playSoundFeed, playSoundSleep, playSoundClick, playSoundXP, playSoundEar, playSoundHead, playSoundFace, playSoundBelly, playSoundBack, startBgm, stopBgm, isBgmPlaying, setBgmEnabled, isBgmEnabled, playMorningCallAlarm, stopMorningCallAlarm, playAsmr, getLastAsmrId, isAsmrSleepAutoplay } from './js/sound.js';
     import { initHomeAsmrSection } from './js/asmr.js';
@@ -456,9 +457,9 @@
         if (newState) {
           resumeAudio();
           startBgm();
-          showToast(t('toast.bgmOn'), 'success');
+          showToast(i18nT('toast.bgmOn'), 'success');
         } else {
-          showToast(t('toast.bgmOff'), 'success');
+          showToast(i18nT('toast.bgmOff'), 'success');
         }
         updateBgmBtn();
       });
@@ -497,7 +498,7 @@
       const btnShearGame     = document.getElementById('btn-shear-game');
       const shearHint        = document.getElementById('shear-hint');
       const sheepNameHeader  = document.getElementById('sheep-name-header');
-      const defaultSheepName = t('home.defaultName');
+      const defaultSheepName = i18nT('home.defaultName');
       const btnMainSleep     = document.getElementById('btn-main-sleep');
       const sleepOverlay     = document.getElementById('sleep-overlay');
       const sleepModal       = document.getElementById('sleep-modal');

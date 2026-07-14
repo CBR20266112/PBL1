@@ -22,52 +22,6 @@ function interpolate(message, params = {}) {
   });
 }
 
-export function t(key, params = {}) {
-  const lang = getCurrentLanguage();
-  const message = TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS[DEFAULT_LANGUAGE]?.[key] ?? key;
-  return interpolate(message, params);
-}
-
-export function applyTranslations(root = document) {
-  if (!root || typeof root.querySelectorAll !== 'function') return;
-
-  const doc = root.nodeType === 9 ? root : (root.ownerDocument || document);
-  const lang = getCurrentLanguage();
-  if (doc?.documentElement) {
-    doc.documentElement.lang = lang;
-  }
-
-  root.querySelectorAll('[data-i18n]').forEach((element) => {
-    const key = element.getAttribute('data-i18n');
-    if (!key) return;
-    const value = t(key);
-    if (value) element.textContent = value;
-  });
-
-  root.querySelectorAll('[data-i18n-title]').forEach((element) => {
-    const key = element.getAttribute('data-i18n-title');
-    const value = t(key);
-    if (value) {
-      element.setAttribute('title', value);
-      if (!element.hasAttribute('aria-label')) {
-        element.setAttribute('aria-label', value);
-      }
-    }
-  });
-
-  root.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
-    const key = element.getAttribute('data-i18n-placeholder');
-    const value = t(key);
-    if (value) element.setAttribute('placeholder', value);
-  });
-
-  root.querySelectorAll('[data-i18n-html]').forEach((element) => {
-    const key = element.getAttribute('data-i18n-html');
-    const value = t(key);
-    if (value) element.innerHTML = value;
-  });
-}
-
 const TRANSLATIONS = {
   ko: {
     'page.title.home': 'SleepySheep | 홈',

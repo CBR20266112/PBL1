@@ -59,6 +59,16 @@ export function clearAll() {
   localStorage.removeItem('ss_pwa_install_dismiss');
 }
 
+/** 개인정보 동의 여부 읽기 */
+export function getPrivacyConsent() {
+  return Boolean(getItem(STORAGE_KEYS.PRIVACY_CONSENT, false));
+}
+
+/** 개인정보 동의 여부 저장 */
+export function setPrivacyConsent(consent) {
+  setItem(STORAGE_KEYS.PRIVACY_CONSENT, Boolean(consent));
+}
+
 // ─── 도메인별 헬퍼 ───
 
 /** 양 상태 읽기 (없으면 기본값) */
@@ -79,6 +89,16 @@ export function getSleepRecords() {
 /** 수면 기록 저장 */
 export function saveSleepRecords(records) {
   setItem(STORAGE_KEYS.SLEEP, records);
+}
+
+/** 코골이 기록 배열 읽기 */
+export function getSnoreRecords() {
+  return getItem(STORAGE_KEYS.SNORE, []);
+}
+
+/** 코골이 기록 저장 */
+export function saveSnoreRecords(records) {
+  setItem(STORAGE_KEYS.SNORE, records);
 }
 
 /** 오늘 날짜 'YYYY-MM-DD' */
@@ -191,5 +211,12 @@ export function saveWorry(date, content, reply) {
   
   setItem(STORAGE_KEYS.WORRIES, worries);
   return newWorry;
+}
+
+/** 고민 기록 삭제 */
+export function deleteWorry(date) {
+  const nextWorries = getWorries().filter(w => w.date !== date);
+  setItem(STORAGE_KEYS.WORRIES, nextWorries);
+  return nextWorries;
 }
 
