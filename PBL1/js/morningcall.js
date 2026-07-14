@@ -3,6 +3,7 @@
  */
 
 import { getSettings, getItem, setItem } from './storage.js';
+import { t } from './i18n.js';
 
 export const MORNING_ACTION = Object.freeze({
   PET:  'pet',
@@ -85,8 +86,10 @@ export function formatAlarmHint(bedtime, wakeTime) {
   if (!bedtime || !wakeTime) return '';
   const alarmDate = computeWakeAlarmDate(bedtime, wakeTime);
   const today = localTodayKey();
-  const dayLabel = alarmDate === today ? '오늘' : '내일';
-  return `⏰ 모닝콜 ${dayLabel} ${wakeTime}에 울려요`;
+  const dayLabel = alarmDate === today
+    ? t('morningCall.hint.today')
+    : t('morningCall.hint.tomorrow');
+  return t('morningCall.hint', { dayLabel, wakeTime });
 }
 
 /** 현재 적용 중인 기상 알람 (수면 중 세션 우선) */

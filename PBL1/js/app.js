@@ -5,6 +5,7 @@
 
 import { initStorage } from './storage.js';
 import { initAppIcon } from './app-icon.js';
+import { applyTranslations } from './i18n.js';
 
 // ─── 별 Canvas ───
 
@@ -147,6 +148,7 @@ export function spawnHearts(container, count = 5) {
  */
 export function initCommon() {
   initStorage();
+  applyTranslations();
   initAppIcon();
   initStars();
   initNav();

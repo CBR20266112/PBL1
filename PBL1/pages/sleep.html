@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>수면·꿈일기 | SleepySheep</title>
+  <title data-i18n="page.title">수면·꿈일기 | SleepySheep</title>
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
@@ -93,8 +93,8 @@
     <header class="header">
       <div class="header-left">
         <div>
-          <h1>😴 수면·꿈일기</h1>
-          <p class="subtitle">기록과 감정, 드리미와의 대화</p>
+          <h1 data-i18n="page.heading">😴 수면·꿈일기</h1>
+          <p class="subtitle" data-i18n="page.subtitle">기록과 감정, 드리미와의 대화</p>
         </div>
       </div>
       <div class="header-right">
@@ -106,32 +106,32 @@
     </header>
 
     <div class="content">
-      <a href="calendar.html" class="sleep-calendar-link" aria-label="메에메에 캘린더 열기">
+      <a href="calendar.html" class="sleep-calendar-link" data-i18n-aria-label="sleep.calendar.linkAria">
         <span class="sleep-calendar-link__icon" aria-hidden="true">📅</span>
         <span class="sleep-calendar-link__body">
-          <span class="sleep-calendar-link__title">메에메에 캘린더</span>
-          <span class="sleep-calendar-link__desc">수면·고민 기록을 한눈에</span>
+          <span class="sleep-calendar-link__title" data-i18n="sleep.calendar.linkTitle">메에메에 캘린더</span>
+          <span class="sleep-calendar-link__desc" data-i18n="sleep.calendar.linkDesc">수면·고민 기록을 한눈에</span>
         </span>
         <span class="sleep-calendar-link__arrow" aria-hidden="true">›</span>
       </a>
 
       <section class="glass card sleep-asmr-mini" style="padding: var(--space-4); margin-bottom: var(--space-3);">
         <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
-          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">🎵 수면 사운드</h3>
-          <a href="asmr.html" class="home-link" style="font-size: var(--font-size-2xs);">전체 ›</a>
+          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);" data-i18n="sleep.asmr.title">🎵 수면 사운드</h3>
+          <a href="asmr.html" class="home-link" style="font-size: var(--font-size-2xs);" data-i18n="home.asmr.viewAll">전체 ›</a>
         </div>
         <div class="sleep-asmr-now" id="sleep-asmr-now-wrap">
-          <span id="sleep-asmr-now">소리를 골라 잠들 준비를 해요</span>
-          <button type="button" class="home-asmr-stop" id="btn-sleep-asmr-stop" style="display:none;" title="ASMR 정지">⏹</button>
+          <span id="sleep-asmr-now" data-i18n="sleep.asmr.status">소리를 골라 잠들 준비를 해요</span>
+          <button type="button" class="home-asmr-stop" id="btn-sleep-asmr-stop" style="display:none;" data-i18n-title="home.asmr.stopButtonTitle" title="ASMR 정지">⏹</button>
         </div>
-        <p class="home-asmr-subtitle" style="margin-top: var(--space-2);">✨ 추천 믹스</p>
+        <p class="home-asmr-subtitle" style="margin-top: var(--space-2);" data-i18n="sleep.asmr.recommendedMix">✨ 추천 믹스</p>
         <div class="home-asmr-scroll" id="sleep-asmr-presets"></div>
       </section>
 
       <section class="glass card" style="padding: var(--space-4); margin-bottom: var(--space-3);">
-        <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">오늘의 수면</h3>
-        <h2 style="font-size: var(--font-size-2xl); margin: 0 0 var(--space-1);" id="today-sleep-duration">기록 없음</h2>
-        <p class="text-muted" id="today-sleep-comment" style="font-size: var(--font-size-xs); margin-bottom: var(--space-3);">아래에서 직접 입력하거나 홈에서 잠자기를 시작하세요.</p>
+        <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--space-3);" data-i18n="sleep.today.title">오늘의 수면</h3>
+        <h2 style="font-size: var(--font-size-2xl); margin: 0 0 var(--space-1);" id="today-sleep-duration" data-i18n="sleep.today.noRecords">기록 없음</h2>
+        <p class="text-muted" id="today-sleep-comment" style="font-size: var(--font-size-xs); margin-bottom: var(--space-3);" data-i18n="sleep.today.noRecordsDesc">아래에서 직접 입력하거나 홈에서 잠자기를 시작하세요.</p>
         <div class="flex justify-between text-small" style="font-size: var(--font-size-xs);">
           <span class="text-muted">💤 <span id="today-bedtime">-</span></span>
           <span class="text-muted">☀️ <span id="today-waketime">-</span></span>
@@ -139,20 +139,20 @@
       </section>
 
       <section class="glass card" style="padding: var(--space-4); margin-bottom: var(--space-3);">
-        <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">✍️ 수면 기록</h3>
+        <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--space-3);" data-i18n="sleep.record.title">✍️ 수면 기록</h3>
         <p class="text-muted" id="alarm-hint" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-3); line-height: 1.5;"></p>
         <div class="time-input-group" style="margin-bottom: var(--space-3);">
           <div class="time-input-card">
-            <span class="time-input-label">💤 취침</span>
+            <span class="time-input-label" data-i18n="sleep.record.bedtimeLabel">💤 취침</span>
             <input type="time" id="input-bedtime" class="time-input" value="23:00">
           </div>
           <div class="time-input-card">
-            <span class="time-input-label">☀️ 기상</span>
+            <span class="time-input-label" data-i18n="sleep.record.waketimeLabel">☀️ 기상</span>
             <input type="time" id="input-waketime" class="time-input" value="07:00">
           </div>
         </div>
         <div style="margin-bottom: var(--space-3);">
-          <span class="time-input-label" style="display:block; margin-bottom: 8px;">🥰 기분</span>
+          <span class="time-input-label" style="display:block; margin-bottom: 8px;" data-i18n="sleep.record.moodLabel">🥰 기분</span>
           <div class="mood-row" id="manual-mood-row">
             <button type="button" class="mood-btn" data-mood="1">😢</button>
             <button type="button" class="mood-btn" data-mood="2">🥱</button>
@@ -161,24 +161,24 @@
             <button type="button" class="mood-btn" data-mood="5">🥰</button>
           </div>
         </div>
-        <button class="btn btn-primary w-full" id="btn-save-manual-sleep">수면 기록 저장</button>
+        <button class="btn btn-primary w-full" id="btn-save-manual-sleep" data-i18n="sleep.record.saveButton">수면 기록 저장</button>
       </section>
 
       <section class="glass card" style="padding: var(--space-4); margin-bottom: var(--space-3);">
         <div class="tab-bar" style="margin-bottom: var(--space-3);">
-          <div class="tab-item active" id="tab-weekly">주간</div>
-          <div class="tab-item" id="tab-monthly">월간</div>
+          <div class="tab-item active" id="tab-weekly" data-i18n="sleep.stats.weeklyTab">주간</div>
+          <div class="tab-item" id="tab-monthly" data-i18n="sleep.stats.monthlyTab">월간</div>
         </div>
         <div class="stat-row" style="margin-bottom: var(--space-3);">
           <div class="stat-chip">
             <span class="chip-icon">🕒</span>
             <span class="chip-value" id="stat-weekly-avg">0분</span>
-            <span class="chip-label">평균 수면</span>
+            <span class="chip-label" data-i18n="sleep.stats.avgSleep">평균 수면</span>
           </div>
           <div class="stat-chip">
             <span class="chip-icon">🎯</span>
             <span class="chip-value" id="stat-goal-attain">0 / 7회</span>
-            <span class="chip-label">목표 달성</span>
+            <span class="chip-label" data-i18n="sleep.stats.goalAchieved">목표 달성</span>
           </div>
         </div>
         <div class="chart-area">
@@ -188,10 +188,10 @@
 
       <section class="glass card" style="padding: var(--space-4);">
         <div class="flex justify-between items-center" style="margin-bottom: var(--space-3);">
-          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);">🌙 꿈일기</h3>
-          <a href="worry.html" class="home-link" style="font-size: var(--font-size-2xs);">오늘 쓰기 ›</a>
+          <h3 class="font-bold" style="font-size: var(--font-size-sm); color: var(--text-secondary);" data-i18n="sleep.diary.title">🌙 꿈일기</h3>
+          <a href="worry.html" class="home-link" style="font-size: var(--font-size-2xs);" data-i18n="sleep.diary.writeLink">오늘 쓰기 ›</a>
         </div>
-        <p class="text-muted" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-3); line-height: 1.5;">
+        <p class="text-muted" style="font-size: var(--font-size-2xs); margin-bottom: var(--space-3); line-height: 1.5;" data-i18n="sleep.diary.desc">
           지난 날의 기분·수면과 드리미와 나눈 짧은 대화를 모아 봐요.
         </p>
         <div id="diary-list" class="flex flex-col gap-2"></div>
@@ -201,27 +201,27 @@
     <nav class="bottom-nav">
       <div class="nav-item" data-href="../index.html">
         <span class="nav-icon">🏠</span>
-        <span class="nav-label">홈</span>
+        <span class="nav-label" data-i18n="nav.home">홈</span>
         <span class="nav-dot"></span>
       </div>
       <div class="nav-item active" data-href="sleep.html">
         <span class="nav-icon">🌙</span>
-        <span class="nav-label">수면</span>
+        <span class="nav-label" data-i18n="nav.sleep">수면</span>
         <span class="nav-dot"></span>
       </div>
       <div class="nav-item" data-href="workshop.html">
         <span class="nav-icon">🧶</span>
-        <span class="nav-label">공방</span>
+        <span class="nav-label" data-i18n="nav.workshop">공방</span>
         <span class="nav-dot"></span>
       </div>
       <div class="nav-item" data-href="friends.html">
         <span class="nav-icon">👥</span>
-        <span class="nav-label">친구</span>
+        <span class="nav-label" data-i18n="nav.friends">친구</span>
         <span class="nav-dot"></span>
       </div>
       <div class="nav-item" data-href="gallery.html">
         <span class="nav-icon">🖼️</span>
-        <span class="nav-label">갤러리</span>
+        <span class="nav-label" data-i18n="nav.gallery">갤러리</span>
         <span class="nav-dot"></span>
       </div>
     </nav>
@@ -233,12 +233,13 @@
     <h3 class="font-bold" id="diary-detail-title" style="font-size: var(--font-size-md); margin-bottom: var(--space-3);"></h3>
     <div id="diary-detail-sleep" style="margin-bottom: var(--space-4); font-size: var(--font-size-sm);"></div>
     <div id="diary-detail-thread" class="worry-thread" style="margin-bottom: var(--space-4);"></div>
-    <button type="button" class="btn btn-secondary w-full" id="btn-close-diary-detail">닫기</button>
+    <button type="button" class="btn btn-secondary w-full" id="btn-close-diary-detail" data-i18n="sleep.diary.closeButton">닫기</button>
   </div>
 
   <script type="module">
     import { initCommon, showToast } from '../js/app.js';
     import { getSheep, getSettings } from '../js/storage.js';
+    import { t } from '../js/i18n.js';
     import {
       recordSleep, formatDuration, getTodaySleep, getWeeklyAvg,
       getMonthlySuccess, getRecentRecords, drawSleepChart,
@@ -274,13 +275,13 @@
         if (today) {
           durEl.textContent = formatDuration(today.duration);
           commentEl.textContent = today.duration >= settings.sleepGoal
-            ? '오늘 목표 수면을 달성했어요.'
-            : '조금 모자란 수면이었어요.';
+            ? t('sleep.today.goalMet')
+            : t('sleep.today.goalMiss');
           document.getElementById('today-bedtime').textContent = today.bedtime;
           document.getElementById('today-waketime').textContent = today.wakeTime;
         } else {
-          durEl.textContent = '기록 없음';
-          commentEl.textContent = '아래에서 직접 입력하거나 홈에서 잠자기를 시작하세요.';
+          durEl.textContent = t('sleep.today.noRecords');
+          commentEl.textContent = t('sleep.today.noRecordsDesc');
           document.getElementById('today-bedtime').textContent = '-';
           document.getElementById('today-waketime').textContent = '-';
         }
@@ -295,11 +296,11 @@
         if (sleepChartTab === 'weekly') {
           const weekly = getRecentRecords(7);
           const success = weekly.filter(r => r.duration >= (settings.sleepGoal || 480)).length;
-          document.getElementById('stat-goal-attain').textContent = `${success} / 7회`;
+          document.getElementById('stat-goal-attain').textContent = t('sleep.chart.goalAttain', { success, total: 7 });
           drawSleepChart(canvas, 'weekly');
         } else {
           const m = getMonthlySuccess();
-          document.getElementById('stat-goal-attain').textContent = `${m.success} / ${m.total}회`;
+          document.getElementById('stat-goal-attain').textContent = t('sleep.chart.goalAttain', { success: m.success, total: m.total });
           drawSleepChart(canvas, 'monthly');
         }
       }
@@ -307,7 +308,7 @@
       function renderDiary() {
         const entries = getDreamDiaryEntries(30);
         if (!entries.length) {
-          diaryList.innerHTML = `<div class="diary-empty">아직 꿈일기가 없어요.<br>수면을 기록하거나 <a href="worry.html" style="color:var(--color-purple-soft);">마음 상담</a>을 시작해 보세요.</div>`;
+          diaryList.innerHTML = `<div class="diary-empty">${t('sleep.diary.empty')}<br><a href="worry.html" style="color:var(--color-purple-soft);">${t('sleep.diary.emptyLink')}</a>${t('sleep.diary.emptySuffix')}</div>`;
           return;
         }
         diaryList.innerHTML = '';
@@ -318,7 +319,7 @@
             ? escapeHtml(entry.worryPreview)
             : entry.sleepNote
               ? escapeHtml(entry.sleepNote)
-              : '<span class="text-muted">수면 기록만 있어요</span>';
+              : `<span class="text-muted">${t('sleep.diary.fallback')}</span>`;
           card.innerHTML = `
             <div class="diary-card-head">
               <span class="diary-date">${entry.dateLabel}</span>
@@ -337,13 +338,13 @@
         const sleepEl = document.getElementById('diary-detail-sleep');
         if (entry.hasSleep) {
           sleepEl.innerHTML = `
-            <div class="text-muted" style="font-size:var(--font-size-xs);margin-bottom:4px;">수면</div>
+            <div class="text-muted" style="font-size:var(--font-size-xs);margin-bottom:4px;">${t('sleep.diary.detailSleepTitle')}</div>
             <div><strong>${formatDuration(entry.sleepDuration)}</strong> · ${entry.moodEmoji || moodEmoji(entry.mood)}
             ${entry.bedtime ? ` · ${entry.bedtime} → ${entry.wakeTime}` : ''}</div>
             ${entry.sleepNote ? `<p style="margin-top:8px;font-size:var(--font-size-xs);line-height:1.5;">${escapeHtml(entry.sleepNote)}</p>` : ''}
           `;
         } else {
-          sleepEl.innerHTML = '<p class="text-muted" style="font-size:var(--font-size-xs);">이 날 수면 기록은 없어요.</p>';
+          sleepEl.innerHTML = `<p class="text-muted" style="font-size:var(--font-size-xs);">${t('sleep.diary.noSleep')}</p>`;
         }
         const threadEl = document.getElementById('diary-detail-thread');
         threadEl.innerHTML = '';
@@ -352,13 +353,13 @@
             const div = document.createElement('div');
             div.className = `worry-bubble ${turn.role}`;
             div.innerHTML = `
-              <div class="worry-bubble-label">${turn.role === 'user' ? '나' : '🐑 드리미'}</div>
+              <div class="worry-bubble-label">${turn.role === 'user' ? t('calendar.worry.user') : t('calendar.worry.model')}</div>
               ${escapeHtml(turn.content)}
             `;
             threadEl.appendChild(div);
           });
         } else if (!entry.hasSleep) {
-          threadEl.innerHTML = '<p class="text-muted text-center" style="font-size:var(--font-size-xs);">대화 기록이 없어요.</p>';
+          threadEl.innerHTML = `<p class="text-muted text-center" style="font-size:var(--font-size-xs);">${t('sleep.diary.noThread')}</p>`;
         }
         diaryOverlay.classList.add('active');
         diaryModal.classList.add('active');
@@ -399,8 +400,8 @@
           note: '',
         });
         syncAlarm();
-        let msg = `저장 완료! +${res.xpGained} XP`;
-        if (res.regularityBonus > 0) msg += ` · 포만감 +${res.regularityBonus}`;
+        let msg = t('sleep.toast.saved', { xpGained: res.xpGained });
+        if (res.regularityBonus > 0) msg += ` · ${t('sleep.toast.regularityBonus', { bonus: res.regularityBonus })}`;
         showToast(msg, 'success');
         refreshToday();
       });

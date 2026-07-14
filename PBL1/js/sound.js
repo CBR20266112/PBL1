@@ -2,6 +2,9 @@
  * sound.js - Sleepy Sheep ?ъ슫???쒖뒪?? * Web Audio API瑜??ъ슜???꾨줈?쒖????ъ슫???⑹꽦
  */
 
+import { getSettings } from './storage.js';
+import { t } from './i18n.js';
+
 let _ctx = null;
 let _masterGain = null;
 let _sfxGain = null;
@@ -907,7 +910,7 @@ export const ASMR_LIST = [
   { id: 'tingle_bell', category: 'texture', emoji: '🔔', name: '종소리 팅글', desc: '짧고 반짝이는 벨 텍스처' },
 ];
 export function getAsmrItem(id) {
-  return ASMR_LIST.find(i => i.id === id) ?? null;
+  return getAsmrList().find(i => i.id === id) ?? null;
 }
 
 export function getLastAsmrId() {
@@ -923,7 +926,14 @@ export function setAsmrSleepAutoplay(v) {
   savePrefs();
 }
 
-export function getAsmrList() { return ASMR_LIST; }
+export function getAsmrList() {
+  const lang = getSettings().language || 'ko';
+  return ASMR_LIST.map(item => ({
+    ...item,
+    name: t(`asmr.${item.id}.name`, {}, lang) || item.name,
+    desc: t(`asmr.${item.id}.desc`, {}, lang) || item.desc,
+  }));
+}
 
 let _currentAsmrId   = null;
 let _asmrNodes       = [];

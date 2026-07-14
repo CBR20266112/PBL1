@@ -77,6 +77,62 @@ const TRANSLATIONS = {
     'page.title.sleep': '수면·꿈일기 | SleepySheep',
     'page.heading.sleep': '😴 수면·꿈일기',
     'page.subtitle.sleep': '기록과 감정, 드리미와의 대화',
+    'sleep.calendar.linkTitle': '메에메에 캘린더',
+    'sleep.calendar.linkDesc': '수면·고민 기록을 한눈에',
+    'sleep.calendar.linkAria': '메에메에 캘린더 열기',
+    'sleep.asmr.title': '🎵 수면 사운드',
+    'sleep.asmr.status': '소리를 골라 잠들 준비를 해요',
+    'sleep.asmr.playing': '재생 중',
+    'sleep.asmr.recommendedMix': '✨ 추천 믹스',
+    'sleep.today.title': '오늘의 수면',
+    'sleep.today.noRecords': '기록 없음',
+    'sleep.today.noRecordsDesc': '아래에서 직접 입력하거나 홈에서 잠자기를 시작하세요.',
+    'sleep.today.goalMet': '오늘 목표 수면을 달성했어요.',
+    'sleep.today.goalMiss': '조금 모자란 수면이었어요.',
+    'sleep.record.title': '✍️ 수면 기록',
+    'sleep.record.bedtimeLabel': '💤 취침',
+    'sleep.record.waketimeLabel': '☀️ 기상',
+    'sleep.record.moodLabel': '🥰 기분',
+    'sleep.record.saveButton': '수면 기록 저장',
+    'sleep.stats.weeklyTab': '주간',
+    'sleep.stats.monthlyTab': '월간',
+    'sleep.stats.avgSleep': '평균 수면',
+    'sleep.stats.goalAchieved': '목표 달성',
+    'sleep.chart.goalAttain': '{success} / {total}회',
+    'sleep.diary.title': '🌙 꿈일기',
+    'sleep.diary.writeLink': '오늘 쓰기 ›',
+    'sleep.diary.desc': '지난 날의 기분·수면과 드리미와 나눈 짧은 대화를 모아 봐요.',
+    'sleep.diary.empty': '아직 꿈일기가 없어요.',
+    'sleep.diary.emptyLink': '마음 상담',
+    'sleep.diary.emptySuffix': '을 시작해 보세요.',
+    'sleep.diary.fallback': '수면 기록만 있어요',
+    'sleep.diary.detailSleepTitle': '수면',
+    'sleep.diary.noSleep': '이 날 수면 기록은 없어요.',
+    'sleep.diary.noThread': '대화 기록이 없어요.',
+    'sleep.diary.closeButton': '닫기',
+    'sleep.toast.saved': '저장 완료! +{xpGained} XP',
+    'sleep.toast.regularityBonus': '포만감 +{bonus}',
+    'morningCall.hint': '⏰ 모닝콜 {dayLabel} {wakeTime}에 울려요',
+    'morningCall.hint.today': '오늘',
+    'morningCall.hint.tomorrow': '내일',
+    'asmr.preset_rainy.name': '비 오는 밤',
+    'asmr.preset_rainy.desc': '빗소리와 부드러운 바람 믹스',
+    'asmr.preset_ocean.name': '해변의 밤',
+    'asmr.preset_ocean.desc': '파도와 먼 풀벌레가 섞인 밤바다',
+    'asmr.preset_cottage.name': '밤의 산장',
+    'asmr.preset_cottage.desc': '장작불, 바람, 밤벌레가 있는 산장',
+    'asmr.preset_zen.name': '젠 가든',
+    'asmr.preset_zen.desc': '물소리, 바람종, 작은 종소리',
+    'asmr.preset_study.name': '조용한 필기방',
+    'asmr.preset_study.desc': '연필, 책장, 잔잔한 실내 공기',
+    'asmr.preset_traditional.name': '전통 악기 명상',
+    'asmr.preset_traditional.desc': '동아시아 현악기와 부드러운 공간감',
+    'asmr.preset_cozy.name': '포근한 난로',
+    'asmr.preset_cozy.desc': '장작불과 잔잔한 바람',
+    'asmr.preset_deep.name': '깊은 잠',
+    'asmr.preset_deep.desc': '브라운 노이즈와 느린 심장 박동',
+    'asmr.preset_starry.name': '별빛 목장',
+    'asmr.preset_starry.desc': '밤 목장, 풀벌레, 먼 양 울음',
     'page.title.workshop': '양털 공방 | SleepySheep',
     'page.heading.workshop': '🧶 양털 공방',
     'page.subtitle.workshop': '모은 양털로 방 꾸미기 요소를 획득해요',
@@ -498,6 +554,62 @@ const TRANSLATIONS = {
     'page.title.sleep': 'Sleep Diary | SleepySheep',
     'page.heading.sleep': '😴 Sleep Diary',
     'page.subtitle.sleep': 'Your records, feelings, and chats with Dreamy',
+    'sleep.calendar.linkTitle': 'Dreamy Calendar',
+    'sleep.calendar.linkDesc': 'See sleep and worry records at a glance',
+    'sleep.calendar.linkAria': 'Open Dreamy Calendar',
+    'sleep.asmr.title': '🎵 Sleep sounds',
+    'sleep.asmr.status': 'Pick a sound and get ready to drift off',
+    'sleep.asmr.playing': 'playing now',
+    'sleep.asmr.recommendedMix': '✨ Recommended mix',
+    'sleep.today.title': 'Today’s sleep',
+    'sleep.today.noRecords': 'No records yet',
+    'sleep.today.noRecordsDesc': 'Enter it manually below or start sleeping from the home screen.',
+    'sleep.today.goalMet': 'You achieved your sleep goal today.',
+    'sleep.today.goalMiss': 'Sleep was a bit short today.',
+    'sleep.record.title': '✍️ Sleep log',
+    'sleep.record.bedtimeLabel': '💤 Bedtime',
+    'sleep.record.waketimeLabel': '☀️ Wake time',
+    'sleep.record.moodLabel': '🥰 Mood',
+    'sleep.record.saveButton': 'Save sleep log',
+    'sleep.stats.weeklyTab': 'Weekly',
+    'sleep.stats.monthlyTab': 'Monthly',
+    'sleep.stats.avgSleep': 'Average sleep',
+    'sleep.stats.goalAchieved': 'Goal achieved',
+    'sleep.chart.goalAttain': '{success} / {total} times',
+    'sleep.diary.title': '🌙 Dream diary',
+    'sleep.diary.writeLink': 'Write today ›',
+    'sleep.diary.desc': 'Collect your mood, sleep, and short conversations with Dreamy from past days.',
+    'sleep.diary.empty': 'No dream diary entries yet.',
+    'sleep.diary.emptyLink': 'Start a heart-to-heart',
+    'sleep.diary.emptySuffix': '.',
+    'sleep.diary.fallback': 'Only sleep notes are available',
+    'sleep.diary.detailSleepTitle': 'Sleep',
+    'sleep.diary.noSleep': 'There is no sleep record for that day.',
+    'sleep.diary.noThread': 'No conversation history yet.',
+    'sleep.diary.closeButton': 'Close',
+    'sleep.toast.saved': 'Saved! +{xpGained} XP',
+    'sleep.toast.regularityBonus': 'Fullness +{bonus}',
+    'morningCall.hint': '⏰ Morning call will ring at {wakeTime} {dayLabel}',
+    'morningCall.hint.today': 'today',
+    'morningCall.hint.tomorrow': 'tomorrow',
+    'asmr.preset_rainy.name': 'Rainy Night',
+    'asmr.preset_rainy.desc': 'Rain and gentle wind mix',
+    'asmr.preset_ocean.name': 'Ocean Night',
+    'asmr.preset_ocean.desc': 'A night sea with waves and distant insects',
+    'asmr.preset_cottage.name': 'Cozy Cabin',
+    'asmr.preset_cottage.desc': 'Campfire, wind, and crickets by the cabin',
+    'asmr.preset_zen.name': 'Zen Garden',
+    'asmr.preset_zen.desc': 'Water, wind chimes, and soft bells',
+    'asmr.preset_study.name': 'Quiet Study Room',
+    'asmr.preset_study.desc': 'Pencil, bookshelf, and calm indoor air',
+    'asmr.preset_traditional.name': 'Traditional Instrument Meditation',
+    'asmr.preset_traditional.desc': 'East Asian strings and soft ambience',
+    'asmr.preset_cozy.name': 'Cozy Hearth',
+    'asmr.preset_cozy.desc': 'Campfire and gentle wind',
+    'asmr.preset_deep.name': 'Deep Sleep',
+    'asmr.preset_deep.desc': 'Brown noise and slow heartbeat',
+    'asmr.preset_starry.name': 'Starlit Pasture',
+    'asmr.preset_starry.desc': 'Night pasture, crickets, and distant sheep',
     'page.title.workshop': 'Wool Workshop | SleepySheep',
     'page.heading.workshop': '🧶 Wool Workshop',
     'page.subtitle.workshop': 'Earn decorations with gathered yarn',
@@ -1359,13 +1471,14 @@ export function applyTranslations(lang = getSettings().language || DEFAULT_LANGU
     return null;
   };
 
-  const elements = root.querySelectorAll('[data-i18n], [data-i18n-html], [data-i18n-placeholder], [data-i18n-title], [data-i18n-alt]');
+  const elements = root.querySelectorAll('[data-i18n], [data-i18n-html], [data-i18n-placeholder], [data-i18n-title], [data-i18n-alt], [data-i18n-aria-label]');
   elements.forEach(el => {
     const htmlKey = el.dataset.i18nHtml;
     const textKey = el.dataset.i18n;
     const placeholderKey = el.dataset.i18nPlaceholder;
     const titleKey = el.dataset.i18nTitle;
     const altKey = el.dataset.i18nAlt;
+    const ariaLabelKey = el.dataset.i18nAriaLabel;
 
     if (htmlKey) {
       const value = resolveTranslation(htmlKey);
@@ -1390,6 +1503,11 @@ export function applyTranslations(lang = getSettings().language || DEFAULT_LANGU
     if (altKey) {
       const value = resolveTranslation(altKey);
       if (value !== null) el.alt = value;
+    }
+
+    if (ariaLabelKey) {
+      const value = resolveTranslation(ariaLabelKey);
+      if (value !== null) el.setAttribute('aria-label', value);
     }
   });
 

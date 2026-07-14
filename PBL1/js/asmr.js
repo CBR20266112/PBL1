@@ -1,6 +1,8 @@
 ﻿/**
  * asmr.js - ASMR shared UI bindings
  */
+import { getSettings } from './storage.js';
+import { t } from './i18n.js';
 import {
   resumeAudio,
   getAsmrList,
@@ -464,14 +466,15 @@ export function initSleepAsmrMini() {
   presets.forEach(item => presetsEl.appendChild(createAsmrChip(item, { compact: false })));
 
   function updateMini() {
+    const lang = getSettings().language || 'ko';
     const cur = getCurrentAsmrId();
     const item = cur ? getAsmrItem(cur) : null;
     syncAsmrPlayingState(presetsEl.parentElement);
     const btnStop = document.getElementById('btn-sleep-asmr-stop');
     if (nowLabel) {
       nowLabel.textContent = item
-        ? `${item.emoji} ${item.name} 재생 중`
-        : '소리를 골라 잠들 준비를 해요';
+        ? `${item.emoji} ${item.name} · ${t('sleep.asmr.playing', {}, lang)}`
+        : t('sleep.asmr.status', {}, lang);
       nowLabel.parentElement?.classList.toggle('playing', !!item);
     }
     if (btnStop) btnStop.style.display = item ? '' : 'none';
