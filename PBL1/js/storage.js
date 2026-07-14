@@ -69,6 +69,16 @@ export function setPrivacyConsent(consent) {
   setItem(STORAGE_KEYS.PRIVACY_CONSENT, Boolean(consent));
 }
 
+/** 온보딩 동의 상태 읽기 */
+export function getOnboardingConsent() {
+  return getItem(STORAGE_KEYS.ONBOARDING_CONSENT, null);
+}
+
+/** 온보딩 동의 상태 저장 */
+export function setOnboardingConsent(consent) {
+  setItem(STORAGE_KEYS.ONBOARDING_CONSENT, consent);
+}
+
 // ─── 도메인별 헬퍼 ───
 
 /** 양 상태 읽기 (없으면 기본값) */

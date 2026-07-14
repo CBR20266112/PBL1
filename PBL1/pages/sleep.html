@@ -175,6 +175,25 @@
         <button class="btn btn-primary w-full" id="btn-save-manual-sleep" data-i18n="sleep.record.saveButton">수면 기록 저장</button>
       </section>
 
+      <div class="modal" id="snoring-consent-modal" style="max-width: 92%; width: 360px;">
+        <div class="modal-handle"></div>
+        <h3 class="font-bold text-center" style="font-size: var(--font-size-lg); margin-bottom: var(--space-4);" data-i18n="sleep.snoringConsentModal.title">코골이 측정 안내</h3>
+        <div class="text-muted" style="font-size: var(--font-size-sm); line-height:1.7; margin-bottom: var(--space-4);" data-i18n-html="sleep.snoringConsentModal.description">
+          코골이 측정 기능은 수면 중 사용자의 코골이를 분석하기 위해
+          기기의 마이크 사용 권한을 필요로 합니다.<br><br>
+
+          녹음된 데이터는 오직 사용자의 수면 데이터를 측정하기 위한 목적으로만 사용되며,
+          사용자의 동의 없이 외부로 전송/저장하지 않습니다.<br><br>
+
+          또, 사용자는 언제든 자신의 민감한 정보를 삭제/관리할 수 있습니다.
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary w-full" id="btn-snoring-consent-cancel" data-i18n="sleep.snoringConsentModal.cancelButton">취소</button>
+          <button class="btn btn-primary w-full" id="btn-snoring-consent-accept" data-i18n="sleep.snoringConsentModal.acceptButton">동의하고 계속</button>
+        </div>
+      </div>
+      
+
       <section class="glass card" style="padding: var(--space-4); margin-bottom: var(--space-3);">
         <div class="tab-bar" style="margin-bottom: var(--space-3);">
           <div class="tab-item active" id="tab-weekly" data-i18n="sleep.stats.weeklyTab">주간</div>
@@ -400,6 +419,38 @@
       const bedInput = document.getElementById('input-bedtime');
       const wakeInput = document.getElementById('input-waketime');
       const snoringInput = document.getElementById('input-snoring');
+      const snoringConsentModal = document.getElementById('snoring-consent-modal');
+      const snoringConsentCancel = document.getElementById('btn-snoring-consent-cancel');
+      const snoringConsentAccept = document.getElementById('btn-snoring-consent-accept');
+      let snoringConsentPending = false;
+
+      function showSnoringConsent() {
+        snoringConsentModal.classList.add('active');
+        snoringConsentPending = true;
+      }
+
+      function hideSnoringConsent() {
+        snoringConsentModal.classList.remove('active');
+        snoringConsentPending = false;
+      }
+
+      snoringInput.addEventListener('change', () => {
+        if (snoringInput.checked) {
+          showSnoringConsent();
+        }
+      });
+
+      snoringConsentCancel.addEventListener('click', () => {
+        if (!snoringConsentPending) return;
+        snoringInput.checked = false;
+        hideSnoringConsent();
+      });
+
+      snoringConsentAccept.addEventListener('click', () => {
+        if (!snoringConsentPending) return;
+        hideSnoringConsent();
+      });
+
       bedInput.value = bedtime;
       wakeInput.value = wakeTime;
       const alarmHint = document.getElementById('alarm-hint');
