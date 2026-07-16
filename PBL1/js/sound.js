@@ -1949,21 +1949,40 @@ function _asmrOceanShore() {
 }
 
 function _asmrKoreanTraditionalNight() {
-  const dur = 22;
+  const dur = 28; // 가야금, 대금, 해금 선율이 완전히 연주되도록 28초로 연장
   const now = getCtx().currentTime;
-  _addHanokCourtyard(now, dur, 0.056);
-  _addDistantInsects(now, dur, 12, 0.04);
-  _addWindChimes(now, dur, 3, 0.014);
-  _addSoftWind(now, dur, 0.003); // 바람 소리 감쇠 (기존 0.008)
+  
+  // 자연 배경음 (바람 소리 극소화 및 한옥 마당, 밤벌레 최소화)
+  _addSoftWind(now, dur, 0.002);
+  _addHanokCourtyard(now, dur, 0.045);
+  _addDistantInsects(now, dur, 4, 0.015);
+  
+  // 풍경 소리 합성음은 1회로 극소화하고 볼륨도 대폭 감쇠시켜 단순한 배경 요소로만 처리 (삑/삐링 소리 제거)
+  _addWindChimes(now, dur, 1, 0.004);
+  
+  // 한국 전통 악기 메인 배치
+  _addGayageumPhrase(now, dur, 0.20);  // 가야금 (메인 선율)
+  _addKoreanDaegeum(now, dur, 0.12);   // 대금 (긴 숨결 관악)
+  _addKoreanHaegeum(now, dur, 0.14);   // 해금 (은은한 여운 현악)
+  
   _scheduleLoop('korean_traditional_night', dur * 1000);
 }
 
 function _asmrJapaneseTraditionalNight() {
-  const dur = 22;
+  const dur = 28; // 고토와 샤쿠하치 선율이 완전히 연주되도록 28초로 연장
   const now = getCtx().currentTime;
-  _addShishiOdoshi(now, dur, 8, 0.036);
-  _addWindChimes(now, dur, 8, 0.028);
-  _addSoftWind(now, dur, 0.002); // 바람 소리 감쇠 (기존 0.006)
+  
+  // 자연 배경음 (바람 소리 극소화 및 시시오도시 최소화)
+  _addSoftWind(now, dur, 0.002);
+  _addShishiOdoshi(now, dur, 2, 0.015);
+  
+  // 풍경 소리 합성음은 2회로 극소화하고 볼륨도 대폭 감쇠시켜 배경으로 처리 (삑/삐링 소리 제거)
+  _addWindChimes(now, dur, 2, 0.005);
+  
+  // 일본 전통 악기 메인 배치
+  _addKotoPhrase(now, dur, 0.20);             // 고토 (메인 현악)
+  _addJapaneseShakunoflute(now, dur, 0.15);   // 샤쿠하치 (천천히 흐르는 관악)
+  
   _scheduleLoop('japanese_traditional_night', dur * 1000);
 }
 
