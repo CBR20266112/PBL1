@@ -2045,6 +2045,281 @@ function _asmrCozyPlaza() {
   _scheduleLoop('cozy_plaza', dur * 1000);
 }
 
+function _asmrLaundryRoom() {
+  const ctx = getCtx();
+  const dur = 16;
+  const now = ctx.currentTime;
+
+  // 1. 낮은 기계 진동음 (Low hum - 55Hz 대역 sine파)
+  const humOsc = ctx.createOscillator();
+  const humGain = createGain(0.045);
+  const humFilter = createFilter('lowpass', 80);
+  humOsc.type = 'sine';
+  humOsc.frequency.setValueAtTime(55, now);
+  humOsc.connect(humFilter); humFilter.connect(humGain); humGain.connect(_asmrtGain);
+  
+  humGain.gain.setValueAtTime(0, now);
+  humGain.gain.linearRampToValueAtTime(0.045, now + 1.5);
+  humGain.gain.setValueAtTime(0.045, now + dur - 1.5);
+  humGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(humOsc);
+  humOsc.start(now);
+  humOsc.stop(now + dur + 0.1);
+
+  // 1-b. 세탁기 드럼 모터 웅웅 보강 (120Hz 사인파 — 조용하고 두꺼운 배음 레이어)
+  const drumHumOsc = ctx.createOscillator();
+  const drumHumGain = createGain(0);
+  const drumHumFilter = createFilter('lowpass', 160, 1.2);
+  drumHumOsc.type = 'sine';
+  drumHumOsc.frequency.setValueAtTime(120, now);
+  drumHumOsc.connect(drumHumFilter); drumHumFilter.connect(drumHumGain); drumHumGain.connect(_asmrtGain);
+
+  drumHumGain.gain.setValueAtTime(0, now);
+  drumHumGain.gain.linearRampToValueAtTime(0.028, now + 2.0);
+  // 6초 주기로 아주 살짝 흔들림 — 드럼 회전 질감
+  for (let t = 2; t < dur - 1; t += 0.2) {
+    const v = 0.028 + 0.007 * Math.sin(2 * Math.PI * (t / 6));
+    drumHumGain.gain.setValueAtTime(v, now + t);
+  }
+  drumHumGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(drumHumOsc);
+  drumHumOsc.start(now);
+  drumHumOsc.stop(now + dur + 0.1);
+
+  // 2. 세탁기 회전음 (80Hz 삼각파 변조)
+  const motorOsc = ctx.createOscillator();
+  const motorGain = createGain(0);
+  const motorFilter = createFilter('lowpass', 110);
+  motorOsc.type = 'triangle';
+  motorOsc.frequency.setValueAtTime(80, now);
+  motorOsc.connect(motorFilter); motorFilter.connect(motorGain); motorGain.connect(_asmrtGain);
+  
+  // LFO: 4초 주기로 부드럽게 세탁기 회전음 세기 변조
+  motorGain.gain.setValueAtTime(0.012, now);
+  for (let t = 0; t < dur; t += 0.1) {
+    const lfoVal = 0.012 + 0.009 * Math.sin(2 * Math.PI * (t / 4));
+    motorGain.gain.setValueAtTime(lfoVal, now + t);
+  }
+  motorGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(motorOsc);
+  motorOsc.start(now);
+  motorOsc.stop(now + dur + 0.1);
+
+  // 3. 물이 천천히 출렁이는 소리 (노이즈 소스를 스위핑 밴드패스 필터로 가공)
+  const waterNoise = createNoise(dur);
+  const waterFilter = createFilter('bandpass', 350, 1.5);
+  const waterGain = createGain(0);
+  waterNoise.connect(waterFilter); waterFilter.connect(waterGain); waterGain.connect(_asmrtGain);
+
+  waterGain.gain.setValueAtTime(0.016, now);
+  for (let t = 0; t < dur; t += 0.1) {
+    // 4초 주기로 물소리 볼륨 및 필터 주파수가 휩쓸며 변동 (회전음과 위상 다르게 조화)
+    const lfoVal = 0.016 + 0.011 * Math.sin(2 * Math.PI * (t / 4) + Math.PI / 2);
+    waterGain.gain.setValueAtTime(lfoVal, now + t);
+    
+    const freqVal = 420 + 180 * Math.sin(2 * Math.PI * (t / 4));
+    waterFilter.frequency.setValueAtTime(freqVal, now + t);
+  }
+  waterGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(waterNoise);
+  waterNoise.start(now);
+  waterNoise.stop(now + dur + 0.1);
+
+  // 3-b. 드럼 내부 잔잔한 물 출렁임 (150~280Hz 로우 밴드패스 — 아주 부드럽게)
+  const sloshNoise = createNoise(dur);
+  const sloshFilter = createFilter('bandpass', 200, 2.0);
+  const sloshGain = createGain(0);
+  sloshNoise.connect(sloshFilter); sloshFilter.connect(sloshGain); sloshGain.connect(_asmrtGain);
+
+  sloshGain.gain.setValueAtTime(0, now);
+  sloshGain.gain.linearRampToValueAtTime(0.014, now + 2.0);
+  // 7초 주기 — 드럼 안 물이 아주 느리게 출렁이는 느낌
+  for (let t = 2; t < dur - 1; t += 0.15) {
+    const sv = 0.014 + 0.008 * Math.sin(2 * Math.PI * (t / 7));
+    sloshGain.gain.setValueAtTime(sv, now + t);
+    const sf = 190 + 70 * Math.sin(2 * Math.PI * (t / 7) + 1.2);
+    sloshFilter.frequency.setValueAtTime(sf, now + t);
+  }
+  sloshGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(sloshNoise);
+  sloshNoise.start(now);
+  sloshNoise.stop(now + dur + 0.1);
+
+  // 4. 건조기 회전음 (65Hz 톱니파 + 로우패스 필터링 및 5초 주기 LFO)
+  const dryerOsc = ctx.createOscillator();
+  const dryerGain = createGain(0);
+  const dryerFilter = createFilter('lowpass', 85);
+  dryerOsc.type = 'sawtooth';
+  dryerOsc.frequency.setValueAtTime(65, now);
+  dryerOsc.connect(dryerFilter); dryerFilter.connect(dryerGain); dryerGain.connect(_asmrtGain);
+
+  dryerGain.gain.setValueAtTime(0.008, now);
+  for (let t = 0; t < dur; t += 0.1) {
+    const lfoVal = 0.008 + 0.006 * Math.sin(2 * Math.PI * (t / 5));
+    dryerGain.gain.setValueAtTime(lfoVal, now + t);
+  }
+  dryerGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(dryerOsc);
+  dryerOsc.start(now);
+  dryerOsc.stop(now + dur + 0.1);
+
+  // 건조기 옷감의 쿵쿵대는 둔탁한 Thump 소리 (25~45Hz 대역의 스위프)
+  const thumpCount = Math.floor(rand(2, 4));
+  for (let i = 0; i < thumpCount; i++) {
+    const thumpTime = now + rand(1.5, dur - 1.5);
+    const thumpOsc = ctx.createOscillator();
+    const thumpG = createGain(0);
+    const thumpFilter = createFilter('lowpass', 45);
+    thumpOsc.type = 'sine';
+    thumpOsc.frequency.setValueAtTime(40, thumpTime);
+    thumpOsc.frequency.exponentialRampToValueAtTime(20, thumpTime + 0.35);
+    thumpOsc.connect(thumpFilter); thumpFilter.connect(thumpG); thumpG.connect(_asmrtGain);
+
+    thumpG.gain.setValueAtTime(0, thumpTime);
+    thumpG.gain.linearRampToValueAtTime(0.035, thumpTime + 0.03);
+    thumpG.gain.exponentialRampToValueAtTime(0.001, thumpTime + 0.45);
+
+    _registerNode(thumpOsc);
+    thumpOsc.start(thumpTime);
+    thumpOsc.stop(thumpTime + 0.5);
+  }
+
+  // 5. 옷감이 부드럽게 스치는 소리 (Fabric rustling)
+  const rustleCount = Math.floor(rand(3, 5));
+  for (let i = 0; i < rustleCount; i++) {
+    const rTime = now + rand(1, dur - 2);
+    const rDur = rand(0.6, 1.3);
+    const rNoise = createNoise(rDur);
+    const rFilter = createFilter('bandpass', rand(900, 1800), 2.5);
+    const rGain = createGain(0);
+    rNoise.connect(rFilter); rFilter.connect(rGain); rGain.connect(_asmrtGain);
+
+    rGain.gain.setValueAtTime(0, rTime);
+    rGain.gain.linearRampToValueAtTime(rand(0.006, 0.012), rTime + rDur * 0.25);
+    rGain.gain.linearRampToValueAtTime(rand(0.004, 0.009), rTime + rDur * 0.65);
+    rGain.gain.exponentialRampToValueAtTime(0.001, rTime + rDur);
+
+    _registerNode(rNoise);
+    rNoise.start(rTime);
+    rNoise.stop(rTime + rDur + 0.1);
+  }
+
+  _scheduleLoop('laundry_room', dur * 1000);
+}
+
+function _asmrSpaceStationNight() {
+  const ctx = getCtx();
+  const dur = 20;
+  const now = ctx.currentTime;
+
+  // 1. 공조기(HVAC) 소리 - 잔잔히 깔리는 기류음 (Low-passed noise)
+  const airNoise = createNoise(dur);
+  const airLpf = createFilter('lowpass', 110, 1.2);
+  const airHpf = createFilter('highpass', 35, 1.0);
+  const airGain = createGain(0);
+  
+  airNoise.connect(airLpf); airLpf.connect(airHpf); airHpf.connect(airGain); airGain.connect(_asmrtGain);
+  
+  airGain.gain.setValueAtTime(0, now);
+  airGain.gain.linearRampToValueAtTime(0.065, now + 2.0);
+  airGain.gain.setValueAtTime(0.065, now + dur - 2.0);
+  airGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(airNoise);
+  airNoise.start(now);
+  airNoise.stop(now + dur + 0.1);
+
+  // 2. 환풍기 모터 회전음 (90Hz, 135Hz 화음의 사인파 중첩)
+  const f1 = ctx.createOscillator();
+  const f2 = ctx.createOscillator();
+  const fg1 = createGain(0);
+  const fanFilter = createFilter('lowpass', 140);
+
+  f1.type = 'sine';
+  f1.frequency.setValueAtTime(90, now);
+  f2.type = 'sine';
+  f2.frequency.setValueAtTime(135, now);
+
+  f1.connect(fanFilter);
+  f2.connect(fanFilter);
+  fanFilter.connect(fg1);
+  fg1.connect(_asmrtGain);
+
+  fg1.gain.setValueAtTime(0, now);
+  fg1.gain.linearRampToValueAtTime(0.012, now + 2.5);
+  fg1.gain.setValueAtTime(0.012, now + dur - 2.5);
+  fg1.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(f1); _registerNode(f2);
+  f1.start(now); f1.stop(now + dur + 0.1);
+  f2.start(now); f2.stop(now + dur + 0.1);
+
+  // 3. 아주 작은 기계 동작음 (Deep background vibration - 48Hz triangle)
+  const deepOsc = ctx.createOscillator();
+  const deepGain = createGain(0);
+  deepOsc.type = 'triangle';
+  deepOsc.frequency.setValueAtTime(48, now);
+  deepOsc.connect(deepGain); deepGain.connect(_asmrtGain);
+
+  deepGain.gain.setValueAtTime(0, now);
+  deepGain.gain.linearRampToValueAtTime(0.024, now + 2.0);
+  deepGain.gain.setValueAtTime(0.024, now + dur - 2.0);
+  deepGain.gain.linearRampToValueAtTime(0, now + dur);
+
+  _registerNode(deepOsc);
+  deepOsc.start(now);
+  deepOsc.stop(now + dur + 0.1);
+
+  // 4. 드물게 들리는 시스템 릴레이 클릭 (Relay clicks)
+  const clickCount = Math.floor(rand(2, 4));
+  for (let i = 0; i < clickCount; i++) {
+    const cTime = now + rand(2, dur - 2);
+    const clickLen = rand(0.005, 0.01);
+    const cNoise = createNoise(clickLen);
+    const cFilter = createFilter('bandpass', rand(3500, 5000), 3.5);
+    const cGain = createGain(0);
+    cNoise.connect(cFilter); cFilter.connect(cGain); cGain.connect(_asmrtGain);
+
+    cGain.gain.setValueAtTime(0, cTime);
+    cGain.gain.linearRampToValueAtTime(rand(0.003, 0.006), cTime);
+    cGain.gain.exponentialRampToValueAtTime(0.0001, cTime + clickLen);
+
+    _registerNode(cNoise);
+    cNoise.start(cTime);
+    cNoise.stop(cTime + clickLen + 0.02);
+  }
+
+  // 5. 아주 드물고 작은 시스템 비프음 (Rare system beep)
+  if (Math.random() < 0.6) {
+    const bTime = now + rand(3, dur - 4);
+    const bFreq = rand(1600, 1850);
+    const bDur = rand(0.07, 0.12);
+    const beepOsc = ctx.createOscillator();
+    const beepGain = createGain(0);
+    
+    beepOsc.type = 'sine';
+    beepOsc.frequency.setValueAtTime(bFreq, bTime);
+    beepOsc.connect(beepGain); beepGain.connect(_asmrtGain);
+    
+    beepGain.gain.setValueAtTime(0, bTime);
+    beepGain.gain.linearRampToValueAtTime(0.002, bTime + 0.005);
+    beepGain.gain.setValueAtTime(0.002, bTime + bDur - 0.01);
+    beepGain.gain.exponentialRampToValueAtTime(0.0001, bTime + bDur);
+
+    _registerNode(beepOsc);
+    beepOsc.start(bTime);
+    beepOsc.stop(bTime + bDur + 0.05);
+  }
+
+  _scheduleLoop('space_station_night', dur * 1000);
+}
+
 function _asmrForest() {
   const ctx = getCtx();
   const dur = 20;
