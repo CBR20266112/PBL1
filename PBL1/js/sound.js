@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sound.js - Sleepy Sheep ?ъ슫???쒖뒪?? * Web Audio API瑜??ъ슜???꾨줈?쒖????ъ슫???⑹꽦
  */
 
@@ -1586,6 +1586,162 @@ function _addKotoPhrase(now, dur, vol) {
   });
 }
 
+/** 해금풍 소리: 사인파 + 비브라토 LFO, 현악기 특유의 부드러운 떨림 */
+function _addKoreanHaegeum(now, dur, vol) {
+  const ctx = getCtx();
+  const haegeum = [
+    { freq: 293.66, t: 1.5, hold: 3.5 },
+    { freq: 329.63, t: 6.0, hold: 2.8 },
+    { freq: 246.94, t: 10.0, hold: 4.0 },
+    { freq: 293.66, t: 16.0, hold: 3.2 },
+    { freq: 220.00, t: 21.0, hold: 3.8 },
+  ];
+  haegeum.forEach(({ freq, t, hold }) => {
+    const start = now + t;
+    if (start >= now + dur - 0.5) return;
+    const osc = ctx.createOscillator();
+    const vibLfo = ctx.createOscillator();
+    const vibGain = createGain(4);
+    const env = createGain(0);
+    const lpf = createFilter('lowpass', 1800, 1.5);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, start);
+    vibLfo.type = 'sine';
+    vibLfo.frequency.value = 5.5;
+    vibLfo.connect(vibGain);
+    vibGain.connect(osc.frequency);
+    osc.connect(lpf); lpf.connect(env); env.connect(_asmrtGain);
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(vol, start + 0.4);
+    env.gain.setValueAtTime(vol, start + hold - 0.5);
+    env.gain.linearRampToValueAtTime(0, start + hold);
+    _registerNode(osc); _registerNode(vibLfo);
+    vibLfo.start(start); vibLfo.stop(start + hold + 0.1);
+    osc.start(start); osc.stop(start + hold + 0.1);
+  });
+}
+
+/** 대금풍 소리: 관악기 숨결 텍스처 + 사인파 멜로디 */
+function _addKoreanDaegeum(now, dur, vol) {
+  const ctx = getCtx();
+  const notes = [
+    { freq: 196.00, t: 2.5, hold: 4.5 },
+    { freq: 220.00, t: 8.5, hold: 3.5 },
+    { freq: 196.00, t: 14.5, hold: 5.0 },
+    { freq: 174.61, t: 21.0, hold: 4.0 },
+  ];
+  notes.forEach(({ freq, t, hold }) => {
+    const start = now + t;
+    if (start >= now + dur - 0.5) return;
+    // 숨결 노이즈 (대금의 바람 소리)
+    const breath = createNoise(hold);
+    const bpf = createFilter('bandpass', freq * 1.5, 4);
+    const ng = createGain(0);
+    breath.connect(bpf); bpf.connect(ng); ng.connect(_asmrtGain);
+    ng.gain.setValueAtTime(vol * 0.3, start);
+    ng.gain.exponentialRampToValueAtTime(0.001, start + hold);
+    _registerNode(breath); breath.start(start); breath.stop(start + hold + 0.1);
+    // 피치 사인파
+    const osc = ctx.createOscillator();
+    const env = createGain(0);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, start);
+    osc.connect(env); env.connect(_asmrtGain);
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(vol, start + 0.6);
+    env.gain.exponentialRampToValueAtTime(vol * 0.7, start + hold - 0.6);
+    env.gain.linearRampToValueAtTime(0, start + hold);
+    _registerNode(osc); osc.start(start); osc.stop(start + hold + 0.1);
+  });
+}
+
+/** 샤쿠하치풍 소리: 부드러운 숨결 + 낮은 피치 */
+function _addJapaneseShakunoflute(now, dur, vol) {
+  const ctx = getCtx();
+  const notes = [
+    { freq: 220.00, t: 1.0, hold: 5.5 },
+    { freq: 196.00, t: 8.5, hold: 4.0 },
+    { freq: 220.00, t: 14.5, hold: 6.0 },
+    { freq: 184.99, t: 22.0, hold: 4.5 },
+  ];
+  notes.forEach(({ freq, t, hold }) => {
+    const start = now + t;
+    if (start >= now + dur - 0.5) return;
+    const breath = createNoise(hold);
+    const lpf = createFilter('lowpass', freq * 2.5, 2);
+    const ng = createGain(0);
+    breath.connect(lpf); lpf.connect(ng); ng.connect(_asmrtGain);
+    ng.gain.setValueAtTime(vol * 0.4, start);
+    ng.gain.exponentialRampToValueAtTime(0.001, start + hold);
+    _registerNode(breath); breath.start(start); breath.stop(start + hold + 0.1);
+    const osc = ctx.createOscillator();
+    const env = createGain(0);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, start);
+    osc.connect(env); env.connect(_asmrtGain);
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(vol * 0.9, start + 0.8);
+    env.gain.setValueAtTime(vol * 0.9, start + hold - 0.8);
+    env.gain.linearRampToValueAtTime(0, start + hold);
+    _registerNode(osc); osc.start(start); osc.stop(start + hold + 0.1);
+  });
+}
+
+/** 고쟁(구쟁) 프레이즈: 플럭드 현악기, 가야금보다 높고 명료한 음색 */
+function _addGuzhengPhrase(now, dur, vol) {
+  const ctx = getCtx();
+  const phrase = [
+    [329.63, 1.5], [369.99, 6.0], [293.66, 11.0],
+    [329.63, 16.5], [261.63, 21.5], [293.66, 25.0],
+  ];
+  phrase.forEach(([freq, t]) => {
+    const start = now + t;
+    if (start >= now + dur - 0.5) return;
+    const osc = ctx.createOscillator();
+    const env = createGain(0);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, start);
+    osc.detune.setValueAtTime(rand(-3, 3), start);
+    osc.connect(env); env.connect(_asmrtGain);
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(vol * 0.85, start + 0.025);
+    env.gain.exponentialRampToValueAtTime(0.001, start + rand(2.0, 3.0));
+    _registerNode(osc); osc.start(start); osc.stop(start + 3.2);
+  });
+}
+
+/** 얼후풍 소리: 삼각파 + 현악기 비브라토, 중국 현악기 특유의 애수 */
+function _addChineseErhu(now, dur, vol) {
+  const ctx = getCtx();
+  const notes = [
+    { freq: 329.63, t: 3.5, hold: 4.5 },
+    { freq: 293.66, t: 10.0, hold: 3.5 },
+    { freq: 349.23, t: 15.5, hold: 5.0 },
+    { freq: 293.66, t: 22.5, hold: 4.0 },
+  ];
+  notes.forEach(({ freq, t, hold }) => {
+    const start = now + t;
+    if (start >= now + dur - 0.5) return;
+    const osc = ctx.createOscillator();
+    const vibLfo = ctx.createOscillator();
+    const vibGain = createGain(5);
+    const env = createGain(0);
+    const lpf = createFilter('lowpass', 2200, 1.5);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, start);
+    vibLfo.type = 'sine';
+    vibLfo.frequency.value = 6.0;
+    vibLfo.connect(vibGain); vibGain.connect(osc.frequency);
+    osc.connect(lpf); lpf.connect(env); env.connect(_asmrtGain);
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(vol, start + 0.5);
+    env.gain.setValueAtTime(vol, start + hold - 0.5);
+    env.gain.linearRampToValueAtTime(0, start + hold);
+    _registerNode(osc); _registerNode(vibLfo);
+    vibLfo.start(start); vibLfo.stop(start + hold + 0.1);
+    osc.start(start); osc.stop(start + hold + 0.1);
+  });
+}
 function _asmrDreamyMeadow() {
   const dur = 24;
   const now = getCtx().currentTime;
@@ -2818,23 +2974,24 @@ function _addKeyboardTaps(now, dur, count, vol) {
 
 // ?좎옄湲?醫뗭? ?ㅻⅤ怨?硫쒕줈???명듃 諛곗뿴 (二쇳뙆?? 諛뺤옄湲몄씠)
 const BGM_MELODY = [
-  // 1?? ?먯옣媛€ ?먮굦??C?μ“ ?좎쑉
-  [523.25, 0.5], [659.25, 0.5], [783.99, 0.5], [659.25, 0.5],
-  [783.99, 0.5], [880.00, 0.5], [1046.5, 1.0],
-  [880.00, 0.5], [783.99, 0.5], [659.25, 0.5], [523.25, 0.5],
-  [392.00, 0.5], [440.00, 0.5], [523.25, 1.5],
-  // 2?? 議곌툑 ???믨쾶
-  [659.25, 0.5], [783.99, 0.5], [880.00, 0.5], [783.99, 0.5],
-  [659.25, 0.5], [587.33, 0.5], [523.25, 1.0],
-  [440.00, 0.5], [523.25, 0.5], [587.33, 0.5], [523.25, 0.5],
-  [493.88, 0.5], [440.00, 0.5], [392.00, 1.5],
-  // 3?? 留덈Т由?  [523.25, 0.5], [587.33, 0.5], [659.25, 0.5], [587.33, 0.5],
-  [523.25, 0.5], [493.88, 0.5], [440.00, 1.0],
-  [392.00, 0.5], [440.00, 0.5], [493.88, 0.5], [523.25, 0.5],
-  [659.25, 0.5], [783.99, 0.5], [523.25, 2.0],
+  // C4(261.63), E4(329.63), G4(392.00), A4(440.00), B4(493.88)
+  // 느긋하고 포근하게 한 음 한 음 길게 연주
+  [261.63, 1.0], [0, 0.5],      [329.63, 1.0], [0, 0.5],
+  [392.00, 1.5], [0, 0.5],      [329.63, 1.0], [0, 0.5],
+  [440.00, 1.0], [392.00, 1.0], [329.63, 1.0], [261.63, 1.5], [0, 1.0],
+
+  [329.63, 1.0], [0, 0.5],      [392.00, 1.0], [0, 0.5],
+  [440.00, 1.5], [0, 0.5],      [392.00, 1.0], [0, 0.5],
+  [329.63, 1.0], [261.63, 1.0], [293.66, 1.0], [261.63, 2.0], [0, 1.5],
+
+  // 2파트 (약간의 변주)
+  [329.63, 1.0], [392.00, 1.0], [440.00, 1.0], [392.00, 1.5], [0, 0.5],
+  [329.63, 1.0], [261.63, 1.0], [220.00, 1.5], [0, 1.0],
+  [293.66, 1.0], [329.63, 1.0], [392.00, 1.0], [329.63, 1.0],
+  [261.63, 2.0], [0, 2.0]
 ];
 
-const BGM_BPM = 72; // ?먮━怨??붿옍?섍쾶
+const BGM_BPM = 58; // 더 안정적이고 포근한 템포
 const BGM_BEAT_SEC = 60 / BGM_BPM;
 
 let _bgmRunning = false;
@@ -2842,58 +2999,51 @@ let _bgmTimeout = null;
 let _bgmNodes = [];
 
 /**
- * ?ㅻⅤ怨??⑥씪 ?명듃 ?⑹꽦
- * ?ㅻⅤ怨??뱀꽦: 利됯컖?곸씤 ?댄깮, ?ъ씤???쎄컙??諛곗쓬, 鍮좊Ⅸ 媛먯뇿
+ * 오르골 단일 노트 합성
+ * 오르골 특성: 어택은 40ms로 소프트하게 조정하여 쨍한 디지털 톤 억제, 로우패스 필터로 따뜻함 유지
  */
 function _playMusicBoxNote(ctx, freq, startTime, duration) {
   if (!_bgmGain) return;
+  if (freq <= 0) return; // 쉼표 처리
 
-  // 湲곕낯 ?ъ씤??(?ㅻⅤ怨⑥쓽 留묒? ?뚯깋)
+  // 1. 기본 사인파 (오르골의 부드러운 알맹이)
   const osc = ctx.createOscillator();
   const env = ctx.createGain();
   osc.type = 'sine';
-  osc.frequency.value = freq;
+  osc.frequency.setValueAtTime(freq, startTime);
 
-  // 2諛곗쓬 (?쏀븯寃? ?ㅻⅤ怨??뱀쑀???곕벏??諛곗쓬)
+  // 2. 2배음 (약하게)
   const osc2 = ctx.createOscillator();
   const env2 = ctx.createGain();
   osc2.type = 'sine';
-  osc2.frequency.value = freq * 2;
+  osc2.frequency.setValueAtTime(freq * 2, startTime);
 
-  // 3諛곗쓬 (留ㅼ슦 ?쏀븯寃?
-  const osc3 = ctx.createOscillator();
-  const env3 = ctx.createGain();
-  osc3.type = 'sine';
-  osc3.frequency.value = freq * 3;
+  // 로우패스 필터로 부드러운 음색 보정 (날카로운 디지털 느낌 제거)
+  const lpf = ctx.createBiquadFilter();
+  lpf.type = 'lowpass';
+  lpf.frequency.setValueAtTime(freq * 2.5, startTime);
+  lpf.Q.setValueAtTime(1.0, startTime);
 
-  osc.connect(env);   env.connect(_bgmGain);
-  osc2.connect(env2); env2.connect(_bgmGain);
-  osc3.connect(env3); env3.connect(_bgmGain);
+  osc.connect(env);   env.connect(lpf);
+  osc2.connect(env2); env2.connect(lpf);
+  lpf.connect(_bgmGain);
 
-  const attackTime = 0.005; // ?ㅻⅤ怨⑥쓽 利됯컖?곸씤 ?댄깮
-  const decayTime  = Math.min(duration * 0.85, 1.8); // ?ㅻⅤ怨??뱀쑀??湲??ъ슫
+  const attackTime = 0.04; // 장난감 느낌을 없애기 위해 어택을 부드럽게 가져감
+  const decayTime  = Math.min(duration * 1.1, 2.5); // 잔향 유지
 
-  // 湲곕낯???붾꺼濡쒗봽
   env.gain.setValueAtTime(0, startTime);
-  env.gain.linearRampToValueAtTime(0.7, startTime + attackTime);
+  env.gain.linearRampToValueAtTime(0.55, startTime + attackTime);
   env.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime);
 
-  // 2諛곗쓬 ?붾꺼濡쒗봽 (??鍮⑤━ 媛먯뇿)
   env2.gain.setValueAtTime(0, startTime);
-  env2.gain.linearRampToValueAtTime(0.2, startTime + attackTime);
-  env2.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime * 0.5);
+  env2.gain.linearRampToValueAtTime(0.08, startTime + attackTime);
+  env2.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime * 0.45);
 
-  // 3諛곗쓬 ?붾꺼濡쒗봽 (媛??鍮⑤━ 媛먯뇿)
-  env3.gain.setValueAtTime(0, startTime);
-  env3.gain.linearRampToValueAtTime(0.06, startTime + attackTime);
-  env3.gain.exponentialRampToValueAtTime(0.001, startTime + decayTime * 0.25);
-
-  const stopAt = startTime + decayTime + 0.05;
+  const stopAt = startTime + decayTime + 0.1;
   osc.start(startTime);  osc.stop(stopAt);
-  osc2.start(startTime); osc2.stop(stopAt * 0.6);
-  osc3.start(startTime); osc3.stop(stopAt * 0.3);
+  osc2.start(startTime); osc2.stop(stopAt);
 
-  _bgmNodes.push(osc, env, osc2, env2, osc3, env3);
+  _bgmNodes.push(osc, env, osc2, env2, lpf);
 }
 
 /**
