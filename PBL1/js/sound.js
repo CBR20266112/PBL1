@@ -1968,11 +1968,20 @@ function _asmrJapaneseTraditionalNight() {
 }
 
 function _asmrChineseTraditionalNight() {
-  const dur = 22;
+  const dur = 28; // 고쟁과 얼후 선율이 완전히 연주되도록 28초로 유지
   const now = getCtx().currentTime;
-  _addWaterDrops(now, dur, 16, 0.042);
-  _addPavilionAmbience(now, dur, 0.052);
-  _addSoftWind(now, dur, 0.002); // 바람 소리 감쇠 (기존 0.006)
+  
+  // 자연 배경음 (바람 소리 극소화 및 정자 앰비언스)
+  _addSoftWind(now, dur, 0.002);
+  _addPavilionAmbience(now, dur, 0.045);
+  
+  // 물방울 합성음은 횟수를 3회로 극소화하고 볼륨도 대폭 감쇠시켜 단순한 배경 요소로만 격하 (뿅/삑 소리 제거)
+  _addWaterDrops(now, dur, 3, 0.006);
+  
+  // 중국 전통 악기 메인 배치 (누가 들어도 선명하게 구별되는 고쟁과 얼후)
+  _addGuzhengPhrase(now, dur, 0.22); // 고쟁 프레이즈 (메인 뜯는 악기)
+  _addChineseErhu(now, dur, 0.15);   // 얼후 프레이즈 (서브 활현 악기)
+  
   _scheduleLoop('chinese_traditional_night', dur * 1000);
 }
 
